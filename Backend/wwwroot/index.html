@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-group">
+                <button class="menu-icon">
+                    <div class="menu-icon-bar"></div>
+                    <div class="menu-icon-bar"></div>
+                    <div class="menu-icon-bar"></div>
+                </button>
+                <div class="logo">Логотип</div>
+            </div>
+
+            <div class="right-section">
+                <div class="catalog-button">
+                    <span>Каталог проектов</span>
+                </div>
+
+                <div class="user-controls">
+                    <button class="account-button">
+                        <div class="account-icon">
+                            <!-- Вставьте PNG-иконку сюда -->
+                            <img src="/static/img/header-icon.png" alt="Профиль пользователя" class="profile-icon">
+                        </div>
+                        <div class="chevron-down"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+
+        <section class="title-section">
+            <div class="title-container">
+                <h1 class="title">НАЗВАНИЕ</h1>
+            </div>
+        </section>
+
+        <section class="stats-section">
+            <!-- Заголовок -->
+            <h2 class="stats-title">О ПЛАТФОРМЕ</h2>
+
+            <!-- Основной контейнер -->
+            <div class="stats-container">
+                <!-- Блок с картой -->
+                <div class="stats-map">
+                    <div class="map-placeholder">Карта будет здесь</div>
+                </div>
+
+                <!-- Менюшка с галочками -->
+                <div class="stats-menu">
+                    <div class="menu-item">
+                        <input type="radio" class="custom-checkbox" name="check">
+                        <span>Образовательное учреждение</span>
+                        </input>
+                    </div>
+                    <div class="menu-item">
+                        <input type="radio" class="custom-checkbox" name="check">
+                        <span>Научно-исследовательский институт</span>
+                        </input>
+                    </div>
+                    <div class="menu-item">
+                        <input type="radio" class="custom-checkbox" name="check">
+                        <span>Научно-образовательный проект</span>
+                        </input>
+                    </div>
+                    <div class="menu-item">
+                        <input type="radio" class="custom-checkbox" name="check">
+                        <span>Государственное учреждение</span>
+                        </input>
+                    </div>
+                    <div class="menu-item">
+                        <input type="radio" class="custom-checkbox" name="check">
+                        <span>Коммерческая деятельность</span>
+                        </input>
+                    </div>
+                    <div class="menu-item">
+                        <input type="radio" class="custom-checkbox" name="check">
+                        <span>Стартап</span>
+                        </input>
+                    </div>
+                    <div class="menu-item">
+                        <input type="radio" class="custom-checkbox" name="check">
+                        <span>Финансы</span>
+                        </input>
+                    </div>
+                    <div class="menu-item">
+                        <input type="radio" class="custom-checkbox" name="check">
+                        <span>Акселератор / инкубатор / технопарк</span>
+                        </input>
+                    </div>
+                    <div class="menu-item">
+                        <input type="radio" class="custom-checkbox" name="check">
+                        <span>Ассоциация / объединение</span>
+                        </input>
+                    </div>
+                    <div class="menu-item">
+                        <input type="radio" class="custom-checkbox" name="check">
+                        <span>Инициатива</span>
+                        </input>
+                    </div>
+                    <div class="menu-item">
+                        <input type="radio" class="custom-checkbox" name="check">
+                        <span>Отраслевое событие / научная конференция</span>
+                        </input>
+                    </div>
+                    <div class="menu-item">
+                        <input type="radio" class="custom-checkbox" name="check">
+                        <span>Другое</span>
+                        </input>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="projects-section">
+            <div class="projects-container">
+                <!-- Кнопка "Назад" -->
+                <button class="nav-button prev-button">
+                    <div class="nav-icon">←</div>
+                </button>
+
+                <!-- Лента проектов -->
+                <div class="projects-carousel">
+                    <div class="project-card">
+                        <div class="project-image"></div>
+                        <div class="project-content">
+                            <h3 class="project-title">Название проекта</h3>
+                            <p class="project-description">
+                                Что, где и кем сделано? Краткое описание проекта.
+                            </p>
+                            <button class="details-button">Подробнее</button>
+                        </div>
+                    </div>
+                    <!-- Добавьте больше project-card по аналогии -->
+                </div>
+
+                <!-- Кнопка "Вперед" -->
+                <button class="nav-button next-button">
+                    <div class="nav-icon">→</div>
+                </button>
+            </div>
+        </section>
+
+
+        <!-- Блок с проектами -->
+        <section class="new-projects-section">
+            <!-- Лента тегов -->
+            <div class="tags-scroll-container">
+                <button class="scroll-button prev-tags-button">←</button>
+                <div class="tags-scroll">
+                    <div class="tags-list">
+                        <div class="tag">
+                            <span class="tag-text">#название-тэга</span>
+                        </div>
+                        <div class="tag">
+                            <span class="tag-text">#название-тэга</span>
+                        </div>
+                        <div class="tag">
+                            <span class="tag-text">#название-тэга</span>
+                        </div>
+                        <div class="tag">
+                            <span class="tag-text">#название-тэга</span>
+                        </div>
+                        <div class="tag">
+                            <span class="tag-text">#название-тэга</span>
+                        </div>
+                        <div class="tag">
+                            <span class="tag-text">#название-тэга</span>
+                        </div>
+                        <div class="tag">
+                            <span class="tag-text">#название-тэга</span>
+                        </div>
+                        <!-- Добавить больше тегов по необходимости -->
+                    </div>
+                </div>
+                <button class="scroll-button next-tags-button">→</button>
+            </div>
+
+            <!-- Сетка проектов -->
+            <div class="new-projects-grid">
+                <!-- Проект 1 -->
+                <div class="new-project-card">
+                    <div class="new-project-image"></div>
+                    <h2 class="new-project-title">Название проекта</h2>
+                    <p class="new-project-description">Краткое описание проекта</p>
+                    <div class="new-project-details">
+                        <div class="new-detail">
+                            <span class="new-detail-icon"></span>
+                            <span class="new-detail-text">200000 руб.</span>
+                        </div>
+                        <div class="new-detail">
+                            <span class="new-detail-icon"></span>
+                            <span class="new-detail-text">Адрес</span>
+                        </div>
+                        <div class="new-detail">
+                            <span class="new-detail-icon"></span>
+                            <span class="new-detail-text">Организация</span>
+                        </div>
+                    </div>
+                    <div class="new-project-tags">
+                        <div class="tag">#тег</div>
+                    </div>
+                </div>
+
+                <!-- Проект 2 -->
+                <div class="new-project-card">
+                    <div class="new-project-image"></div>
+                    <h2 class="new-project-title">Название проекта</h2>
+                    <p class="new-project-description">Краткое описание проекта</p>
+                    <div class="new-project-details">
+                        <div class="new-detail">
+                            <span class="new-detail-icon"></span>
+                            <span class="new-detail-text">200000 руб.</span>
+                        </div>
+                        <div class="new-detail">
+                            <span class="new-detail-icon"></span>
+                            <span class="new-detail-text">Адрес</span>
+                        </div>
+                        <div class="new-detail">
+                            <span class="new-detail-icon"></span>
+                            <span class="new-detail-text">Организация</span>
+                        </div>
+                    </div>
+                    <div class="new-project-tags">
+                        <div class="tag">#тег</div>
+                    </div>
+                </div>
+
+                <!-- Проект 3 -->
+                <div class="new-project-card">
+                    <div class="new-project-image"></div>
+                    <h2 class="new-project-title">Название проекта</h2>
+                    <p class="new-project-description">Краткое описание проекта</p>
+                    <div class="new-project-details">
+                        <div class="new-detail">
+                            <span class="new-detail-icon"></span>
+                            <span class="new-detail-text">200000 руб.</span>
+                        </div>
+                        <div class="new-detail">
+                            <span class="new-detail-icon"></span>
+                            <span class="new-detail-text">Адрес</span>
+                        </div>
+                        <div class="new-detail">
+                            <span class="new-detail-icon"></span>
+                            <span class="new-detail-text">Организация</span>
+                        </div>
+                    </div>
+                    <div class="new-project-tags">
+                        <div class="tag">#тег</div>
+                    </div>
+                </div>
+
+                <!-- Проект 4 -->
+                <div class="new-project-card">
+                    <div class="new-project-image"></div>
+                    <h2 class="new-project-title">Название проекта</h2>
+                    <p class="new-project-description">Краткое описание проекта</p>
+                    <div class="new-project-details">
+                        <div class="new-detail">
+                            <span class="new-detail-icon"></span>
+                            <span class="new-detail-text">200000 руб.</span>
+                        </div>
+                        <div class="new-detail">
+                            <span class="new-detail-icon"></span>
+                            <span class="new-detail-text">Адрес</span>
+                        </div>
+                        <div class="new-detail">
+                            <span class="new-detail-icon"></span>
+                            <span class="new-detail-text">Организация</span>
+                        </div>
+                    </div>
+                    <div class="new-project-tags">
+                        <div class="tag">#тег</div>
+                    </div>
+                </div>
+
+                <!-- Проект 5 -->
+                <div class="new-project-card">
+                    <div class="new-project-image"></div>
+                    <h2 class="new-project-title">Название проекта</h2>
+                    <p class="new-project-description">Краткое описание проекта</p>
+                    <div class="new-project-details">
+                        <div class="new-detail">
+                            <span class="new-detail-icon"></span>
+                            <span class="new-detail-text">200000 руб.</span>
+                        </div>
+                        <div class="new-detail">
+                            <span class="new-detail-icon"></span>
+                            <span class="new-detail-text">Адрес</span>
+                        </div>
+                        <div class="new-detail">
+                            <span class="new-detail-icon"></span>
+                            <span class="new-detail-text">Организация</span>
+                        </div>
+                    </div>
+                    <div class="new-project-tags">
+                        <div class="tag">#тег</div>
+                    </div>
+                </div>
+
+                <!-- Блок "еще 2965 проектов" -->
+                <div class="new-more-projects">
+                    <h2 class="new-more-projects-title">еще 2965</h2>
+                    <p class="new-more-projects-subtitle">проектов</p>
+                    <button class="new-view-all-button">Смотреть все</button>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="faq-section">
+            <h2 class="faq-title">FAQ</h2>
+            <div class="faq-list">
+            <!-- Вопрос 1 -->
+            <fieldset class="faq-item">
+                <div class="faq-question">
+                <span class="question-text">Очень важный вопрос</span>
+                <span class="question-arrow">
+                  →
+                </span>
+                </div>
+            </fieldset>
+
+            <!-- Вопрос 2 -->
+            <div class="faq-item">
+                <div class="faq-question">
+                <span class="question-text">Очень важный вопрос</span>
+                <span class="question-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- Вопрос 3 -->
+            <div class="faq-item">
+                <div class="faq-question">
+                <span class="question-text">Очень важный вопрос</span>
+                <span class="question-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- Вопрос 4 -->
+            <div class="faq-item">
+                <div class="faq-question">
+                <span class="question-text">Очень важный вопрос</span>
+                <span class="question-arrow">→</span>
+                </div>
+            </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+
+    </footer>
+</body>
+
+</html>

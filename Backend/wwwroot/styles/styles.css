@@ -1,0 +1,675 @@
+body {
+    background-color: #F0F0F0;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+  }
+
+/* input {
+  width: 1.4375rem;
+  height: 1.4375rem;
+  border: 0.03125rem solid rgba(0, 0, 0, 0.5);
+  border-radius: 0.3125rem;
+  position: relative;
+  flex-shrink: 0;
+} */
+
+.header {
+    width: 100%;
+    background: #D9D9D9;
+    height: 3.125rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1.875rem;
+    box-sizing: border-box;
+  }
+
+  .header-container {
+    width: 100%;
+    max-width: 90rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo-group {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .menu-icon {
+    background: none;
+    border: none;
+    padding: 0.3125rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1875rem;
+  }
+
+  .menu-icon-bar {
+    width: 1.453rem;
+    height: 0.1875rem;
+    background: #1D1B20;
+  }
+
+  .logo {
+    width: 7.5rem;
+    height: 2.25rem;
+    background: #8CB5BB;
+    border-radius: 0.625rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .right-section {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .catalog-button {
+    background: #F0F0F0;
+    border-radius: 0.9375rem;
+    padding: 0.5rem 1.25rem;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: #464646;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    height: 1.4rem;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .user-controls {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .account-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .account-icon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .profile-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .chevron-down {
+    width: 0;
+    height: 0;
+    border-left: 0.375rem solid transparent;
+    border-right: 0.375rem solid transparent;
+    border-top: 0.375rem solid #1D1B20;
+    transition: transform 0.2s ease;
+  }
+
+  .account-button:hover .chevron-down {
+    transform: rotate(180deg);
+  }
+
+  /* Секция с заголовком */
+  html {
+    font-size: 16px;
+  }
+
+  .title-section {
+    width: 100%;
+    min-height: 18.75rem;
+    background: #F0F0F0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: clamp(1.875rem, 10vw, 11.25rem);
+    box-sizing: border-box;
+    margin-bottom: 2rem;
+  }
+
+  .title-container {
+    max-width: 90rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(1.875rem, 5vw, 1.875rem);
+  }
+
+  .title {
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-weight: 800;
+    font-size: clamp(2rem, 8vw, 3.125rem);
+    line-height: 1.22;
+    letter-spacing: 0.04em;
+    color: #000000;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    white-space: nowrap;
+  }
+
+.stats-section {
+    width: 100%;
+    max-width: 90rem;
+    margin: 0 auto;
+    padding: 4.375rem 3.75rem;
+    box-sizing: border-box;
+  }
+
+  .stats-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 2rem;
+    line-height: 1.22;
+    letter-spacing: 0.08em;
+    color: #000000;
+    margin-bottom: 4.375rem;
+  }
+
+  .stats-container {
+    display: flex;
+    gap: 3.125rem;
+  }
+
+  /* Блок с картой */
+  .stats-map {
+    flex: 1;
+    background: #ffffff;
+    border-radius: 0.9375rem;
+    padding: 1.5rem;
+    height: 39.375rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .map-placeholder {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 2rem;
+    color: #000000;
+    opacity: 0.5;
+  }
+
+  /* Менюшка с галочками */
+  .stats-menu {
+    width: 27.3125rem;
+    background: #ffffff;
+    border-radius: 0.9375rem;
+    padding: 1.5rem 1.25rem;
+  }
+
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 0;
+  }
+
+  .custom-checkbox {
+    width: 1.4375rem;
+    height: 1.4375rem;
+    border: 0.03125rem solid rgba(0, 0, 0, 0.5);
+    border-radius: 0.3125rem;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .custom-checkbox::after {
+    content: '';
+    position: absolute;
+    width: 0.9375rem;
+    height: 0.9375rem;
+    border: 0.0625rem solid #000;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+  }
+
+  .menu-item span {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 0.9rem;
+    line-height: 1.21;
+    letter-spacing: 0.06em;
+    color: #000000;
+  }
+
+.projects-section {
+  width: 100%;
+  max-width: 90rem;
+  margin: 0 auto;
+  padding: 2rem 7.5rem;
+  box-sizing: border-box;
+}
+
+.projects-container {
+  display: flex;
+  align-items: center;
+  gap: 1.875rem;
+}
+
+/* Кнопки навигации */
+.nav-button {
+  width: 4rem;
+  height: 3.6rem;
+  background: #f0f0f0;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+}
+
+.nav-button:hover {
+  background: #d9d9d9;
+}
+
+.nav-icon {
+  font-size: 1.875rem;
+  color: #49454f;
+}
+
+/* Лента проектов */
+.projects-carousel {
+  display: flex;
+  gap: 1.875rem;
+  overflow: hidden;
+  width: 100%;
+}
+
+.project-card {
+  width: 64.5269rem;
+  height: 22.1875rem;
+  background: #d9d9d9;
+  border-radius: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: all 500ms
+}
+
+.project-image {
+  width: 100%;
+  height: 7.625rem;
+  background: #d9d9d9;
+}
+
+.project-content {
+  flex: 1;
+  background: #ffffff;
+  padding: 0.9375rem 1.875rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9375rem;
+}
+
+.project-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem; /* 24px */
+  line-height: 1.21;
+  letter-spacing: 0.04em;
+  color: #000000;
+  margin: 0;
+}
+
+.project-description {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.22;
+  letter-spacing: 0.04em;
+  color: #000000;
+  margin: 0;
+  text-align: center;
+}
+
+.details-button {
+  padding: 0.625rem 1.875rem; /* 10px 30px */
+  background: #f0f0f0;
+  border: none;
+  border-radius: 1.25rem; /* 20px */
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 1rem; /* 16px */
+  line-height: 1.19;
+  letter-spacing: 0.04em;
+  color: #000000;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.details-button:hover {
+  background: #d9d9d9;
+  transform: scale(1.05);
+}
+
+.new-projects-section {
+  width: 100%;
+  max-width: 90rem;
+  margin: 0 auto;
+  padding: 2rem 7.5rem;
+  box-sizing: border-box;
+}
+
+/* Лента тегов */
+.tags-scroll-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.tags-scroll {
+  flex: 1;
+  overflow: hidden;
+}
+
+.tags-list {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+}
+
+.tag {
+  padding: 8px 16px;
+  background: #FFFFFF;
+  border: 1px solid rgba(70, 70, 70, 0.8);
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 100%;
+  color: #2C2C2C;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 500ms;
+}
+
+.tag:hover {
+  background: #F0F0F0;
+}
+
+.scroll-button {
+  background: #F0F0F0;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 20px;
+  color: #49454F;
+  transition: all 500ms;
+}
+
+.scroll-button:hover {
+  background: #D9D9D9;
+}
+
+/* Сетка проектов */
+.new-projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+.new-project-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 15px;
+  gap: 20px;
+  background: #FFFFFF;
+  border: 1px solid rgba(70, 70, 70, 0.8);
+  border-radius: 30px;
+}
+
+.new-project-image {
+  width: 100%;
+  height: 221px;
+  background: #D9D9D9;
+  border-radius: 20px;
+}
+
+.new-project-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0.1em;
+  color: #000000;
+}
+
+.new-project-description {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.1em;
+  color: #000000;
+}
+
+.new-project-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.new-detail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.new-detail-icon {
+  width: 24px;
+  height: 24px;
+  background: #1D1B20;
+}
+
+.new-detail-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.1em;
+  color: #000000;
+}
+
+.new-project-tags {
+  display: flex;
+  gap: 8px;
+}
+
+/* Блок "еще 2965 проектов" */
+.new-more-projects {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  border: 1px solid rgba(70, 70, 70, 0.8);
+  border-radius: 30px;
+  padding: 20px;
+}
+
+.new-more-projects-title {
+  font-family: 'Itim', sans-serif;
+  font-weight: 400;
+  font-size: 54px;
+  line-height: 65px;
+  letter-spacing: 0.1em;
+  color: #000000;
+  margin: 0;
+}
+
+.new-more-projects-subtitle {
+  font-family: 'Itim', sans-serif;
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 43px;
+  letter-spacing: 0.1em;
+  color: #000000;
+  margin: 0;
+}
+
+.new-view-all-button {
+  padding: 10px 20px;
+  background: #F0F0F0;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'Itim', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.1em;
+  color: #000000;
+  margin-top: 20px;
+  transition: all 500ms;
+}
+
+.new-view-all-button:hover {
+  background: #D9D9D9;
+  transform: scale(1.05);
+}
+
+
+/* Стили для секции FAQ */
+.faq-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 180px;
+    gap: 30px;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  .faq-title {
+    width: 100%;
+    max-width: 1080px;
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 39px;
+    letter-spacing: 0.08em;
+    color: #000000;
+    margin: 0;
+    text-align: left;
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 1080px;
+  }
+
+  .faq-item {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 4rem;
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 15px 30px;
+    box-sizing: border-box;
+    transition: height 500ms ease 0s;
+  }
+
+  .faq-item:active {
+    height: 15rem;
+  }
+
+  .faq-question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    cursor: pointer;
+  }
+
+  .question-text {
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 29px;
+    letter-spacing: 0.04em;
+    color: #000000;
+    margin: 0;
+  }
+
+  .question-arrow {
+    font-size: 24px;
+    color: #49454F;
+    transform: rotate(0deg);
+    transition: transform 200ms ease 100ms;
+  }
+
+  .faq-item:active .question-arrow {
+    transform: rotate(90deg) scale(1.2);
+  }
+
+  footer {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 10px 180px;
+    gap: 10px;
+    width: 100%;
+    height: 49px;
+    background: #D9D9D9;
+    flex: none;
+    order: 2;
+    align-self: stretch;
+    flex-grow: 0;
+  }
