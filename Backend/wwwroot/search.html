@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поиск организаций</title>
+    <link rel="stylesheet" href="styles/search.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="page-container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-container">
+                    <button class="menu-button">
+                        <span class="menu-icon"></span>
+                    </button>
+                    <div class="logo">LOGO</div>
+                </div>
+                
+                <div class="header-controls">
+                    <button class="catalog-button">
+                        Каталог проектов
+                    </button>
+                    
+                    <div class="user-menu">
+                        <button class="user-button">
+                            <span class="user-icon"></span>
+                            <span class="chevron-down"></span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="#" class="menu-item">Выход</a>
+                            <a href="#" class="menu-item">Сменить пароль</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="content-container">
+                <h1 class="page-title">Поиск организаций</h1>
+                
+                <div class="search-section">
+                    <div class="search-filters">
+                        <div class="search-input-container">
+                            <input type="text" placeholder="Название" class="search-input">
+                            <span class="search-icon"></span>
+                        </div>
+                        
+                        <div class="select-wrapper">
+                            <select class="filter-select">
+                                <option value="" selected disabled>Направление</option>
+                                <option value="1">Направление 1</option>
+                                <option value="2">Направление 2</option>
+                            </select>
+                            <span class="select-arrow"></span>
+                        </div>
+                        
+                        <div class="select-wrapper">
+                            <select class="filter-select">
+                                <option value="" selected disabled>Регион</option>
+                                <option value="1">Регион 1</option>
+                                <option value="2">Регион 2</option>
+                            </select>
+                            <span class="select-arrow"></span>
+                        </div>
+                    </div>
+                    
+                    <button class="apply-button">
+                        Применить
+                    </button>
+                </div>
+                
+                <div class="results-grid">
+                    <!-- Карточка организации -->
+                    <div class="organization-card">
+                        <div class="card-image"></div>
+                        <div class="card-content">
+                            <h3 class="org-name">Название организации</h3>
+                            <p class="org-description">Краткое описание проекта, цели и что-то там еще что захочет написать исполнитель проекта</p>
+                            <button class="details-button">Подробнее</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Повторяющиеся карточки -->
+                    <div class="organization-card">
+                        <div class="card-image"></div>
+                        <div class="card-content">
+                            <h3 class="org-name">Название организации</h3>
+                            <p class="org-description">Краткое описание проекта, цели и что-то там еще что захочет написать исполнитель проекта</p>
+                            <button class="details-button">Подробнее</button>
+                        </div>
+                    </div>
+                    
+                    <div class="organization-card">
+                        <div class="card-image"></div>
+                        <div class="card-content">
+                            <h3 class="org-name">Название организации</h3>
+                            <p class="org-description">Краткое описание проекта, цели и что-то там еще что захочет написать исполнитель проекта</p>
+                            <button class="details-button">Подробнее</button>
+                        </div>
+                    </div>
+                    
+                    <div class="organization-card">
+                        <div class="card-image"></div>
+                        <div class="card-content">
+                            <h3 class="org-name">Название организации</h3>
+                            <p class="org-description">Краткое описание проекта, цели и что-то там еще что захочет написать исполнитель проекта</p>
+                            <button class="details-button">Подробнее</button>
+                        </div>
+                    </div>
+                    
+                    <div class="organization-card">
+                        <div class="card-image"></div>
+                        <div class="card-content">
+                            <h3 class="org-name">Название организации</h3>
+                            <p class="org-description">Краткое описание проекта, цели и что-то там еще что захочет написать исполнитель проекта</p>
+                            <button class="details-button">Подробнее</button>
+                        </div>
+                    </div>
+                    
+                    <div class="organization-card">
+                        <div class="card-image"></div>
+                        <div class="card-content">
+                            <h3 class="org-name">Название организации</h3>
+                            <p class="org-description">Краткое описание проекта, цели и что-то там еще что захочет написать исполнитель проекта</p>
+                            <button class="details-button">Подробнее</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <div class="footer-content">
+                <p class="footer-text">© 2023 Все права защищены</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
