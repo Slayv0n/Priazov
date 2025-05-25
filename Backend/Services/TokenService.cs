@@ -2,12 +2,11 @@
 using System.Security.Claims;
 using System.Text;
 using Backend.Models;
-using DataBase.Models;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Backend
+namespace Backend.Services
 {
     public class TokenService
     {

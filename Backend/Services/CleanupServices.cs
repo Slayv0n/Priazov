@@ -2,7 +2,7 @@
 using DataBase.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Backend
+namespace Backend.Services
 {
     public abstract class BaseCleanupService<TEntity> : BackgroundService
     {

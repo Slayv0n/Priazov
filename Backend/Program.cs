@@ -6,11 +6,11 @@ using System.Text;
 using DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Backend;
 using Backend.Models;
 using Backend.Mapping;
 using Microsoft.AspNetCore.HttpOverrides;
 using Scalar.AspNetCore;
+using Backend.Services;
 
 var builder = WebApplication.CreateBuilder();
 
@@ -20,7 +20,6 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
         ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
 });
 
-builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 
 builder.Logging.ClearProviders();
@@ -42,6 +41,10 @@ builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<EmailService>();
 
 builder.Services.AddScoped<TurnstileService>();
+
+builder.Services.AddScoped<IManagerService, ManagerService>();
+
+builder.Services.AddScoped<ICompanyService, CompanyService>();
 
 builder.Services.AddMemoryCache();
 
@@ -127,7 +130,6 @@ app.MapScalarApiReference(opt =>
     opt.DefaultHttpClient = new(ScalarTarget.Http, ScalarClient.Http11);
 });
 
-app.MapControllers();
 app.MapAuthEndpoints();
 app.MapPasswordEndpoints();
 app.MapCompanyEndpoints();
