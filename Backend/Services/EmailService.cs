@@ -26,13 +26,13 @@ namespace Backend.Services
             message.To.Add(new MailboxAddress("", user.Email));
             message.Subject = "Успешная регистрация";
 
-            var templatePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "RegisterEmail.html");
+            var templatePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "moderka.html");
             var htmlTemplate = await File.ReadAllTextAsync(templatePath);
 
             var htmlBody = htmlTemplate
                 .Replace("[Имя пользователя]", user.Name)
-                .Replace("[Почта пользователя]", user.Email)
-                .Replace("[Телефон пользователя]", user.Phone);
+                .Replace("[USER_EMAIL]", user.Email)
+                .Replace("[USER_PHONE]", user.Phone);
 
 
             message.Body = new TextPart("html")

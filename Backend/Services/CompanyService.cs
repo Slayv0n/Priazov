@@ -60,7 +60,7 @@ namespace Backend.Services
 
         private readonly IDbContextFactory<PriazovContext> _factory;
         private readonly IOptions<DadataSettings> _dadata;
-        private readonly EmailService? _email;
+        private readonly EmailService _email;
         private readonly TurnstileService? _turnstile;
         private readonly ILogger<ManagerService> _logger;
         private readonly IMemoryCache _cache;
@@ -68,7 +68,7 @@ namespace Backend.Services
         public CompanyService(
             IDbContextFactory<PriazovContext> factory,
             IOptions<DadataSettings> dadata,
-            EmailService? email,
+            EmailService email,
             TurnstileService? turnstile,
             ILogger<ManagerService> logger,
             IMemoryCache cache)
@@ -103,12 +103,12 @@ namespace Backend.Services
                 return Results.ValidationProblem(errors);
             }
 
-            bool isHuman = await _turnstile.VerifyTurnstileAsync(companyDto.Token);
-            if (!isHuman)
-            {
-                _logger.LogWarning($"Cloudflare Turnstile не пройдён для email: {companyDto.Email}");
-                return Results.BadRequest("Проверка Cloudflare Turnstile не пройдена.");
-            }
+            //bool isHuman = await _turnstile.VerifyTurnstileAsync(companyDto.Token);
+            //if (!isHuman)
+            //{
+            //    _logger.LogWarning($"Cloudflare Turnstile не пройдён для email: {companyDto.Email}");
+            //    return Results.BadRequest("Проверка Cloudflare Turnstile не пройдена.");
+            //}
 
             companyDto.Name = companyDto.Name.Trim();
             companyDto.Password = companyDto.Password.Trim();

@@ -42,9 +42,9 @@ builder.Services.AddScoped<EmailService>();
 
 builder.Services.AddScoped<TurnstileService>();
 
-builder.Services.AddScoped<IManagerService, ManagerService>();
+builder.Services.AddScoped<ManagerService>();
 
-builder.Services.AddScoped<ICompanyService, CompanyService>();
+builder.Services.AddScoped<CompanyService>();
 
 builder.Services.AddMemoryCache();
 
