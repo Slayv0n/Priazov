@@ -20,6 +20,8 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
         ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
 });
 
+builder.Services.AddRazorPages();
+
 builder.Services.AddHttpClient();
 
 builder.Logging.ClearProviders();
@@ -119,7 +121,7 @@ else
 
 app.UseForwardedHeaders();
 
-app.UseDefaultFiles();
+//app.UseDefaultFiles();
 app.UseStaticFiles();
 
 app.UseAuthentication();
@@ -132,6 +134,7 @@ app.MapScalarApiReference(opt =>
     opt.DefaultHttpClient = new(ScalarTarget.Http, ScalarClient.Http11);
 });
 
+app.MapRazorPages();
 app.MapAuthEndpoints();
 app.MapPasswordEndpoints();
 app.MapCompanyEndpoints();

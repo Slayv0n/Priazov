@@ -30,7 +30,7 @@ namespace Backend.Mapping
         {
             var group = app.MapGroup("/companies");
             group.MapPost("/create", Create);
-            group.MapGet("/review", Review);
+            //group.MapGet("/review", Review);
             group.MapGet("account", Account);
             group.MapGet("/filterMap", FilterMap);
             group.MapGet("/search", Search);
@@ -44,11 +44,11 @@ namespace Backend.Mapping
             return await service.CreateCompanyAsync(companyDto);
         }
 
-        private static async Task<IResult> Review(
-            [FromServices] CompanyService service)
-        {
-            return await service.ReviewCompanyAsync();
-        }
+        //private static async Task<IResult> Review(
+        //    [FromServices] CompanyService service)
+        //{
+        //    //return await service.ReviewCompanyAsync();
+        //}
 
         [Authorize]
         public static async Task<IResult> Account([FromQuery] Guid? id,
@@ -72,7 +72,7 @@ namespace Backend.Mapping
         {
             return await service.FilterMapCompanyAsync(industries);
         }
-        [Authorize]
+        //[Authorize]
         public static async Task<IResult> Update([FromQuery] Guid? id,
             [FromBody] CompanyChangeDto companyDto,
             [FromServices] CompanyService service)

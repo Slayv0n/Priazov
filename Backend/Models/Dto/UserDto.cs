@@ -14,15 +14,12 @@ namespace Backend.Models.Dto
         [Required]
         [StringLength(254, MinimumLength = 5,
             ErrorMessage = "Длина почты 5-254 символов")]
-        [RegularExpression(@"^\s*[\p{L}0-9_%+-]+(?<!\.)@(?!\.)[\p{L}.-]+\.[\p{L}]{2,4}\s*$",
-            ErrorMessage = "Неверный формат почты")]
+        [EmailAddress(ErrorMessage = "Неверный формат почты")]
         public string Email { get; set; } = null!;
         [Required]
         [StringLength(18, MinimumLength = 10,
             ErrorMessage = "Длина номера телефона 10-18 символов")]
-        [RegularExpression(
-        @"^\s*(\+7|7|8)?[\s-]?\(?[0-9]{3}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}\s*$",
-        ErrorMessage = "Неверный формат телефона. Используйте российский номер")]
+        [Phone(ErrorMessage = "Неверный формат телефона")]
         public string Phone { get; set; } = null!;
         [Required]
         [StringLength(255, MinimumLength = 10, ErrorMessage = "Адрес должен содержать 10-255 символов")]

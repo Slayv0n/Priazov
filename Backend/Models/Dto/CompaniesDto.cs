@@ -21,8 +21,8 @@ namespace Backend.Models.Dto
         [Required]
         [StringLength(30, MinimumLength = 8,
             ErrorMessage = "Длина пароля 8-30 символов")]
-        //[RegularExpression(@"^\s*(?=.*[a-zа-яё])(?=.*[A-ZА-ЯЁ])(?=.*\d)(?=.*[^\da-zA-Zа-яА-ЯЁё]).{8,30}\s*$",
-        //ErrorMessage = "Пароль слишком слабый")]
+        [RegularExpression(@"^\s*(?=.*[a-zа-яё])(?=.*[A-ZА-ЯЁ])(?=.*\d)(?=.*[^\da-zA-Zа-яА-ЯЁё]).{8,30}\s*$",
+        ErrorMessage = "Пароль слишком слабый")]
         public string Password { get; set; } = null!;
         //[Required]
         public string Token { get; set; } = null!;
@@ -48,6 +48,7 @@ namespace Backend.Models.Dto
             PhotoIcon = company.PhotoIcon;
             PhotoHeader = company.PhotoHeader;
             Contacts = company.Contacts;
+            Description = company.Description;
         }
     }
 

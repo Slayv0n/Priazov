@@ -46,7 +46,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\index.html" />
     <None Include="wwwroot\styles\reg.css" />
     <None Include="wwwroot\styles\styles.css" />
   </ItemGroup>

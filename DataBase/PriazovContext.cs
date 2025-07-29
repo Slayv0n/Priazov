@@ -10,7 +10,6 @@ namespace DataBase
         {
 
         }
-        //Создание таблиц в бд
         public DbSet<User> Users { get; set; }
         public DbSet<ShortAddressDto> Addresses { get; set; }
         public DbSet<Project> Projects { get; set; }

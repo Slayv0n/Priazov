@@ -11,6 +11,7 @@ using NLog.Config;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.CompilerServices;
 
 namespace Backend.Services
 {
@@ -18,7 +19,7 @@ namespace Backend.Services
     {
         Task<IResult> CreateCompanyAsync(CompanyCreateDto companyDto);
         Task<IResult> AccountCompanyAsync(Guid? id);
-        Task<IResult> ReviewCompanyAsync();
+        Task<Tuple<List<CompanyResponseDto>, int>> ReviewCompanyAsync();
         Task<IResult> SearchCompanyAsync(string? industry, string? region, string? searchTerm);
         Task<IResult> FilterMapCompanyAsync(string? industries);
         Task<IResult> UpdateCompanyAsync(Guid? id, CompanyChangeDto companyDto);
@@ -170,7 +171,7 @@ namespace Backend.Services
             await db.Users.AddAsync(company);
             await db.SaveChangesAsync();
 
-            await _email.SendRegistrationEmail(company);
+            //await _email.SendRegistrationEmail(company);
             _logger.LogInformation($"Компания зарегистрирована: {companyDto.Email}");
 
             return Results.Ok(new CompanyResponseDto(company, company.Address.FullAddress));
@@ -213,14 +214,14 @@ namespace Backend.Services
             return Results.Ok(companyResponse);
         }
 
-        public async Task<IResult> ReviewCompanyAsync()
+        public async Task<Tuple<List<CompanyResponseDto>, int>> ReviewCompanyAsync()
         {
             var cacheKey = $"companies_review";
 
-            if (_cache.TryGetValue(cacheKey, out List<Company>? cachedCompanies))
+            if (_cache.TryGetValue(cacheKey, out Tuple<List<CompanyResponseDto>, int>? cachedCompanies))
             {
                 _logger.LogInformation($"Ответ взят из кэша: {cacheKey}");
-                return Results.Ok(cachedCompanies);
+                return cachedCompanies!; 
             }
             else
             {
@@ -238,11 +239,12 @@ namespace Backend.Services
                 .ToListAsync();
 
             var count = await db.Users.OfType<Company>().CountAsync() - query.Count;
+            Tuple<List<CompanyResponseDto>, int> response = new Tuple<List<CompanyResponseDto>, int>(query, count);
 
             _cache.Set(cacheKey, query, CacheOptions);
             _logger.LogInformation("Краткий просмотр компаний выполнен");
 
-            return Results.Ok(new { query, count });
+            return response;
         }
 
         public async Task<IResult> SearchCompanyAsync(string? industry, string? region, string? searchTerm)
