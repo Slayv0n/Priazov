@@ -14,21 +14,21 @@ using Backend.Services;
 
 var builder = WebApplication.CreateBuilder();
 
+builder.Logging.ClearProviders();
+builder.Host.UseNLog();
+
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders =
         ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
 });
 
-builder.Services.AddRazorPages();
-
-builder.Services.AddHttpClient();
-
-builder.Logging.ClearProviders();
-builder.Host.UseNLog();
-
-builder.Services.AddHostedService<SessionsCleanupService>();
-builder.Services.AddHostedService<PasswordTokensCleanupService>();
+builder.Services.Configure<RouteOptions>(o =>
+{
+    o.LowercaseUrls = true;
+    o.LowercaseQueryStrings = true;
+    o.AppendTrailingSlash = true;
+});
 
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SMTP"));
 
@@ -37,6 +37,15 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSet
 builder.Services.Configure<DadataSettings>(builder.Configuration.GetSection("Dadata"));
 
 builder.Services.Configure<TurnstileSettings>(builder.Configuration.GetSection("Turnstile"));
+
+builder.Services.AddRazorPages();
+
+builder.Services.AddHttpClient();
+
+builder.Services.AddMemoryCache();
+
+builder.Services.AddHostedService<SessionsCleanupService>();
+builder.Services.AddHostedService<PasswordTokensCleanupService>();
 
 builder.Services.AddScoped<TokenService>();
 
@@ -48,12 +57,8 @@ builder.Services.AddScoped<ManagerService>();
 
 builder.Services.AddScoped<CompanyService>();
 
-builder.Services.AddMemoryCache();
-
 builder.Services.AddDbContextFactory<PriazovContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Singleton);
-
-builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -75,6 +80,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
 {
     opt.SwaggerDoc("v1", new OpenApiInfo { Title = "API V1", Version = "v1" });
@@ -121,7 +127,6 @@ else
 
 app.UseForwardedHeaders();
 
-//app.UseDefaultFiles();
 app.UseStaticFiles();
 
 app.UseAuthentication();

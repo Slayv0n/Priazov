@@ -32,7 +32,7 @@ namespace Backend.Mapping
             group.MapPost("/create", Create);
             //group.MapGet("/review", Review);
             group.MapGet("account", Account);
-            group.MapGet("/filterMap", FilterMap);
+            //group.MapGet("/filterMap", FilterMap);
             group.MapGet("/search", Search);
             group.MapPut("/update", Update);
         }
@@ -66,12 +66,12 @@ namespace Backend.Mapping
         {
             return await service.SearchCompanyAsync(industry, region, searchTerm);
         }
-        public static async Task<IResult> FilterMap(
-            [FromQuery] string? industries,
-            [FromServices] CompanyService service)
-        {
-            return await service.FilterMapCompanyAsync(industries);
-        }
+        //public static async Task<IResult> FilterMap(
+        //    [FromQuery] string? industries,
+        //    [FromServices] CompanyService service)
+        //{
+        //    return await service.FilterMapCompanyAsync(industries);
+        //}
         //[Authorize]
         public static async Task<IResult> Update([FromQuery] Guid? id,
             [FromBody] CompanyChangeDto companyDto,

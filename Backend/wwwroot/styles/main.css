@@ -232,6 +232,8 @@ body {
 }
 
 /* Секция с картой, фильтрами и организациями */
+
+
 .organizations-section {
     width: 100%;
     padding: 60px 0;
@@ -305,7 +307,6 @@ body {
     font-weight: 400;
     font-size: 16px;
     color: #012021;
-    cursor: pointer;
 }
 
 .organizations-grid {
@@ -529,7 +530,7 @@ footer {
     color: var(--text-color);
     padding: 10px 180px;
     background: #0E6466;
-    justify-content: left 1rem;
+    justify-content: left;
     color: white;
     gap: 1rem;
     position: relative;

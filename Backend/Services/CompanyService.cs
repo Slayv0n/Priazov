@@ -19,9 +19,10 @@ namespace Backend.Services
     {
         Task<IResult> CreateCompanyAsync(CompanyCreateDto companyDto);
         Task<IResult> AccountCompanyAsync(Guid? id);
-        Task<Tuple<List<CompanyResponseDto>, int>> ReviewCompanyAsync();
+        Task<List<CompanyResponseDto>> ReviewCompanyAsync();
+        Task<int> CountCompaniesAsync();
         Task<IResult> SearchCompanyAsync(string? industry, string? region, string? searchTerm);
-        Task<IResult> FilterMapCompanyAsync(string? industries);
+        Task<List<AddressDto>> FilterMapCompanyAsync(string? industries);
         Task<IResult> UpdateCompanyAsync(Guid? id, CompanyChangeDto companyDto);
     }
 
@@ -214,11 +215,11 @@ namespace Backend.Services
             return Results.Ok(companyResponse);
         }
 
-        public async Task<Tuple<List<CompanyResponseDto>, int>> ReviewCompanyAsync()
+        public async Task<List<CompanyResponseDto>> ReviewCompanyAsync()
         {
             var cacheKey = $"companies_review";
 
-            if (_cache.TryGetValue(cacheKey, out Tuple<List<CompanyResponseDto>, int>? cachedCompanies))
+            if (_cache.TryGetValue(cacheKey, out List<CompanyResponseDto>? cachedCompanies))
             {
                 _logger.LogInformation($"Ответ взят из кэша: {cacheKey}");
                 return cachedCompanies!; 
@@ -238,13 +239,16 @@ namespace Backend.Services
                 .Select(c => new CompanyResponseDto(c, c.Address.FullAddress))
                 .ToListAsync();
 
-            var count = await db.Users.OfType<Company>().CountAsync() - query.Count;
-            Tuple<List<CompanyResponseDto>, int> response = new Tuple<List<CompanyResponseDto>, int>(query, count);
-
             _cache.Set(cacheKey, query, CacheOptions);
             _logger.LogInformation("Краткий просмотр компаний выполнен");
 
-            return response;
+            return query;
+        }
+
+        public async Task<int> CountCompaniesAsync()
+        {
+            using var db = await _factory.CreateDbContextAsync();
+            return db.Users.OfType<Company>().Count();
         }
 
         public async Task<IResult> SearchCompanyAsync(string? industry, string? region, string? searchTerm)
@@ -289,14 +293,14 @@ namespace Backend.Services
             return Results.Ok(companies);
         }
 
-        public async Task<IResult> FilterMapCompanyAsync(string? industries)
+        public async Task<List<AddressDto>> FilterMapCompanyAsync(string? industries)
         {
             var cacheKey = $"companies_filterMap_{industries ?? "all"}";
 
-            if (_cache.TryGetValue(cacheKey, out List<(ShortAddressDto Address, List<CompanyResponseDto> Companies)>? cachedAddress))
+            if (_cache.TryGetValue(cacheKey, out List<AddressDto>? cachedAddress))
             {
                 _logger.LogInformation($"Ответ взят из кэша: {cacheKey}");
-                return Results.Ok(cachedAddress);
+                return cachedAddress!;
             }
             else
             {
@@ -312,33 +316,31 @@ namespace Backend.Services
             if (industryList?.Count > 0 && industryList.Any(i => !_allowedIndustries.Contains(i)))
             {
                 _logger.LogInformation($"Недопустимые значения индустрий: {industryList}");
-                return Results.BadRequest("Недопустимые значения индустрий.");
+                //return Results.BadRequest("Недопустимые значения индустрий.");
             }
 
             using var db = await _factory.CreateDbContextAsync();
 
-            var query = db.Users.OfType<Company>().Select(user => new
-            {
-                Address = user.Address,
-                Company = new CompanyResponseDto(user, user.Address.FullAddress)
-            });
+            var companies = db.Users.OfType<Company>();
 
             if (industryList?.Count > 0)
-                query = query.Where(c => industryList.Contains(c.Company.Industry));
+                companies = companies.Where(c => industryList.Contains(c.Industry));
 
-
-            var addresses = await query.GroupBy(x => x.Address.FullAddress)
-            .Select(g => new
-            {
-                Address = g.First().Address,
-                Users = g.Select(x => x.Company).ToList()
-            })
-            .ToListAsync();
+            var addresses = companies
+                .Include(c => c.Address)
+                .AsEnumerable()
+                .GroupBy(c => c.Address.FullAddress)
+                .Select(g => new AddressDto
+                {
+                    Address = g.First().Address,
+                    Companies = g.Select(c => new CompanyResponseDto(c, c.Address.FullAddress)).ToList()
+                })
+                .ToList();
 
             _cache.Set(cacheKey, addresses, CacheOptions);
             _logger.LogInformation("Фильтрация адресов завершилась успешно");
 
-            return Results.Ok(addresses);
+            return addresses;
         }
 
         public async Task<IResult> UpdateCompanyAsync(Guid? id, CompanyChangeDto companyDto)
