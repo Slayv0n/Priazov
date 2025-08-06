@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="styles/registration.css" />
+    
+</head>
+<body>
+    <!-- Шапка -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-group">
+                <button class="menu-icon">
+                    <svg width="30" height="30" viewBox="0 0 30 30">
+                        <path d="M5,9 H25 M5,15 H25 M5,21 H25"
+                              stroke="#000"
+                              stroke-width="2"
+                              stroke-linecap="round" />
+                    </svg>
+                </button>
+                    <img width="65" height="42" viewBox="0 0 65 42" fill="none" src="static/main/Logo.svg" onclick="location.href='index.html'">
+            </div>
+        </div>
+    </header>
+    
+    <!-- Основное содержимое -->
+    <main class="main-container">
+            <h1 class="registration-title">регистрация</h1>
+            <div class="registration-container">
+                <div class="tabs-container">
+                    <button class="tab executor-tab">
+                        <span class="tab-text">исполнитель</span>
+                    </button>
+                    <button class="tab investor-tab">
+                        <span class="tab-text">инвестор</span>
+                    </button>
+                </div>
+                <form class="registration-form" method="post" name="myForm">
+                    <div class="form-field">
+                        <input type="text" placeholder="краткое название организации" name="organizationName" id="organizationName">
+                    </div>
+                    <div class="form-field">
+                        <input type="text" placeholder="юридический адрес" name="address" id="address">
+                    </div>
+                    <div class="form-field">
+                        <input type="text" list="browsers" id="industry" name="industry">
+                        <datalist id="browsers">
+                            <option value="" disabled selected hidden>категория (с выбором)</option>
+                            <option value="Образовательное учреждение">Образовательное учреждение</option>
+                            <option value="Научно-исследовательский институт">Научно-исследовательский институт</option>
+                            <option value="Научно-образовательный проект">Научно-образовательный проект</option>
+                            <option value="Государственное учреждение">Государственное учреждение</option>
+                            <option value="Коммерческая деятельность">Коммерческая деятельность</option>
+                            <option value="Стартап">Стартап</option>
+                            <option value="Финансы">Финансы</option>
+                            <option value="Акселератор / инкубатор / технопарк">Акселератор / инкубатор / технопарк</option>
+                            <option value="Ассоциация / объединение">Ассоциация / объединение</option>
+                            <option value="Инициатива">Инициатива</option>
+                            <option value="Отраслевое событие / научная конференция">Отраслевое событие / научная конференция</option>
+                            <option value="Другое">Другое</option>
+                        </datalist>
+                    </div>
+                    <div class="form-field">
+                        <input type="text" placeholder="ФИО руководителя" name="FIO" id="FIO">
+                    </div>
+                    <div class="form-field">
+                        <input type="tel" id="phone" name="phone" placeholder="7 (XXX) XXX-XX-XX" maxlength="20" required />
+                    </div>
+                    <div class="form-field">
+                        <input type="email" placeholder="электронная почта" name="mail" id="mail">
+                    </div>
+                    <div class="form-field">
+                        <input type="password" minlength="8" maxlength="20" placeholder="пароль" name="password" id="password">
+                    </div>
+                    <div class="form-field">
+                        <input type="password" minlength="8" maxlength="20" placeholder="повторите пароль" name="password2" id="password2">
+                    </div>
+                    <button type="submit" class="submit-btn">Зарегистрироваться</button>
+                </form>
+</div>
+    </main>
+    <div class="interm"></div>
+  <footer>
+      <div class="contacts">
+          <h3>Контакты</h3>
+          <div class="contact-item">
+              <span>✉</span>
+              <span>dobra.hol@example.com</span>
+          </div>
+          <div class="contact-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20.487 17.14L18.387 15.79C17.447 15.15 16.217 15.41 15.587 16.34L14.517 17.95C12.997 17.35 9.66705 14.33 9.03705 12.81L10.647 11.75C11.587 11.12 11.847 9.89 11.207 8.95L9.85705 6.85C9.21705 5.91 7.98705 5.66 7.05705 6.29L4.50705 8.09C3.57705 8.72 3.32705 9.96 3.96705 10.89L5.72705 13.9C7.96705 18.22 11.647 21.43 16.187 22.71C16.967 22.93 17.787 22.71 18.337 22.11L20.337 19.91C21.107 19.03 20.997 17.67 20.487 17.14Z" fill="currentColor"/>
+              </svg>
+              <span>+7 (808) 555-0111</span>
+          </div>
+      </div>
+      <div class="help-section">
+          <br>
+          <div class="help-title">Помощь?</div>
+          <div>+7 (808) 555-0111</div>
+      </div>
+  </footer>
+
+  <script src="scripts/fetch.js" async>
+  </script>
+</body>
+</html>
