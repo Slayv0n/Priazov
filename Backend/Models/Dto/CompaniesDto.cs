@@ -8,12 +8,14 @@ namespace Backend.Models.Dto
     public class CompanyDto : UserDto
     {
         [Required]
+        [Display(Name="Сфера интересов")]
         public string Industry { get; set; } = null!;
         [Required]
         [StringLength(100, MinimumLength = 4,
             ErrorMessage = "Длина названия 4-100 символов")]
         [RegularExpression(@"^\s*[\p{L}\s]+\s*$",
             ErrorMessage = "Разрешены только буквы и пробелы")]
+        [Display(Name= "ФИО руководителя")]
         public string LeaderName { get; set; } = null!;
     }
     public class CompanyCreateDto : CompanyDto
@@ -25,7 +27,7 @@ namespace Backend.Models.Dto
         ErrorMessage = "Пароль слишком слабый")]
         public string Password { get; set; } = null!;
         //[Required]
-        public string Token { get; set; } = null!;
+        //public string Token { get; set; } = null!;
     }
     public class CompanyResponseDto : CompanyDto
     {
