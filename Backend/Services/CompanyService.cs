@@ -248,7 +248,7 @@ namespace Backend.Services
         public async Task<int> CountCompaniesAsync()
         {
             using var db = await _factory.CreateDbContextAsync();
-            return db.Users.OfType<Company>().Count();
+            return await db.Users.OfType<Company>().CountAsync();
         }
 
         public async Task<IResult> SearchCompanyAsync(string? industry, string? region, string? searchTerm)
