@@ -25,7 +25,11 @@ namespace Backend.Models.Dto
             ErrorMessage = "Длина пароля 8-30 символов")]
         [RegularExpression(@"^\s*(?=.*[a-zа-яё])(?=.*[A-ZА-ЯЁ])(?=.*\d)(?=.*[^\da-zA-Zа-яА-ЯЁё]).{8,30}\s*$",
         ErrorMessage = "Пароль слишком слабый")]
+        [Display(Name="Пароль")]
         public string Password { get; set; } = null!;
+        [Compare(nameof(Password), ErrorMessage = "Пароли не совпадают")]
+        [Display(Name = "Повторите пароль")]
+        public string Password2 { get; set; } = null!;
         //[Required]
         //public string Token { get; set; } = null!;
     }

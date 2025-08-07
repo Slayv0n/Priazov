@@ -1,7 +1,6 @@
 ﻿@page
 @model Backend.Pages.RegistrationModel
 @{
-    Layout = "_Layout";
     ViewData["Title"] = "Регистрация";
 }
 @section Links
@@ -24,13 +23,19 @@
         </div>
         <form class="registration-form" method="post" name="myForm">
             <div class="form-field">
-                <input type="text" placeholder="краткое название организации" name="organizationName" id="organizationName">
+                <label asp-for="Company.Name"></label>
+                <input asp-for="Company.Name" placeholder="краткое название организации" id="organizationName">
+                <span asp-validation-for="Company.Name"></span>
             </div>
             <div class="form-field">
-                <input type="text" placeholder="юридический адрес" name="address" id="address">
+                <label asp-for="Company.FullAddress"></label>
+                <input asp-for="Company.FullAddress" placeholder="юридический адрес" id="address">
+                <span asp-validation-for="Company.FullAddress"></span>
             </div>
             <div class="form-field">
-                <input type="text" placeholder="сфера интересов" list="browsers" id="industry" name="industry">
+                <label asp-for="Company.Industry"></label>
+                <input asp-for="Company.Industry" placeholder="сфера интересов" list="browsers" id="industry" >
+                <span asp-validation-for="Company.Industry"></span>
                 <datalist id="browsers">
                     <option value="" disabled selected hidden>категория (с выбором)</option>
                     <option value="Образовательное учреждение">Образовательное учреждение</option>
@@ -48,19 +53,29 @@
                 </datalist>
             </div>
             <div class="form-field">
-                <input type="text" placeholder="ФИО руководителя" name="FIO" id="FIO">
+                <label asp-for="Company.LeaderName"></label>
+                <input asp-for="Company.LeaderName" placeholder="ФИО руководителя" id="FIO">
+                <span asp-validation-for="Company.LeaderName"></span>
             </div>
             <div class="form-field">
-                <input type="tel" id="phone" name="phone" placeholder="7 (XXX) XXX-XX-XX" maxlength="20" required />
+                <label asp-for="Company.Phone"></label>
+                <input asp-for="Company.Phone" id="phone" placeholder="7 (XXX) XXX-XX-XX" maxlength="20" required />
+                <span asp-validation-for="Company.Phone"></span>
             </div>
             <div class="form-field">
-                <input type="email" placeholder="электронная почта" name="mail" id="mail">
+                <label asp-for="Company.Email"></label>
+                <input asp-for="Company.Email" placeholder="электронная почта" id="mail">
+                <span asp-validation-for="Company.Email"></span>
             </div>
             <div class="form-field">
-                <input type="password" minlength="8" maxlength="20" placeholder="пароль" name="password" id="password">
+                <label asp-for="Company.Password"></label>
+                <input asp-for="Company.Password" placeholder="пароль" id="password">
+                <span asp-validation-for="Company.Password"></span>
             </div>
             <div class="form-field">
-                <input type="password" minlength="8" maxlength="20" placeholder="повторите пароль" name="password2" id="password2">
+                <label asp-for="Company.Password2"></label>
+                <input asp-for="Company.Password2" placeholder="повторите пароль" id="password2">
+                <span asp-validation-for="Company.Password2"></span>
             </div>
             <button type="submit" class="submit-btn">Зарегистрироваться</button>
         </form>
@@ -69,7 +84,7 @@
 
 @section Scripts
 {
-    <script src="scripts/fetch.js" async></script>
+    @* <script src="scripts/fetch.js" async></script> *@
 }
 
 
