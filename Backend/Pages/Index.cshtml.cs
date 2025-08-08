@@ -41,11 +41,14 @@ namespace Backend
                 sb.Append(select.Industry);
             }
 
-            Adresses = await _companyService.FilterMapCompanyAsync(sb.ToString());
+            Addresses = await _companyService.FilterMapCompanyAsync(sb.ToString());
         }
-
+        public IActionResult OnGetFilteredLocations()
+        {
+            return new JsonResult(Addresses);
+        }
         public int Count { get; set; }
         public List<CompanyResponseDto> Query { get; set; } = new List<CompanyResponseDto>();
-        public List<AddressDto> Adresses { get; set; } = new List<AddressDto>();
+        public List<AddressDto> Addresses { get; set; } = new List<AddressDto>();
     }
 }

@@ -55,7 +55,7 @@
                 <h2 class="section-title">ОРГАНИЗАЦИИ</h2>
                 <div class="map-filters-container">
                     <div class="map-container">
-                        <script class="map-placeholder" type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Abb2e803e8888540af1464fa8f0916b00692e5b83676a91f7a37ed16dc7f2b64b&amp;lang=ru_RU&amp;scroll=true" onload="initYandexMap(this)"></script>
+                        <div id="map" class="map-placeholder"></div>
                     </div>
                     <div class="filters-menu">
                         @Html.AntiForgeryToken()
@@ -192,64 +192,152 @@
     </section>
 </main>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const faqItems = document.querySelectorAll('.faq-item');
+@section Scripts
+{
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=79291f02-351a-4139-9402-f2037856fba7&lang=ru_RU" type="text/javascript"></script>
 
-        faqItems.forEach(item => {
-            const question = item.querySelector('.faq-question');
-            const arrow = item.querySelector('.farrow');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqItems = document.querySelectorAll('.faq-item');
 
-            question.addEventListener('click', () => {
-                // Закрываем все открытые элементы, кроме текущего
-                faqItems.forEach(otherItem => {
-                    if (otherItem !== item && otherItem.classList.contains('active')) {
-                        otherItem.classList.remove('active');
-                        otherItem.querySelector('.farrow').classList.remove('farrow-rotated');
-                    }
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                const arrow = item.querySelector('.farrow');
+
+                question.addEventListener('click', () => {
+                    // Закрываем все открытые элементы, кроме текущего
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item && otherItem.classList.contains('active')) {
+                            otherItem.classList.remove('active');
+                            otherItem.querySelector('.farrow').classList.remove('farrow-rotated');
+                        }
+                    });
+
+                    // Переключаем текущий элемент
+                    item.classList.toggle('active');
+                    arrow.classList.toggle('farrow-rotated');
                 });
-
-                // Переключаем текущий элемент
-                item.classList.toggle('active');
-                arrow.classList.toggle('farrow-rotated');
             });
         });
-    });
 
-        document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            const label = document.querySelector(`label[for="${this.id}"]`);
+        // Выносим переменные карты в глобальную область видимости
+        let myMap;
+        let clusterer;
 
-            if (label) {
-                const labelText = label.textContent.trim();
-                const isChecked = this.checked;
+        ymaps.ready(init);
 
-                console.log(`Чекбокс "${labelText}" - ${isChecked ? 'выбран' : 'не выбран'}`);
+        function init() {
+            // Создаем карту
+            myMap = new ymaps.Map("map", {
+                center: [55.76, 37.64], // Центр по умолчанию (Москва)
+                zoom: 10
+            });
 
-                updateServerSelection(labelText, isChecked);
-            }
-        });
-    });
+            // Инициализируем кластеризатор
+            clusterer = new ymaps.Clusterer();
+            myMap.geoObjects.add(clusterer);
 
-    function updateServerSelection(labelText, isChecked) {
-        const data = {
-            Industry: labelText,
-            IsChecked: isChecked
-        };
+            // Первоначальная загрузка меток
+            updateMapMarkers();
+        }
 
-        fetch('/?handler=UpdateFilter', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-            },
-            body: JSON.stringify(data)
+        // Функция для обновления меток на карте
+        function updateMapMarkers() {
+            // Очищаем текущие метки
+            myMap.geoObjects.removeAll();
+            clusterer.removeAll();
+
+        fetch('/?handler=FilteredLocations', {
+            method: 'GET'
         })
         .then(response => {
             if (!response.ok) {
-                console.error('Ошибка при отправке данных');
+                throw new Error('Network response was not ok');
             }
+            return response.json();
+        })
+        .then(data => {
+            const geoObjects = data.map(location => {
+                return new ymaps.Placemark(
+                    [location.address.latitude, location.address.longitude],
+                    {
+                        balloonContentHeader: location.companies[0].name,
+                        hintContent: location.companies[0].name
+                    },
+                    {
+                        preset: 'islands#icon',
+                        iconColor: '#0095b6'
+                    }
+                );
+            });
+
+            // Добавляем новые метки на карту
+            clusterer.add(geoObjects);
+
+            myMap.geoObjects.add(clusterer);
+
+            // Автоматически подбираем масштаб
+            if (geoObjects.length > 0) {
+                myMap.setBounds(clusterer.getBounds(), {
+                    checkZoomRange: true,
+                    zoomMargin: 50
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Ошибка при загрузке данных');
+        })
+        .finally(() => {
+            showLoading(false);
         });
-    }
-</script>
+
+            // Получаем данные прямо из модели Razor
+            const locations = JSON.parse('@Json.Serialize(Model.Addresses)');
+
+            // Создаем массив для новых меток
+            
+        }
+
+        document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const label = document.querySelector(`label[for="${this.id}"]`);
+
+                if (label) {
+                    const labelText = label.textContent.trim();
+                    const isChecked = this.checked;
+
+                    console.log(`Чекбокс "${labelText}" - ${isChecked ? 'выбран' : 'не выбран'}`);
+
+                    updateServerSelection(labelText, isChecked);
+                }
+            });
+        });
+
+        function updateServerSelection(labelText, isChecked) {
+            const data = {
+                Industry: labelText,
+                IsChecked: isChecked
+            };
+
+            fetch('/?handler=UpdateFilter', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
+                    // После успешного обновления фильтров - обновляем метки на карте
+                    updateMapMarkers();
+                } else {
+                    console.error('Ошибка при отправке данных');
+                }
+            });
+        }
+    </script>
+}
+
 

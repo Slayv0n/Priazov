@@ -85,25 +85,6 @@ namespace Backend.Services
 
         public async Task<IResult> CreateCompanyAsync(CompanyCreateDto companyDto)
         {
-            var validationResults = new List<ValidationResult>();
-            bool isValid = Validator.TryValidateObject(
-                companyDto,
-                new ValidationContext(companyDto),
-                validationResults,
-                validateAllProperties: true
-            );
-
-            if (!isValid)
-            {
-                _logger.LogWarning($"Ошибка валидации при создании компании: {validationResults}");
-                var errors = validationResults
-                    .GroupBy(v => v.MemberNames.FirstOrDefault() ?? "")
-                    .ToDictionary(
-                        g => g.Key,
-                        g => g.Select(v => v.ErrorMessage ?? "Неизвестная ошибка").ToArray()
-                    );
-                return Results.ValidationProblem(errors);
-            }
 
             //bool isHuman = await _turnstile.VerifyTurnstileAsync(companyDto.Token);
             //if (!isHuman)

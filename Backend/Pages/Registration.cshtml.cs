@@ -26,7 +26,7 @@ namespace Backend.Pages
                 return Page();
             }
             await _companyService.CreateCompanyAsync(Company);
-            return RedirectToPage("/");
+            return RedirectToPage("Index");
         }
     }
 }
