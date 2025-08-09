@@ -1,8 +1,14 @@
-﻿namespace Backend.Models.Dto
+﻿using Backend.Validation;
+using System.ComponentModel.DataAnnotations;
+
+namespace Backend.Models.Dto
 {
     public class Filter
     {
-        public required string Industry { get; set; } 
+        [Required(ErrorMessage = "Введите сферу интересов.")]
+        [IndustryValidation(ErrorMessage = "Недопустимое значение сферы интересов.")]
+        [Display(Name = "Сфера интересов")]
+        public string Industry { get; set; } = null!;
         public bool IsChecked { get; set; }
     }
 }

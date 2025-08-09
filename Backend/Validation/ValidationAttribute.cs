@@ -25,4 +25,40 @@ namespace Backend.Validation
             return ValidationResult.Success!;
         }
     }
+
+    public class IndustryValidationAttribute : ValidationAttribute
+    {
+        private readonly HashSet<string> _allowedIndustries = new()
+        {
+            "Образовательное учреждение",
+            "Научно-исследовательский институт",
+            "Научно-образовательный проект",
+            "Государственное учреждение",
+            "Коммерческая деятельность",
+            "Стартап",
+            "Финансы",
+            "Акселератор / инкубатор / технопарк",
+            "Ассоциация / объединение",
+            "Инициатива",
+            "Отраслевое событие / научная конференция",
+            "Государственное учреждение",
+            "Некоммерческая организация",
+            "Другое"
+        };
+        protected override ValidationResult IsValid(object? value, ValidationContext context)
+        {
+            var industry = value as string;
+            if (industry == null)
+            {
+                return new ValidationResult("Объект не является строкой");
+            }
+
+            if (!_allowedIndustries.Contains(industry))
+            {
+                return new ValidationResult("Недопустимое значение индустрии");
+            }
+
+            return ValidationResult.Success!;
+        }
+    }
 }

@@ -11,7 +11,6 @@ namespace Backend
     public class IndexModel : PageModel
     {
         private readonly CompanyService _companyService;
-        private readonly List<Filter> _selectedFilters = new();
         public IndexModel(CompanyService companyService)
         {
             _companyService = companyService;
@@ -23,28 +22,22 @@ namespace Backend
             Count -= Count > 5 ? 5 : Count; 
         }
 
-        public async Task OnPostUpdateFilterAsync([FromBody] Filter filter)
+        public async Task<IActionResult> OnPostUpdateFilterAsync([FromBody] List<Filter> filters)
         {
-            if (filter.IsChecked)
+            if (!ModelState.IsValid)
             {
-                _selectedFilters.Add(filter);
-            }
-            else
-            {
-                _selectedFilters.Remove(filter);
+                return new JsonResult(null);
             }
 
             StringBuilder sb = new StringBuilder();
 
-            foreach(var select in _selectedFilters)
+            foreach(var select in filters)
             {
                 sb.Append(select.Industry);
             }
 
             Addresses = await _companyService.FilterMapCompanyAsync(sb.ToString());
-        }
-        public IActionResult OnGetFilteredLocations()
-        {
+            
             return new JsonResult(Addresses);
         }
         public int Count { get; set; }

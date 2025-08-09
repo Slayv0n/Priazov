@@ -28,23 +28,6 @@ namespace Backend.Services
 
     public class CompanyService : ICompanyService
     {
-        private readonly HashSet<string> _allowedIndustries = new()
-        {
-            "Образовательное учреждение",
-            "Научно-исследовательский институт",
-            "Научно-образовательный проект",
-            "Государственное учреждение",
-            "Коммерческая деятельность",
-            "Стартап",
-            "Финансы",
-            "Акселератор / инкубатор / технопарк",
-            "Ассоциация / объединение",
-            "Инициатива",
-            "Отраслевое событие / научная конференция",
-            "Государственное учреждение",
-            "Некоммерческая организация",
-            "Другое"
-        };
         private readonly HashSet<string> _allowedRegions = new()
         {
             "Ростовская область",
@@ -100,12 +83,6 @@ namespace Backend.Services
             companyDto.Phone = companyDto.Phone.Trim();
             companyDto.Industry = companyDto.Industry.Trim();
             companyDto.LeaderName = companyDto.LeaderName.Trim();
-
-            if (!_allowedIndustries.Any(i => i == companyDto.Industry))
-            {
-                _logger.LogWarning($"Индустрия не найдена в списке: {companyDto.Industry}");
-                return Results.BadRequest("Недопустимое значение индустрии");
-            }
 
             if (companyDto.Password.ToLower().Contains("script"))
             {
@@ -246,13 +223,6 @@ namespace Backend.Services
                 _logger.LogInformation($"Кэш промах. Запрос к БД: {cacheKey}");
             }
 
-            if (industry != null && !_allowedIndustries.Contains(industry))
-            {
-                _logger.LogInformation($"Недопустимое значение индустрии: {industry}");
-                return Results.BadRequest("Недопустимое значение индустрии");
-            }
-
-
             if (region != null && !_allowedRegions.Contains(region))
             {
                 _logger.LogInformation($"Недопустимое значение региона: {region}");
@@ -293,12 +263,6 @@ namespace Backend.Services
                 industryList = industries.Split(',', StringSplitOptions.RemoveEmptyEntries)
                                         .Select(i => i.Trim())
                                         .ToList();
-
-            if (industryList?.Count > 0 && industryList.Any(i => !_allowedIndustries.Contains(i)))
-            {
-                _logger.LogInformation($"Недопустимые значения индустрий: {industryList}");
-                //return Results.BadRequest("Недопустимые значения индустрий.");
-            }
 
             using var db = await _factory.CreateDbContextAsync();
 
@@ -368,12 +332,6 @@ namespace Backend.Services
             {
                 _logger.LogWarning($"Компания не найдена по Id: {id}");
                 return Results.NotFound();
-            }
-
-            if (!_allowedIndustries.Any(i => i == companyDto.Industry))
-            {
-                _logger.LogWarning($"Индустрия не найдена в списке: {companyDto.Industry}");
-                return Results.BadRequest("Недопустимое значение индустрии");
             }
 
             if (db.Users.Any(u => u.Email == companyDto.Email &&

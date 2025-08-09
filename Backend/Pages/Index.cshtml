@@ -22,7 +22,7 @@
 <main>
     <section class="hero-section">
         <div class="hero-container">
-            <h1 class="hero-title">ПРОЕКТЫ СОЦИАЛЬНОГО ВОЗДЕЙСТВИЯ ПРИАЗОВЬЯ</h1>
+            <h1 class="hero-title">@ViewData["Title"]!.ToString()!.ToUpper()</h1>
         </div>
     </section>
 
@@ -242,22 +242,12 @@
         }
 
         // Функция для обновления меток на карте
-        function updateMapMarkers() {
+        function updateMapMarkers(addresses) {
             // Очищаем текущие метки
             myMap.geoObjects.removeAll();
             clusterer.removeAll();
 
-        fetch('/?handler=FilteredLocations', {
-            method: 'GET'
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            const geoObjects = data.map(location => {
+            const geoObjects = addresses.map(location => {
                 return new ymaps.Placemark(
                     [location.address.latitude, location.address.longitude],
                     {
@@ -282,23 +272,9 @@
                     checkZoomRange: true,
                     zoomMargin: 50
                 });
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Ошибка при загрузке данных');
-        })
-        .finally(() => {
-            showLoading(false);
-        });
-
-            // Получаем данные прямо из модели Razor
-            const locations = JSON.parse('@Json.Serialize(Model.Addresses)');
-
-            // Создаем массив для новых меток
-            
+            };
         }
-
+            
         document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
             checkbox.addEventListener('change', function() {
                 const label = document.querySelector(`label[for="${this.id}"]`);
@@ -329,12 +305,13 @@
                 body: JSON.stringify(data)
             })
             .then(response => {
-                if (response.ok) {
-                    // После успешного обновления фильтров - обновляем метки на карте
-                    updateMapMarkers();
-                } else {
+                if (!response.ok) {
                     console.error('Ошибка при отправке данных');
                 }
+                return response.json();
+            })
+            .then(data => {
+                updateMapMarkers(data);
             });
         }
     </script>
