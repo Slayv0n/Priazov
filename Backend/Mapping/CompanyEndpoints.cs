@@ -29,7 +29,7 @@ namespace Backend.Mapping
         public static void MapCompanyEndpoints(this WebApplication app)
         {
             var group = app.MapGroup("/companies");
-            group.MapPost("/create", Create);
+            //group.MapPost("/create", Create);
             //group.MapGet("/review", Review);
             group.MapGet("account", Account);
             //group.MapGet("/filterMap", FilterMap);
@@ -37,12 +37,12 @@ namespace Backend.Mapping
             group.MapPut("/update", Update);
         }
 
-        private static async Task<IResult> Create(
-            [FromBody] CompanyCreateDto companyDto,
-            [FromServices] CompanyService service)
-        {
-            return await service.CreateCompanyAsync(companyDto);
-        }
+        //private static async Task<IResult> Create(
+        //    [FromBody] CompanyCreateDto companyDto,
+        //    [FromServices] CompanyService service)
+        //{
+        //    return await service.CreateCompanyAsync(companyDto);
+        //}
 
         //private static async Task<IResult> Review(
         //    [FromServices] CompanyService service)

@@ -5,11 +5,11 @@
     ViewData["Organization"] = "организаций";
     ViewData["Title"] = "Проекты социального воздействия Приазовья";
 }
-@if (Model.Count % 10 == 1)
+@if (Model.Count % 10 == 1 && (Model.Count % 100 < 10 || Model.Count % 100 > 20))
 {
     ViewData["Organization"] = "организация";
 }
-@if (Model.Count % 10 > 1 && Model.Count % 10 < 5)
+@if (Model.Count % 10 > 1 && Model.Count % 10 < 5 && (Model.Count % 100 < 10 || Model.Count % 100 > 20))
 {
     ViewData["Organization"] = "организации";
 }
@@ -118,8 +118,8 @@
                     {
                         <div class="organization-card">
                             <div class="org-image"></div>
-                            <h3 class="org-title">@company.Name</h3>
-                            <p class="org-description">@company.Description</p>
+                            <h3 class="org-title">@company.Name</h3> <!--Problem zone-->
+                            <p class="org-description">@company.Description</p> 
                             <div class="org-details">
                                 <div class="detail">
                                     <span class="detail-icon">📍</span>
@@ -238,7 +238,7 @@
             myMap.geoObjects.add(clusterer);
 
             // Первоначальная загрузка меток
-            updateMapMarkers();
+            updateServerSelection();
         }
 
         // Функция для обновления меток на карте
@@ -246,13 +246,19 @@
             // Очищаем текущие метки
             myMap.geoObjects.removeAll();
             clusterer.removeAll();
-
+            
             const geoObjects = addresses.map(location => {
+                let name = "";
+                for (const company of location.companies)
+                {
+                    name += company.name + ",\n";
+                }
                 return new ymaps.Placemark(
                     [location.address.latitude, location.address.longitude],
                     {
-                        balloonContentHeader: location.companies[0].name,
-                        hintContent: location.companies[0].name
+
+                        balloonContentHeader: name.slice(0, -2),
+                        hintContent: location.companies[0].name + (location.companies.length > 1 ? "..." : "")
                     },
                     {
                         preset: 'islands#icon',
@@ -274,27 +280,23 @@
                 });
             };
         }
-            
+
         document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
             checkbox.addEventListener('change', function() {
-                const label = document.querySelector(`label[for="${this.id}"]`);
+                const allCheckboxesData = Array.from(document.querySelectorAll('.filter-checkbox')).map(checkbox => {
+                    const label = document.querySelector(`label[for="${checkbox.id}"]`);
+                    return {
+                        Industry: label ? label.textContent.trim() : '',
+                        IsChecked: checkbox.checked
+                    };
+                });
 
-                if (label) {
-                    const labelText = label.textContent.trim();
-                    const isChecked = this.checked;
-
-                    console.log(`Чекбокс "${labelText}" - ${isChecked ? 'выбран' : 'не выбран'}`);
-
-                    updateServerSelection(labelText, isChecked);
-                }
+                console.log('Текущее состояние всех чекбоксов:', allCheckboxesData);
+                updateServerSelection(allCheckboxesData);
             });
         });
 
-        function updateServerSelection(labelText, isChecked) {
-            const data = {
-                Industry: labelText,
-                IsChecked: isChecked
-            };
+        function updateServerSelection(allCheckboxesData) {
 
             fetch('/?handler=UpdateFilter', {
                 method: 'POST',
@@ -302,7 +304,7 @@
                     'Content-Type': 'application/json',
                     'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(allCheckboxesData)
             })
             .then(response => {
                 if (!response.ok) {

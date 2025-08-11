@@ -8,7 +8,7 @@ namespace Backend.Models.Dto
     public class CompanyDto : UserDto
     {
         [Required(ErrorMessage = "Введите сферу интересов.")]
-        [IndustryValidation(ErrorMessage="Недопустимое значение сферы интересов.")]
+        [IndustryValidation]
         [Display(Name="Сфера интересов")]
         public string Industry { get; set; } = null!;
         [Required(ErrorMessage = "Введите ФИО руководителя.")]

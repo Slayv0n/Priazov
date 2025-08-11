@@ -8,7 +8,14 @@ using MimeKit;
 
 namespace Backend.Services
 {
-    public class EmailService
+    public interface IMessageService
+    {
+        public Task SendRegistrationEmail(User user);
+        public Task SendPasswordResetEmail(string email, string resetCode);
+        public Task SendPasswordOkayEmail(string email);
+    }
+
+    public class EmailService : IMessageService
     {
         private readonly SmtpSettings _smtpSettings;
         private readonly ILogger<EmailService> _logger;

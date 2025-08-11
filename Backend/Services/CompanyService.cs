@@ -12,17 +12,20 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.CompilerServices;
+using System.Text;
+using Backend.Validation;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Backend.Services
 {
-    interface ICompanyService
+    public interface ICompanyService
     {
-        Task<IResult> CreateCompanyAsync(CompanyCreateDto companyDto);
+        Task<CompanyResponseDto> CreateCompanyAsync(CompanyCreateDto companyDto);
         Task<IResult> AccountCompanyAsync(Guid? id);
         Task<List<CompanyResponseDto>> ReviewCompanyAsync();
         Task<int> CountCompaniesAsync();
         Task<IResult> SearchCompanyAsync(string? industry, string? region, string? searchTerm);
-        Task<List<AddressDto>> FilterMapCompanyAsync(string? industries);
+        Task<List<AddressDto>> FilterMapCompanyAsync(List<Filter> industries);
         Task<IResult> UpdateCompanyAsync(Guid? id, CompanyChangeDto companyDto);
     }
 
@@ -44,8 +47,8 @@ namespace Backend.Services
         };
 
         private readonly IDbContextFactory<PriazovContext> _factory;
-        private readonly IOptions<DadataSettings> _dadata;
-        private readonly EmailService _email;
+        private readonly DadataSettings _dadata;
+        private readonly IMessageService _email;
         private readonly TurnstileService? _turnstile;
         private readonly ILogger<ManagerService> _logger;
         private readonly IMemoryCache _cache;
@@ -53,20 +56,20 @@ namespace Backend.Services
         public CompanyService(
             IDbContextFactory<PriazovContext> factory,
             IOptions<DadataSettings> dadata,
-            EmailService email,
+            IMessageService email,
             TurnstileService? turnstile,
             ILogger<ManagerService> logger,
             IMemoryCache cache)
         {
             _factory = factory;
-            _dadata = dadata;
+            _dadata = dadata.Value;
             _email = email;
             _turnstile = turnstile;
             _logger = logger;
             _cache = cache;
         }
 
-        public async Task<IResult> CreateCompanyAsync(CompanyCreateDto companyDto)
+        public async Task<CompanyResponseDto> CreateCompanyAsync(CompanyCreateDto companyDto)
         {
 
             //bool isHuman = await _turnstile.VerifyTurnstileAsync(companyDto.Token);
@@ -87,7 +90,7 @@ namespace Backend.Services
             if (companyDto.Password.ToLower().Contains("script"))
             {
                 _logger.LogWarning("Попытка зарегистрировать опасный контент");
-                return Results.BadRequest();
+                throw new UnsafeContentException("Попытка зарегистрировать опасный контент");
             }
 
             using var db = await _factory.CreateDbContextAsync();
@@ -96,16 +99,16 @@ namespace Backend.Services
             u.Address.FullAddress == companyDto.FullAddress))
             {
                 _logger.LogWarning($"Пользователь с таким email и адресом уже существует: {companyDto.Email}, {companyDto.FullAddress}");
-                return Results.Conflict("Повтор уникальных данных");
+                throw new ConflictException("Повтор уникальных данных");
             }
 
-            var api = new CleanClientAsync(_dadata.Value.ApiKey, _dadata.Value.SecretKey);
+            var api = new CleanClientAsync(_dadata.ApiKey, _dadata.SecretKey);
             var cleanedAddress = await api.Clean<Dadata.Model.Address>(companyDto.FullAddress);
 
-            if (cleanedAddress.result == null)
+            if (cleanedAddress.result == null || cleanedAddress.geo_lat == null || cleanedAddress.geo_lon == null)
             {
                 _logger.LogWarning($"Адрес не найден: {companyDto.FullAddress}");
-                return Results.NotFound("Адрес не найден");
+                throw new NotFoundException("Адрес не найден");
             }
 
             var company = new Company()
@@ -133,7 +136,7 @@ namespace Backend.Services
             //await _email.SendRegistrationEmail(company);
             _logger.LogInformation($"Компания зарегистрирована: {companyDto.Email}");
 
-            return Results.Ok(new CompanyResponseDto(company, company.Address.FullAddress));
+            return new CompanyResponseDto(company, company.Address.FullAddress);
         }
 
         public async Task<IResult> AccountCompanyAsync(Guid? id)
@@ -244,9 +247,22 @@ namespace Backend.Services
             return Results.Ok(companies);
         }
 
-        public async Task<List<AddressDto>> FilterMapCompanyAsync(string? industries)
+        public async Task<List<AddressDto>> FilterMapCompanyAsync(List<Filter>? industries)
         {
-            var cacheKey = $"companies_filterMap_{industries ?? "all"}";
+            StringBuilder key = new StringBuilder();
+
+            if (industries != null && industries.Any(i => i.IsChecked))
+            {
+                foreach (Filter filter in industries)
+                {
+                    if (filter.IsChecked)
+                    {
+                        key.Append(filter.Industry);
+                    }
+                }
+            }
+            
+            var cacheKey = $"companies_filterMap_{key.ToString() ?? "all"}";
 
             if (_cache.TryGetValue(cacheKey, out List<AddressDto>? cachedAddress))
             {
@@ -258,19 +274,19 @@ namespace Backend.Services
                 _logger.LogInformation($"Кэш промах. Запрос к БД: {cacheKey}");
             }
 
-            List<string>? industryList = null;
-            if (!string.IsNullOrEmpty(industries))
-                industryList = industries.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                                        .Select(i => i.Trim())
-                                        .ToList();
-
             using var db = await _factory.CreateDbContextAsync();
 
             var companies = db.Users.OfType<Company>();
 
-            if (industryList?.Count > 0)
-                companies = companies.Where(c => industryList.Contains(c.Industry));
+            if (industries != null && industries.Any(i => i.IsChecked))
+            {
+                List<string>? industryList = industries.Where(filter => filter.IsChecked)
+                .Select(filter => filter.Industry)
+                .ToList();
 
+                companies = companies.Where(c => industryList.Contains(c.Industry));
+            }
+                
             var addresses = companies
                 .Include(c => c.Address)
                 .AsEnumerable()
@@ -294,26 +310,6 @@ namespace Backend.Services
             {
                 _logger.LogWarning("Id компании отсутствует");
                 return Results.BadRequest("Id пуст");
-            }
-
-            var validationResults = new List<ValidationResult>();
-            bool isValid = Validator.TryValidateObject(
-                companyDto,
-                new ValidationContext(companyDto),
-                validationResults,
-                validateAllProperties: true
-            );
-
-            if (!isValid)
-            {
-                _logger.LogWarning($"Ошибка валидации при создании компании: {validationResults}");
-                var errors = validationResults
-                    .GroupBy(v => v.MemberNames.FirstOrDefault() ?? "")
-                    .ToDictionary(
-                        g => g.Key,
-                        g => g.Select(v => v.ErrorMessage ?? "Неизвестная ошибка").ToArray()
-                    );
-                return Results.ValidationProblem(errors);
             }
 
             companyDto.Name = companyDto.Name.Trim();
@@ -341,7 +337,7 @@ namespace Backend.Services
                 return Results.Conflict("Повтор уникальных данных");
             }
 
-            var api = new CleanClientAsync(_dadata.Value.ApiKey, _dadata.Value.SecretKey);
+            var api = new CleanClientAsync(_dadata.ApiKey, _dadata.SecretKey);
             var cleanedAddress = await api.Clean<Dadata.Model.Address>(companyDto.FullAddress);
 
             if (cleanedAddress.result == null)

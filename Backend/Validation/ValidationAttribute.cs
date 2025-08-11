@@ -46,16 +46,16 @@ namespace Backend.Validation
             "Другое"
         };
         protected override ValidationResult IsValid(object? value, ValidationContext context)
-        {
+        {       
             var industry = value as string;
             if (industry == null)
             {
                 return new ValidationResult("Объект не является строкой");
             }
-
+                
             if (!_allowedIndustries.Contains(industry))
             {
-                return new ValidationResult("Недопустимое значение индустрии");
+                return new ValidationResult("Недопустимое значение сферы интересов");
             }
 
             return ValidationResult.Success!;

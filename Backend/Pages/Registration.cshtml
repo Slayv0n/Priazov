@@ -21,7 +21,7 @@
                 <span class="tab-text" style = "color: white">инвестор</span>
             </button>
         </div>
-        <form class="registration-form" method="post" name="myForm">
+        <form class="registration-form" asp-page="Registration">
             <div class="field">
                 <label asp-for="Company.Name"></label>
                 <div class="form-field">
@@ -95,7 +95,7 @@
                 </div>
                 <span asp-validation-for="Company.Password2" class="validate"></span>
             </div>
-                
+            <span class="validate">@Model.ValidationResult</span>
             
             <button type="submit" class="submit-btn">Зарегистрироваться</button>
         </form>

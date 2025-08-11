@@ -30,7 +30,7 @@ namespace Backend.Services
 
         private readonly IDbContextFactory<PriazovContext> _factory;
         private readonly IOptions<DadataSettings> _dadata;
-        private readonly EmailService _email;
+        private readonly IMessageService _email;
         private readonly TurnstileService _turnstile;
         private readonly ILogger<ManagerService> _logger;
         private readonly IMemoryCache _cache;
@@ -38,7 +38,7 @@ namespace Backend.Services
         public ManagerService(
             IDbContextFactory<PriazovContext> factory,
             IOptions<DadataSettings> dadata,
-            EmailService email,
+            IMessageService email,
             TurnstileService turnstile,
             ILogger<ManagerService> logger,
             IMemoryCache cache)

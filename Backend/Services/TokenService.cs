@@ -8,7 +8,14 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Backend.Services
 {
-    public class TokenService
+    public interface ITokenService
+    {
+        public ClaimsPrincipal? ValidateToken(string token, bool isAccessToken);
+        public string GenerateAccessToken(string userId, string email, string role);
+        public string GenerateRefreshToken(string userId);
+    }
+
+    public class TokenService : ITokenService
     {
         private readonly JwtSettings _jwtSettings;
         private readonly IMemoryCache _cache;
@@ -86,7 +93,6 @@ namespace Backend.Services
             return tokenHandler.WriteToken(token);
         }
 
-        // Генерация Refresh Token (обычно случайная строка, но может быть и JWT)
         public string GenerateRefreshToken(string userId)
         {
             _logger.LogInformation($"Генерация токена для пользователя {userId}");

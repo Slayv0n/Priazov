@@ -47,15 +47,17 @@ builder.Services.AddMemoryCache();
 builder.Services.AddHostedService<SessionsCleanupService>();
 builder.Services.AddHostedService<PasswordTokensCleanupService>();
 
-builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
-builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<IMessageService, EmailService>();
 
 builder.Services.AddScoped<TurnstileService>();
 
-builder.Services.AddScoped<ManagerService>();
+builder.Services.AddScoped<IManagerService, ManagerService>();
 
-builder.Services.AddScoped<CompanyService>();
+builder.Services.AddScoped<ICompanyService, CompanyService>();
+
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddDbContextFactory<PriazovContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Singleton);
@@ -140,7 +142,7 @@ app.MapScalarApiReference(opt =>
 });
 
 app.MapRazorPages();
-app.MapAuthEndpoints();
+//app.MapAuthEndpoints();
 app.MapPasswordEndpoints();
 app.MapCompanyEndpoints();
 app.MapManagerEndpoints();

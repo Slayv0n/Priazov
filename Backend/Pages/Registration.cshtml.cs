@@ -1,18 +1,19 @@
 using Backend.Models.Dto;
 using Backend.Services;
+using Backend.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Runtime.CompilerServices;
 
 namespace Backend.Pages
 {
     public class RegistrationModel : PageModel
     {
-        private readonly CompanyService _companyService;
+        private readonly ICompanyService _companyService;
         [BindProperty]
         public CompanyCreateDto Company { get; set; } = null!;
-        [BindProperty]
-        string CompanyName { get; set; } = "";
-        public RegistrationModel(CompanyService companyService)
+        public string ValidationResult { get; set; } = "";
+        public RegistrationModel(ICompanyService companyService)
         {
             _companyService = companyService;
         }
@@ -25,7 +26,16 @@ namespace Backend.Pages
             {
                 return Page();
             }
-            await _companyService.CreateCompanyAsync(Company);
+            try
+            {
+                await _companyService.CreateCompanyAsync(Company);
+            }
+            catch (Exception ex)
+            {
+                ValidationResult = ex.Message;
+                return Page();
+            }
+            
             return RedirectToPage("Index");
         }
     }
