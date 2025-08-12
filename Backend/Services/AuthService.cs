@@ -2,10 +2,12 @@
 using Backend.Models.Dto;
 using DataBase;
 using DataBase.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using NLog.Config;
 using Org.BouncyCastle.Asn1.Ocsp;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace Backend.Services
@@ -15,12 +17,14 @@ namespace Backend.Services
         Task<AuthDto> Login(LoginDto loginDto);
         Task<AuthDto> Refresh(RefreshDto refreshDto);
         Task<AuthDto?> Logout(RefreshDto refreshDto);
+        Task<ClaimsPrincipal> SignInForContext(LoginDto loginDto);
+        public ClaimsPrincipal CreateClaimsPrincipalFromToken(string accessToken);
     }
     public class AuthService : IAuthService
     {
         private readonly ITokenService _tokenService;
         private readonly IDbContextFactory<PriazovContext> _factory;
-        private readonly IOptions<JwtSettings> _jwtSettings;
+        private readonly JwtSettings _jwtSettings;
         private readonly ILogger<AuthEndpointsLogger> _logger;
         
         public AuthService(ITokenService tokenService,
@@ -30,7 +34,7 @@ namespace Backend.Services
         {
             _tokenService = tokenService;
             _factory = factory;
-            _jwtSettings = jwtSettings;
+            _jwtSettings = jwtSettings.Value;
             _logger = logger;
         }
 
@@ -38,27 +42,20 @@ namespace Backend.Services
         {
             await using var db = await _factory.CreateDbContextAsync();
 
-            if (string.IsNullOrEmpty(loginDto.Email) || string.IsNullOrEmpty(loginDto.Password))
-            {
-                _logger.LogWarning($"Отсутствует пароль или почта: {loginDto.Email}, {loginDto.Password}");
-                //return Results.BadRequest("Почта и пароль обязательны");
-            }
-
-
             var person = await db.Users
                 .Include(u => u.Password)
                 .FirstOrDefaultAsync(u => u.Email == loginDto.Email);
             if (person == null)
             {
                 _logger.LogWarning($"Пользователь не зарегистрирован: {loginDto.Email}");
-                throw new UnauthorizedAccessException("Неверный формат учётной записи");
+                throw new UnauthorizedAccessException("Неверный формат учётной записи.");
             }
 
 
             if (!PasswordHasher.VerifyPassword(loginDto.Password, person.Password.PasswordHash))
             {
                 _logger.LogWarning($"Пользователь не прошёл авторизацию: {loginDto.Email}");
-                throw new UnauthorizedAccessException("Неверный формат учётной записи");
+                throw new UnauthorizedAccessException("Неверный формат учётной записи.");
             }
 
             var newAccessToken = _tokenService.GenerateAccessToken(Convert.ToString(person.Id)!,
@@ -72,7 +69,7 @@ namespace Backend.Services
                 RefreshToken = newRefreshToken,
                 UserId = person.Id,
                 User = person,
-                ExpiresAt = DateTime.UtcNow.AddDays(Convert.ToDouble(_jwtSettings.Value.RefreshTokenExpiryDays))
+                ExpiresAt = DateTime.UtcNow.AddDays(Convert.ToDouble(_jwtSettings.RefreshTokenExpiryDays))
             });
 
             await db.SaveChangesAsync();
@@ -94,7 +91,7 @@ namespace Backend.Services
             if (principal == null)
             {
                 _logger.LogWarning("Токен не валиден");
-                throw new UnauthorizedAccessException("Пользователь не авторизован");
+                throw new UnauthorizedAccessException("Пользователь не авторизован.");
             }
 
             var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier)!;
@@ -113,7 +110,7 @@ namespace Backend.Services
             if (principal == null)
             {
                 _logger.LogWarning("Токен не валиден");
-                throw new UnauthorizedAccessException("Пользователь не авторизован");
+                throw new UnauthorizedAccessException("Пользователь не авторизован.");
             }
 
             var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier)!;
@@ -134,7 +131,7 @@ namespace Backend.Services
             {
                 RefreshToken = newRefreshToken,
                 UserId = Guid.Parse(userId),
-                ExpiresAt = DateTime.UtcNow.AddDays(_jwtSettings.Value.RefreshTokenExpiryDays)
+                ExpiresAt = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpiryDays)
             };
 
             await db.Sessions.Where(s => s.UserId == Guid.Parse(userId))
@@ -148,8 +145,52 @@ namespace Backend.Services
             {
                 AccessToken = newAccessToken,
                 RefreshToken = newRefreshToken,
-                Id = newUser.Id
+                Id = newUser.UserId
             };
+        }
+
+        public async Task<ClaimsPrincipal> SignInForContext(LoginDto loginDto)
+        {
+            using var db = await _factory.CreateDbContextAsync();
+
+            var person = await db.Users
+            .Include(u => u.Password)
+            .FirstOrDefaultAsync(u => u.Email == loginDto.Email);
+            if (person == null)
+            {
+                _logger.LogWarning($"Пользователь не зарегистрирован: {loginDto.Email}");
+                throw new UnauthorizedAccessException("Неверный формат учётной записи.");
+            }
+
+            if (!PasswordHasher.VerifyPassword(loginDto.Password, person.Password.PasswordHash))
+            {
+                _logger.LogWarning($"Пользователь не прошёл авторизацию: {loginDto.Email}");
+                throw new UnauthorizedAccessException("Неверный формат учётной записи.");
+            }
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, person.Id.ToString()),
+                new Claim(ClaimTypes.Email, person.Email),
+                new Claim(ClaimTypes.Role, person.Role),
+                new Claim("exp", ((DateTimeOffset)DateTime.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpiryMinutes)).ToUnixTimeSeconds().ToString())
+            };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            return new ClaimsPrincipal(claimsIdentity);
+        }
+
+        public ClaimsPrincipal CreateClaimsPrincipalFromToken(string accessToken)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(accessToken);
+
+            var identity = new ClaimsIdentity(
+                jwtToken.Claims,
+                CookieAuthenticationDefaults.AuthenticationScheme
+            );
+
+            return new ClaimsPrincipal(identity);
         }
     }
 

@@ -1,9 +1,10 @@
 ﻿using DataBase.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 
 namespace DataBase
 {
-    public class PriazovContext : DbContext
+    public class PriazovContext : DbContext, IDataProtectionKeyContext
     {
 
         public PriazovContext(DbContextOptions<PriazovContext> options) : base(options)
@@ -16,6 +17,8 @@ namespace DataBase
         public DbSet<UserSession> Sessions { get; set; }
         public DbSet<UserPassword> Password { get; set; }
         public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+        public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 

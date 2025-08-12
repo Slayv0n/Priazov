@@ -1,16 +1,19 @@
+using Backend.Mapping;
+using Backend.Middleware;
+using Backend.Models;
+using Backend.Services;
+using DataBase;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using NLog;
 using NLog.Web;
-using System.Text;
-using DataBase;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using Backend.Models;
-using Backend.Mapping;
-using Microsoft.AspNetCore.HttpOverrides;
 using Scalar.AspNetCore;
-using Backend.Services;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder();
 
@@ -62,23 +65,24 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddDbContextFactory<PriazovContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Singleton);
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        var settings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>()!;
 
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(settings.AccessTokenSecret)),
-            ValidateIssuer = true,
-            ValidIssuer = settings.Issuer,
-            ValidateAudience = true,
-            ValidAudience = settings.Audience,
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero
-        };
-    });
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+})
+.AddCookie(options =>
+{
+    var settings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>()!;
+
+    options.LoginPath = "/auth";
+    options.ExpireTimeSpan = TimeSpan.FromDays(settings.RefreshTokenExpiryDays);
+    options.SlidingExpiration = true;
+});
+
+builder.Services.AddDataProtection()
+    .PersistKeysToDbContext<PriazovContext>();
 
 builder.Services.AddAuthorization();
 
@@ -132,6 +136,7 @@ app.UseForwardedHeaders();
 app.UseStaticFiles();
 
 app.UseAuthentication();
+app.UseMiddleware<TokenRefreshMiddleware>();
 app.UseAuthorization();
 
 app.MapScalarApiReference(opt =>

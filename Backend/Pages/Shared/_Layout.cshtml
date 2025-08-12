@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/styles/layout.css" asp-append-version="true">
-    <link rel="shortcut icon" href="~/static/main/Logo.svg"/>
+    <link rel="shortcut icon" href="~/static/main/Logo.svg" asp-append-version="true" />
     @await RenderSectionAsync("Links", required: false)
 </head>
 <body>
@@ -20,21 +20,29 @@
                     <div class="menu-icon-bar"></div>
                 </button>
                 <div class="logo">
-                    <img src="static/main/Logo.svg" onclick="location.href='/'">
-                    
+                    <img src="/static/main/Logo.svg" onclick="location.href='/'">
                 </div>
             </div>
-
-            <div class="right-section">
-                <div class="catalog-button">
-                    <span>Каталог организаций</span>
-                </div>
-                <div class="login-button">
+            
+            <div class="right-section">                
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <div class="icon">
+                        <img src="/static/img/header-icon.png" onclick="location.href='/'">
+                    </div>
+                    <div class="catalog-button">
+                        <span>Каталог организаций</span>
+                    </div>
+                }
+                else {
+                <div class="login-button" onclick="location.href='/auth'">
                     <span>Вход</span>
                 </div>
-                <div class="register-button" onclick="location.href='registration'">
+                <div class="register-button" onclick="location.href='/registration'">
                     <span>Регистрация</span>
                 </div>
+                }
+                
             </div>
         </div>
     </header>

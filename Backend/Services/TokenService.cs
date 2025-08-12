@@ -79,7 +79,7 @@ namespace Backend.Services
                 {
                 new Claim(ClaimTypes.NameIdentifier, userId),
                 new Claim(ClaimTypes.Email, email),
-                new Claim(ClaimTypes.Role, role),
+                new Claim(ClaimTypes.Role, role)
             }),
                 Issuer = _jwtSettings.Issuer,
                 Audience = _jwtSettings.Audience,

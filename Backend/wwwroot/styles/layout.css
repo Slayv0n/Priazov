@@ -56,6 +56,12 @@
     margin-left: auto;
 }
 
+.icon {
+    width: 28px;
+    height: 42px;
+    cursor: pointer;
+}
+
 .catalog-button {
     background: #0E6466;
     border-radius: 15px;

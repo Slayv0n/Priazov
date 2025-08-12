@@ -2,10 +2,16 @@
 
 namespace Backend.Models.Dto
 {
-    public record LoginDto(
-    [Required] string Email,
-    [Required] string Password
-    );
+    public class LoginDto
+    {
+        [Required(ErrorMessage = "Введите электронную почту.")]
+        [EmailAddress(ErrorMessage = "Неверный формат почты.")]
+        [Display(Name = "Электронная почта")]
+        public string Email { get; set; } = null!;
+        [Required(ErrorMessage = "Введите пароль.")]
+        [Display(Name = "Пароль")]
+        public string Password { get; set; } = null!;
+    }
     public record RefreshDto(
         [Required] string RefreshToken
     );
