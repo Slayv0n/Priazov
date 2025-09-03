@@ -7,101 +7,6 @@ body {
     color: #012021;
 }
 
-/* Шапка */
-.header {
-    width: 100%;
-    height: 3.125rem;
-    display: flex;
-    justify-content: center;
-    padding: 0 1.875rem;
-    box-sizing: border-box;
-}
-
-.header-container {
-    width: 100%;
-    display: flex;
-}
-
-.logo-group {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.menu-icon {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 5px;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-.menu-icon-bar {
-    margin-top: 2px;
-    width: 30px;
-    height: 3px;
-    background: #012021;
-}
-
-.logo {
-    width: 65px;
-    height: 42px;
-}
-
-.right-section {
-    display: flex;
-    align-items: center;
-    gap: 32px;
-    margin-left: auto;
-}
-
-.catalog-button {
-    background: #0E6466;
-    border-radius: 15px;
-    padding: 8px 20px;
-    color: #FFFFFF;
-    font-family: 'Inter';
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 120%;
-    letter-spacing: 0.04em;
-    cursor: pointer;
-    border: none;
-}
-
-.user-controls {
-    display: flex;
-    gap: 16px;
-}
-
-.login-button {
-    background: #E7F0F2;
-    border-radius: 15px;
-    padding: 8px 20px;
-    font-family: 'Inter';
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 130%;
-    color: #0E6466;
-    border: none;
-    cursor: pointer;
-}
-
-.register-button {
-    background: #0E6466;
-    border-radius: 15px;
-    padding: 8px 20px;
-    font-family: 'Inter';
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 130%;
-    color: #FFFFFF;
-    border: none;
-    cursor: pointer;
-}
-
 /* Тело */
 
 /* Заголовок и картинка */
@@ -128,7 +33,7 @@ body {
     font-weight: 700;
     font-size: 48px;
     line-height: 1.2;
-    color: #000000;
+    color: white;
     text-shadow: none;
     margin: 0;
 }
@@ -232,6 +137,8 @@ body {
 }
 
 /* Секция с картой, фильтрами и организациями */
+
+
 .organizations-section {
     width: 100%;
     padding: 60px 0;
@@ -277,6 +184,11 @@ body {
     border-color: gray;
 }
 
+.map-placeholder {
+    width: 100%;
+    height: 100%;
+}
+
 .filters-menu {
     flex: 1;
     background: #FFFFFF;
@@ -305,7 +217,6 @@ body {
     font-weight: 400;
     font-size: 16px;
     color: #012021;
-    cursor: pointer;
 }
 
 .organizations-grid {
@@ -520,39 +431,5 @@ body {
     display: block;
 }
 
-/* Футер */
-footer {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    font-size: 14px;
-    color: var(--text-color);
-    padding: 10px 180px;
-    background: #0E6466;
-    justify-content: left 1rem;
-    color: white;
-    gap: 1rem;
-    position: relative;
-}
-.contacts {
-    margin-left: 10rem;
-}
-
-.contact-item {
-    position: relative;
-    top: -1rem;
-}
-
-.contact-icon {
-    font-size: 20px;
-    color: #FFFFFF;
-}
-
-.contact-text {
-    font-family: 'Inter', sans-serif;
-    font-weight: 400;
-    font-size: 16px;
-    color: #FFFFFF;
-}
 
 

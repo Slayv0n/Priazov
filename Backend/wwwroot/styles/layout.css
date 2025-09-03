@@ -1,0 +1,141 @@
+﻿/* Шапка */
+.header {
+    background: linear-gradient(#ffffff 98%,rgba(31, 111, 112, 0.01) 2%);
+    height: 3.125rem;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    padding: 0 1.875rem;
+    box-sizing: border-box;
+    border-bottom: 1px solid var(--header-border);
+    width: 100%;
+    box-shadow: 0px 48px 19px rgba(31, 111, 112, 0.01), 
+                0px 27px 16px rgba(31, 111, 112, 0.03), 
+                0px 12px 12px rgba(31, 111, 112, 0.04), 
+                0px 3px 7px rgba(31, 111, 112, 0.05);
+}
+
+.header-container {
+    width: 100%;
+    display: flex;
+}
+
+.logo-group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.menu-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.menu-icon-bar {
+    margin-top: 2px;
+    width: 30px;
+    height: 3px;
+    background: #012021;
+}
+
+.logo {
+    width: 65px;
+    height: 42px;
+    cursor: pointer;
+}
+
+.right-section {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin-left: auto;
+}
+
+.icon {
+    width: 28px;
+    height: 42px;
+    cursor: pointer;
+}
+
+.catalog-button {
+    background: #0E6466;
+    border-radius: 15px;
+    padding: 8px 20px;
+    color: #FFFFFF;
+    font-family: 'Inter';
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 120%;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    border: none;
+}
+
+.user-controls {
+    display: flex;
+    gap: 16px;
+}
+
+.login-button {
+    background: #E7F0F2;
+    border-radius: 15px;
+    padding: 8px 20px;
+    font-family: 'Inter';
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 130%;
+    color: #0E6466;
+    border: none;
+    cursor: pointer;
+}
+
+.register-button {
+    background: #0E6466;
+    border-radius: 15px;
+    padding: 8px 20px;
+    font-family: 'Inter';
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 130%;
+    color: #FFFFFF;
+    border: none;
+    cursor: pointer;
+}
+/* Футер */
+footer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    font-size: 14px;
+    color: var(--text-color);
+    background: #0E6466;
+    justify-content: left;
+    color: white;
+    gap: 1rem;
+}
+
+.contacts {
+    margin-left: 10rem;
+}
+
+.contact-item {
+    position: relative;
+    top: -1rem;
+}
+
+.contact-icon {
+    font-size: 20px;
+    color: #FFFFFF;
+}
+
+.contact-text {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: #FFFFFF;
+}

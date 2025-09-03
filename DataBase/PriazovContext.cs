@@ -1,22 +1,24 @@
 ﻿using DataBase.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 
 namespace DataBase
 {
-    public class PriazovContext : DbContext
+    public class PriazovContext : DbContext, IDataProtectionKeyContext
     {
 
         public PriazovContext(DbContextOptions<PriazovContext> options) : base(options)
         {
 
         }
-        //Создание таблиц в бд
         public DbSet<User> Users { get; set; }
         public DbSet<ShortAddressDto> Addresses { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<UserSession> Sessions { get; set; }
         public DbSet<UserPassword> Password { get; set; }
         public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+        public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 

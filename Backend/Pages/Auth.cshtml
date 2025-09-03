@@ -1,0 +1,39 @@
+﻿@page
+@model Backend.Pages.AuthModel
+@{
+    ViewData["Title"] = "Вход";
+}
+@section Links
+{
+    <link rel="stylesheet" href="~/styles/auth.css" asp-append-version="true" />
+}
+
+<main class="main-container">
+    
+    <div class="auth-container">
+        <h1 class="auth-title">@ViewData["Title"]</h1>
+        <form class="auth-form" asp-page="Auth">
+            <div class="field">
+                <label asp-for="Login.Email"></label>
+                <div class="form-field">
+                    <input asp-for="Login.Email" placeholder="Электронная почта" id="email">
+                </div>
+                <span asp-validation-for="Login.Email" class="validate"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Login.Password"></label>
+                <div class="form-field">
+                    <input asp-for="Login.Password" type="password" placeholder="Пароль" id="password">
+                </div>
+                <span asp-validation-for="Login.Password" class="validate"></span>
+            </div>
+            <span class="validate">@Model.ValidationResult</span>
+
+            <div class="forgot" align="center">
+                <a href="/forgot_password">Забыли пароль?</a>
+            </div>
+            
+            <button type="submit" class="submit-btn">Войти</button>
+        </form>
+    </div>
+</main>

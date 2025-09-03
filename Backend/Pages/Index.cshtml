@@ -1,0 +1,322 @@
+﻿@page
+@model Backend.IndexModel
+
+@{
+    ViewData["Organization"] = "организаций";
+    ViewData["Title"] = "Проекты социального воздействия Приазовья";
+}
+@if (Model.Count % 10 == 1 && (Model.Count % 100 < 10 || Model.Count % 100 > 20))
+{
+    ViewData["Organization"] = "организация";
+}
+@if (Model.Count % 10 > 1 && Model.Count % 10 < 5 && (Model.Count % 100 < 10 || Model.Count % 100 > 20))
+{
+    ViewData["Organization"] = "организации";
+}
+@section Links
+{
+    <link rel="stylesheet" href="~/styles/main.css" asp-append-version="true">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Itim&family=Natasha:wght@700&display=swap" rel="stylesheet">
+}
+
+<main>
+    <section class="hero-section">
+        <div class="hero-container">
+            <h1 class="hero-title">@ViewData["Title"]!.ToString()!.ToUpper()</h1>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <div class="about-container">
+            <button class="nav-button prev-button">
+                <div class="nav-icon">←</div>
+            </button>
+            <div class="about-card">
+                <div class="about-image">
+                    <img src="static/main/Social-effect.svg" alt="#">
+                </div>
+                <div class="about-content">
+                    <h2 class="about-title">Что такое проект социального воздействия?</h2>
+                    <p class="about-text">
+                        Проект социального воздействия — это комплекс мероприятий, направленных на достижение измеримого социального эффекта в жизни конкретных людей-участников проекта. Например, мероприятия по повышению успеваемости школьников на определенной территории или вовлечение людей в диспансеризацию, содействие в получении мер социальной поддержки.
+                    </p>
+                    <button class="about-button">Подробнее</button>
+                </div>
+            </div>
+            <button class="nav-button next-button">
+                <div class="nav-icon">→</div>
+            </button>
+        </div>
+    </section>
+
+    <section class="organizations-section">
+        <div class="section-container">
+            <div class="organizations-content">
+                <h2 class="section-title">ОРГАНИЗАЦИИ</h2>
+                <div class="map-filters-container">
+                    <div class="map-container">
+                        <div id="map" class="map-placeholder"></div>
+                    </div>
+                    <div class="filters-menu">
+                        @Html.AntiForgeryToken()
+                        <div class="filter-item">
+                            <input type="checkbox" id="filter1" class="filter-checkbox">
+                            <label for="filter1">Образовательное учреждение</label>
+                        </div>
+                        <div class="filter-item">
+                            <input type="checkbox" id="filter2" class="filter-checkbox">
+                            <label for="filter2">Научно-исследовательский институт</label>
+                        </div>
+                        <div class="filter-item">
+                            <input type="checkbox" id="filter3" class="filter-checkbox">
+                            <label for="filter3">Научно-образовательный проект</label>
+                        </div>
+                        <div class="filter-item">
+                            <input type="checkbox" id="filter4" class="filter-checkbox">
+                            <label for="filter4">Государственное учреждение</label>
+                        </div>
+                        <div class="filter-item">
+                            <input type="checkbox" id="filter5" class="filter-checkbox">
+                            <label for="filter5">Коммерческая деятельность</label>
+                        </div>
+                        <div class="filter-item">
+                            <input type="checkbox" id="filter6" class="filter-checkbox">
+                            <label for="filter6">Некоммерческая организация</label>
+                        </div>
+                        <div class="filter-item">
+                            <input type="checkbox" id="filter7" class="filter-checkbox">
+                            <label for="filter7">Финансы</label>
+                        </div>
+                        <div class="filter-item">
+                            <input type="checkbox" id="filter8" class="filter-checkbox">
+                            <label for="filter8">Акселератор / инкубатор / технопарк</label>
+                        </div>
+                        <div class="filter-item">
+                            <input type="checkbox" id="filter9" class="filter-checkbox">
+                            <label for="filter9">Ассоциация / объединение</label>
+                        </div>
+                        <div class="filter-item">
+                            <input type="checkbox" id="filter10" class="filter-checkbox">
+                            <label for="filter10">Инициатива</label>
+                        </div>
+                        <div class="filter-item">
+                            <input type="checkbox" id="filter11" class="filter-checkbox">
+                            <label for="filter11">Отраслевое событие / научная конференция</label>
+                        </div>
+                        <div class="filter-item">
+                            <input type="checkbox" id="filter12" class="filter-checkbox">
+                            <label for="filter12">Другое</label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--Организации-->
+                <div class="organizations-grid">
+
+                    @foreach (var company in Model.Query)
+                    {
+                        <div class="organization-card">
+                            <div class="org-image"></div>
+                            <h3 class="org-title">@company.Name</h3> <!--Problem zone-->
+                            <p class="org-description">@company.Description</p> 
+                            <div class="org-details">
+                                <div class="detail">
+                                    <span class="detail-icon">📍</span>
+                                    <span class="detail-text">@company.FullAddress</span>
+                                </div>
+                                <div class="detail">
+                                    <span class="detail-icon">🏛️</span>
+                                    <span class="detail-text">@company.Industry</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="organization-card more-projects">
+                        <div class="more-number">ЕЩЕ @Model.Count</div>
+                        <div class="more-label">
+                            @ViewData["Organization"]
+                        </div>
+                        <button class="view-all-button">Смотреть все</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <div class="section-container">
+            <div class="faq-content">
+                <h2 class="section-title">Часто задаваемые вопросы</h2>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span class="question-text">Что такое проект социального воздействия?</span>
+                            <span class="farrow"></span>
+                        </div>
+                        <div class="faq-answer">
+                            Очень важный ответ
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span class="question-text">Роль ВЭБ.РФ</span>
+                            <span class="farrow"></span>
+                        </div>
+                        <div class="faq-answer">
+                            Очень важный ответ
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span class="question-text">Нормативная база</span>
+                            <span class="farrow"></span>
+                        </div>
+                        <div class="faq-answer">
+                            Очень важный ответ
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span class="question-text">Примеры успешных проектов</span>
+                            <span class="farrow"></span>
+                        </div>
+                        <div class="faq-answer">
+                            Очень важный ответ
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+@section Scripts
+{
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=79291f02-351a-4139-9402-f2037856fba7&lang=ru_RU" type="text/javascript"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqItems = document.querySelectorAll('.faq-item');
+
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                const arrow = item.querySelector('.farrow');
+
+                question.addEventListener('click', () => {
+                    // Закрываем все открытые элементы, кроме текущего
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item && otherItem.classList.contains('active')) {
+                            otherItem.classList.remove('active');
+                            otherItem.querySelector('.farrow').classList.remove('farrow-rotated');
+                        }
+                    });
+
+                    // Переключаем текущий элемент
+                    item.classList.toggle('active');
+                    arrow.classList.toggle('farrow-rotated');
+                });
+            });
+        });
+
+        // Выносим переменные карты в глобальную область видимости
+        let myMap;
+        let clusterer;
+
+        ymaps.ready(init);
+
+        function init() {
+            // Создаем карту
+            myMap = new ymaps.Map("map", {
+                center: [55.76, 37.64], // Центр по умолчанию (Москва)
+                zoom: 10
+            });
+
+            // Инициализируем кластеризатор
+            clusterer = new ymaps.Clusterer();
+            myMap.geoObjects.add(clusterer);
+
+            // Первоначальная загрузка меток
+            updateServerSelection();
+        }
+
+        // Функция для обновления меток на карте
+        function updateMapMarkers(addresses) {
+            // Очищаем текущие метки
+            myMap.geoObjects.removeAll();
+            clusterer.removeAll();
+            
+            const geoObjects = addresses.map(location => {
+                let name = "";
+                for (const company of location.companies)
+                {
+                    name += company.name + ",\n";
+                }
+                return new ymaps.Placemark(
+                    [location.address.latitude, location.address.longitude],
+                    {
+
+                        balloonContentHeader: name.slice(0, -2),
+                        hintContent: location.companies[0].name + (location.companies.length > 1 ? "..." : "")
+                    },
+                    {
+                        preset: 'islands#icon',
+                        iconColor: '#0095b6'
+                    }
+                );
+            });
+
+            // Добавляем новые метки на карту
+            clusterer.add(geoObjects);
+
+            myMap.geoObjects.add(clusterer);
+
+            // Автоматически подбираем масштаб
+            if (geoObjects.length > 0) {
+                myMap.setBounds(clusterer.getBounds(), {
+                    checkZoomRange: true,
+                    zoomMargin: 50
+                });
+            };
+        }
+
+        document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const allCheckboxesData = Array.from(document.querySelectorAll('.filter-checkbox')).map(checkbox => {
+                    const label = document.querySelector(`label[for="${checkbox.id}"]`);
+                    return {
+                        Industry: label ? label.textContent.trim() : '',
+                        IsChecked: checkbox.checked
+                    };
+                });
+
+                console.log('Текущее состояние всех чекбоксов:', allCheckboxesData);
+                updateServerSelection(allCheckboxesData);
+            });
+        });
+
+        function updateServerSelection(allCheckboxesData) {
+
+            fetch('/?handler=UpdateFilter', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify(allCheckboxesData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.error('Ошибка при отправке данных');
+                }
+                return response.json();
+            })
+            .then(data => {
+                updateMapMarkers(data);
+            });
+        }
+    </script>
+}
+
+

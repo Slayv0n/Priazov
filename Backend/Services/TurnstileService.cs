@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
-namespace Backend
+namespace Backend.Services
 {
     public class TurnstileService
     {
