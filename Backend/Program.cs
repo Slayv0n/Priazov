@@ -31,6 +31,7 @@ builder.Services.Configure<RouteOptions>(o =>
     o.LowercaseUrls = true;
     o.LowercaseQueryStrings = true;
     o.AppendTrailingSlash = true;
+        
 });
 
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SMTP"));
@@ -62,10 +63,10 @@ builder.Services.AddScoped<ICompanyService, CompanyService>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+builder.Services.AddScoped<IPasswordService, PasswordService>();    
+
 builder.Services.AddDbContextFactory<PriazovContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Singleton);
-
-
 
 builder.Services.AddAuthentication(options =>
 {

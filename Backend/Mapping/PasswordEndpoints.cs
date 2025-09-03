@@ -13,46 +13,9 @@ namespace Backend.Mapping
         {
             var group = app.MapGroup("/password");
 
-            group.MapPost("/forgot-password", ForgotPassword);
             group.MapPost("/reset-password", PostResetPassword);
         }
-        private static async Task<IResult> ForgotPassword(ForgotPasswordRequest request,
-            [FromServices] EmailService emailService,
-            [FromServices] IDbContextFactory<PriazovContext> factory,
-            [FromServices] ILogger<PasswordEndpointsLogger> logger)
-        {
-            await using var db = await factory.CreateDbContextAsync();
-
-            var user = await db.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
-            if (user == null)
-            {
-                logger.LogWarning("Попытка сброса пароля для несуществующего пользователя");
-                return Results.Ok();
-            }
-                
-            var token = new PasswordResetToken
-            {
-                Token = Guid.NewGuid().ToString()[..6],
-                UserId = user.Id,
-                ExpiresAt = DateTime.UtcNow.AddHours(1)
-            };
-
-            var update = await db.PasswordResetTokens
-                .Where(t => t.UserId == user.Id)
-                .ExecuteUpdateAsync(setters => setters
-                .SetProperty(t => t.Token, token.Token)
-                .SetProperty(t => t.ExpiresAt, token.ExpiresAt));
-
-            if (update == 0)
-            {
-                await db.PasswordResetTokens.AddAsync(token);
-                await db.SaveChangesAsync();
-            }
-
-            await emailService.SendPasswordResetEmail(user.Email, token.Token);
-
-            return Results.Ok();
-        }
+            
         private static async Task<IResult> PostResetPassword(ResetPasswordRequest request,
             [FromServices] EmailService emailService,
             [FromServices] IDbContextFactory<PriazovContext> factory,
@@ -98,6 +61,5 @@ namespace Backend.Mapping
             return Results.Ok("Пароль успешно изменён.");
         }
     }
-    public record ForgotPasswordRequest(string Email);
     public record ResetPasswordRequest(string Token, string NewPassword);
 }
