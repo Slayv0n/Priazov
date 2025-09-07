@@ -117,9 +117,9 @@
                     @foreach (var company in Model.Query)
                     {
                         <div class="organization-card">
-                            <div class="org-image"></div>
+                            <div class="org-image">@company.PhotoIcon</div>
                             <h3 class="org-title">@company.Name</h3> <!--Problem zone-->
-                            <p class="org-description">@company.Description</p> 
+                            <p class="org-description">@company.Description</p>
                             <div class="org-details">
                                 <div class="detail">
                                     <span class="detail-icon">📍</span>

@@ -16,8 +16,6 @@ namespace Backend.Mapping
 {
     public static class ManagerEndpoints
     {
-
-
         public static void MapManagerEndpoints(this WebApplication app)
         {
             var group = app.MapGroup("/managers");

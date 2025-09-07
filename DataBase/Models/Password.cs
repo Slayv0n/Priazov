@@ -24,9 +24,9 @@ namespace DataBase.Models
     {
         public Guid Id { get; set; }
         [MaxLength(6)]
-        public string Token { get; set; } = null!; // Уникальный токен
-        public Guid UserId { get; set; }   // Связь с пользователем
-        public User User { get; set; } = null!;    // Навигационное свойство
-        public DateTime ExpiresAt { get; set; }  // Срок действия (UTC)
+        public string Token { get; set; } = null!;
+        public Guid UserId { get; set; }
+        public User User { get; set; } = null!;
+        public DateTime ExpiresAt { get; set; } 
     }
 }
