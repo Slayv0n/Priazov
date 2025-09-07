@@ -1,4 +1,5 @@
 using Backend.Services;
+using Dadata.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,7 +10,7 @@ namespace Backend.Pages
     public class ForgotPasswordModel : PageModel
     {
         private readonly IPasswordService _passwordService;
-        public string ValidationResult { get; set; } = "";
+        public string? ValidationResult { get; set; } = "";
         public bool IsTokenSend = false;
 
         public ForgotPasswordModel(IPasswordService passwordService)
@@ -33,7 +34,7 @@ namespace Backend.Pages
                     errors = ModelState.ToDictionary(
                     k => k.Key,
                     v => v.Value.Errors.Select(e => e.ErrorMessage).ToArray())
-            });
+                });
             }
             try
             {
@@ -58,15 +59,18 @@ namespace Backend.Pages
             });
         }
 
-        public async Task<IActionResult> OnPostTokenAsync()
+        public async Task<IActionResult> OnPostTokenAsync([FromBody] TokenInput token)
         {
-            if (ModelState.GetFieldValidationState("Token") != ModelValidationState.Valid)
+            TryValidateModel(token, nameof(token));
+
+            if (!ModelState.IsValid)
             {
+                ValidationResult = ModelState.ToDictionary().FirstOrDefault(x => x.Key == "Token").Value?.ToString();
                 return Page();
-            }
+            }    
             try
             {
-                await _passwordService.IsValidToken("");
+                await _passwordService.IsValidToken(token.Token);
             }
             catch (Exception ex)
             {
@@ -84,6 +88,12 @@ namespace Backend.Pages
             [Display(Name = "Ёлектронна€ почта")]
             public string Email { get; set; } = null!;
         }
-
+        public class TokenInput
+        {
+            [Required(ErrorMessage = "¬ведите код.")]
+            [StringLength(6, MinimumLength = 6, ErrorMessage = "Ќедопустимый формат кода")]
+            [Display(Name = "¬ведите код")]
+            public string Token { get; set; } = null!;
+        }
     }
 }
