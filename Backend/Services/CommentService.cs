@@ -1,15 +1,9 @@
-﻿using Backend.Models;
-using Backend.Models.Dto;
+﻿using Backend.Models.Dto;
 using Backend.Validation;
 using DataBase;
 using DataBase.Models;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
-using System.Xml.Linq;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-
 namespace Backend.Services
 {
     public interface ICommentService

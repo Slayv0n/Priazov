@@ -1,23 +1,21 @@
 ﻿using Backend.Models;
 using Backend.Models.Dto;
+using Backend.Validation;
 using Dadata;
-using Dadata.Model;
 using DataBase;
 using DataBase.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using NLog.Config;
-using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
 namespace Backend.Services
 {
     interface IManagerService
     {
-        Task<IResult> CreateManagerAsync(ManagerCreateDto dto);
-        Task<IResult> AccountManagerAsync(Guid? id);
-        Task<IResult> UpdateManagerAsync(Guid? id, ManagerChangeDto dto);
+        Task<ManagerResponseDto> CreateManagerAsync(ManagerCreateDto dto);
+        Task<ManagerResponseDto> AccountManagerAsync(Guid? id);
+        Task<ManagerResponseDto> UpdateManagerAsync(Guid? id, ManagerChangeDto dto);
         
     }
 
@@ -30,64 +28,32 @@ namespace Backend.Services
 
         private readonly IDbContextFactory<PriazovContext> _factory;
         private readonly IOptions<DadataSettings> _dadata;
-        private readonly IMessageService _email;
+        private readonly IMessageService _message;
         private readonly ILogger<ManagerService> _logger;
         private readonly IMemoryCache _cache;
 
         public ManagerService(
             IDbContextFactory<PriazovContext> factory,
             IOptions<DadataSettings> dadata,
-            IMessageService email,
+            IMessageService message,
             ILogger<ManagerService> logger,
             IMemoryCache cache)
         {
             _factory = factory;
             _dadata = dadata;
-            _email = email;
+            _message = message;
             _logger = logger;
             _cache = cache;
         }
-        public async Task<IResult> CreateManagerAsync(ManagerCreateDto managerDto)
+        public async Task<ManagerResponseDto> CreateManagerAsync(ManagerCreateDto managerDto)
         {
-            var validationResults = new List<ValidationResult>();
-            bool isValid = Validator.TryValidateObject(
-                managerDto,
-                new ValidationContext(managerDto),
-                validationResults,
-                validateAllProperties: true
-            );
-
-            if (!isValid)
-            {
-                _logger.LogWarning($"Ошибка валидации при создании инвестора: {validationResults}");
-                var errors = validationResults
-                    .GroupBy(v => v.MemberNames.FirstOrDefault() ?? "")
-                    .ToDictionary(
-                        g => g.Key,
-                        g => g.Select(v => v.ErrorMessage ?? "Неизвестная ошибка").ToArray()
-                    );
-                return Results.ValidationProblem(errors);
-            }
-
-            managerDto.Name = managerDto.Name.Trim();
-            managerDto.Password = managerDto.Password.Trim();
-            managerDto.FullAddress = managerDto.FullAddress.Trim();
-            managerDto.Email = managerDto.Email.Trim();
-            managerDto.Phone = managerDto.Phone.Trim();
-
-            if (managerDto.Password.ToLower().Contains("script"))
-            {
-                _logger.LogWarning("Попытка зарегистрировать опасный контент");
-                return Results.BadRequest();
-            }
 
             using var db = await _factory.CreateDbContextAsync();
 
-            if (db.Users.Any(u => u.Email == managerDto.Email &&
-            u.Address.FullAddress == managerDto.FullAddress))
+            if (db.Users.Any(u => u.Email == managerDto.Email))
             {
-                _logger.LogWarning($"Пользователь с таким email и адресом уже существует: {managerDto.Email}, {managerDto.FullAddress}");
-                return Results.Conflict("Повтор уникальных данных");
+                _logger.LogWarning($"Пользователь с таким email уже сущетсвует: {managerDto.Email}");
+                throw new ConflictException("Повтор уникальных данных");
             }
 
             var api = new CleanClientAsync(_dadata.Value.ApiKey, _dadata.Value.SecretKey);
@@ -96,7 +62,7 @@ namespace Backend.Services
             if (cleanedAddress.result == null)
             {
                 _logger.LogWarning($"Адрес не найден: {managerDto.FullAddress}");
-                return Results.NotFound("Адрес не найден");
+                throw new NotFoundException("Адрес не найден");
             }
 
             var manager = new Manager()
@@ -115,24 +81,18 @@ namespace Backend.Services
             await db.Users.AddAsync(manager);
             await db.SaveChangesAsync();
 
-            await _email.SendRegistrationEmail(manager);
+            await _message.SendRegistrationEmail(manager);
             _logger.LogInformation($"Инвестор зарегистрирована: {managerDto.Email}");
 
-            return Results.Ok(new ManagerResponseDto(manager));
+            return new ManagerResponseDto(manager);
         }
-        public async Task<IResult> AccountManagerAsync(Guid? id)
+        public async Task<ManagerResponseDto> AccountManagerAsync(Guid? id)
         {
-            if (id == null)
-            {
-                _logger.LogWarning("Id инвестора отсутствует");
-                return Results.BadRequest("Id пуст");
-            }
-
             var cacheKey = $"managers_{id}";
             if (_cache.TryGetValue(cacheKey, out ManagerResponseDto? cachedManager))
             {
                 _logger.LogInformation($"Ответ взят из кэша: {cacheKey}");
-                return Results.Ok(cachedManager);
+                return cachedManager!;
             }
             else
             {
@@ -146,7 +106,7 @@ namespace Backend.Services
             if (manager == null)
             {
                 _logger.LogWarning($"Инвестор не найден по Id: {id}");
-                return Results.NotFound();
+                throw new NotFoundException("Инвестор не найден по Id");
             }
 
             var managerResponse = new ManagerResponseDto(manager);
@@ -154,42 +114,11 @@ namespace Backend.Services
             _cache.Set(cacheKey, managerResponse, CacheOptions);
             _logger.LogInformation($"Инвестор успешно найдена Id: {id}");
 
-            return Results.Ok(managerResponse);
+            return managerResponse;
         }
 
-        public async Task<IResult> UpdateManagerAsync(Guid? id, ManagerChangeDto managerDto)
+        public async Task<ManagerResponseDto> UpdateManagerAsync(Guid? id, ManagerChangeDto managerDto)
         {
-            if (id == null)
-            {
-                _logger.LogWarning("Id инвестора отсутствует");
-                return Results.BadRequest("Id пуст");
-            }
-
-            var validationResults = new List<ValidationResult>();
-            bool isValid = Validator.TryValidateObject(
-                managerDto,
-                new ValidationContext(managerDto),
-                validationResults,
-                validateAllProperties: true
-            );
-
-            if (!isValid)
-            {
-                _logger.LogWarning($"Ошибка валидации при создании инвестора: {validationResults}");
-                var errors = validationResults
-                    .GroupBy(v => v.MemberNames.FirstOrDefault() ?? "")
-                    .ToDictionary(
-                        g => g.Key,
-                        g => g.Select(v => v.ErrorMessage ?? "Неизвестная ошибка").ToArray()
-                    );
-                return Results.ValidationProblem(errors);
-            }
-
-            managerDto.Name = managerDto.Name.Trim();
-            managerDto.FullAddress = managerDto.FullAddress.Trim();
-            managerDto.Email = managerDto.Email.Trim();
-            managerDto.Phone = managerDto.Phone.Trim();
-
             using var db = await _factory.CreateDbContextAsync();
 
             var manager = db.Users.OfType<Manager>().Include(c => c.Address).FirstOrDefault(c => c.Id == id);
@@ -197,14 +126,13 @@ namespace Backend.Services
             if (manager == null)
             {
                 _logger.LogWarning($"Инвестор не найден по Id: {id}");
-                return Results.NotFound();
+                throw new NotFoundException("Инвестор не найден по Id");
             }
 
-            if (db.Users.Any(u => u.Email == managerDto.Email &&
-            u.Address.FullAddress == managerDto.FullAddress && u.Id != id))
+            if (db.Users.Any(u => u.Email == managerDto.Email && u.Id != id))
             {
-                _logger.LogWarning($"Пользователь с таким email и адресом уже существует: {managerDto.Email}, {managerDto.FullAddress}");
-                return Results.Conflict("Повтор уникальных данных");
+                _logger.LogWarning($"Пользователь с таким email уже существует: {managerDto.Email}");
+                throw new ConflictException("Повтор уникальных данных");
             }
 
             var api = new CleanClientAsync(_dadata.Value.ApiKey, _dadata.Value.SecretKey);
@@ -213,7 +141,7 @@ namespace Backend.Services
             if (cleanedAddress.result == null)
             {
                 _logger.LogWarning($"Адрес не найден: {managerDto.FullAddress}");
-                return Results.NotFound("Адрес не найден");
+                throw new NotFoundException("Адрес не найден");
             }
 
             manager.Name = managerDto.Name;
@@ -230,7 +158,7 @@ namespace Backend.Services
             await db.SaveChangesAsync();
             _logger.LogInformation($"Инвестор успешно изменен: {id}");
 
-            return Results.Ok(new ManagerResponseDto(manager));
+            return new ManagerResponseDto(manager);
         }
     }
 }
