@@ -5,3 +5,4 @@
     public class AuthEndpointsLogger { }
     public class PasswordEndpointsLogger { }
 }
+

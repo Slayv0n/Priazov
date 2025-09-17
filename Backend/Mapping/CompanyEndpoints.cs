@@ -24,8 +24,6 @@ namespace Backend.Mapping
     public static class CompanyEndpoints
     {
 
-
-
         public static void MapCompanyEndpoints(this WebApplication app)
         {
             var group = app.MapGroup("/companies");

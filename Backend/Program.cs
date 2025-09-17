@@ -55,8 +55,6 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddScoped<IMessageService, EmailService>();
 
-builder.Services.AddScoped<TurnstileService>();
-
 builder.Services.AddScoped<IManagerService, ManagerService>();
 
 builder.Services.AddScoped<ICompanyService, CompanyService>();
@@ -148,8 +146,6 @@ app.MapScalarApiReference(opt =>
 });
 
 app.MapRazorPages();
-//app.MapAuthEndpoints();
-app.MapPasswordEndpoints();
 app.MapCompanyEndpoints();
 app.MapManagerEndpoints();
 

@@ -48,37 +48,26 @@ namespace Backend.Services
 
         private readonly IDbContextFactory<PriazovContext> _factory;
         private readonly DadataSettings _dadata;
-        private readonly IMessageService _email;
-        private readonly TurnstileService? _turnstile;
-        private readonly ILogger<ManagerService> _logger;
+        private readonly IMessageService _messageService;
+        private readonly ILogger<CompanyService> _logger;
         private readonly IMemoryCache _cache;
 
         public CompanyService(
             IDbContextFactory<PriazovContext> factory,
             IOptions<DadataSettings> dadata,
-            IMessageService email,
-            TurnstileService? turnstile,
-            ILogger<ManagerService> logger,
+            IMessageService messageService,
+            ILogger<CompanyService> logger,
             IMemoryCache cache)
         {
             _factory = factory;
             _dadata = dadata.Value;
-            _email = email;
-            _turnstile = turnstile;
+            _messageService = messageService;
             _logger = logger;
             _cache = cache;
         }
 
         public async Task<CompanyResponseDto> CreateCompanyAsync(CompanyCreateDto companyDto)
         {
-
-            //bool isHuman = await _turnstile.VerifyTurnstileAsync(companyDto.Token);
-            //if (!isHuman)
-            //{
-            //    _logger.LogWarning($"Cloudflare Turnstile не пройдён для email: {companyDto.Email}");
-            //    return Results.BadRequest("Проверка Cloudflare Turnstile не пройдена.");
-            //}
-
             companyDto.Name = companyDto.Name.Trim();
             companyDto.Password = companyDto.Password.Trim();
             companyDto.FullAddress = companyDto.FullAddress.Trim();
@@ -133,7 +122,7 @@ namespace Backend.Services
             await db.Users.AddAsync(company);
             await db.SaveChangesAsync();
 
-            //await _email.SendRegistrationEmail(company);
+            await _messageService.SendRegistrationEmail(company);
             _logger.LogInformation($"Компания зарегистрирована: {companyDto.Email}");
 
             return new CompanyResponseDto(company, company.Address.FullAddress);

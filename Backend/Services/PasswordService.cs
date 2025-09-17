@@ -11,7 +11,7 @@ namespace Backend.Services
 {
     public interface IPasswordService
     {
-        Task ForgotPassword(string addressMessage);
+        Task<Guid> ForgotPassword(string addressMessage);
         Task<bool> IsValidToken(string token);
         Task ResetPassword(Guid userId, string newPassword);
     }
@@ -31,7 +31,7 @@ namespace Backend.Services
             _logger = logger;
         }
 
-        public async Task ForgotPassword(string addressMessage)
+        public async Task<Guid> ForgotPassword(string addressMessage)
         {
             using var db = await _factory.CreateDbContextAsync();
 
@@ -62,6 +62,8 @@ namespace Backend.Services
             }
 
             await _messageService.SendPasswordResetEmail(user.Email, token.Token);
+
+            return user.Id;
         }
 
         public async Task<bool> IsValidToken(string token)
@@ -79,15 +81,47 @@ namespace Backend.Services
             var user = db.Users.FirstOrDefault(u => u.Id == valid.UserId);
 
             db.PasswordResetTokens.Remove(valid);
-            if (user!.Session != null)
-                db.Sessions.Remove(user.Session);
+
+            await db.SaveChangesAsync();
 
             return true;
         }
 
-        public Task ResetPassword(Guid userId, string newPassword)
+        public async Task ResetPassword(Guid userId, string newPassword)
         {
-            throw new NotImplementedException();
+            await using var db = await _factory.CreateDbContextAsync();
+
+            var user = await db.Users
+                .Include(u => u.Password)
+                .Include(u => u.Session)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+            {
+                _logger.LogWarning($"Пользователь не найден: {userId}");
+                throw new Exception("Пользователь не найден.");
+            }
+
+            if (PasswordHasher.VerifyPassword(newPassword, user.Password.PasswordHash))
+            {
+                throw new Exception("Пароль не должен повторять предыдущий");
+            }
+
+            user.Password.PasswordHash = PasswordHasher.HashPassword(newPassword);
+            user.Password.LastUpdated = DateTime.UtcNow;
+
+            var token = db.PasswordResetTokens.FirstOrDefault(u => u.UserId == userId);
+            if (token != null)
+            {
+                db.PasswordResetTokens.Remove(token);
+            }
+            if (user.Session != null)
+            {
+                db.Sessions.Remove(user.Session);
+            }
+            await db.SaveChangesAsync();
+
+            await _messageService.SendPasswordOkayEmail(user.Email);
+            _logger.LogInformation($"Пароль успешно изменён для пользователя {user.Id}");
         }
     }
 }
