@@ -1,0 +1,385 @@
+
+:root {
+    font-size: 16px;
+    --primary-color: #0e6466;
+    --secondary-color: #e7f0f1;
+    --accent-color: #8CB5BB;
+    --text-color: #1E1E1E;
+    --light-text: #FFFFFF;
+    --border-color: var(--primary-color);
+    --header-bg: #FFFFFF;
+    --header-border: #e0e0e0;
+    --menu-hover: #ececec;
+    --logo-bg: var(--accent-color);
+    --container-bg: var(--secondary-color);
+    --container-border: rgba(70, 70, 70, 0.8);
+    --tab-gradient-start: var(--primary-color);
+    --tab-gradient-end: var(--header-bg);
+    --executor-text: var(--primary-color);
+    --investor-text: var(--secondary-color);
+    --field-bg: var(--header-bg);
+    --btn-hover: #073434;
+    --shadow-color: rgba(0, 0, 0, 1);
+    --light-gray: #F0F0F0;
+    --medium-gray: #D9D9D9;
+    --dark-gray: #5C5B5B;
+    --white: #FFFFFF;
+    --border-radius: 8px;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--light-gray);
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Шапка */
+
+.right-section {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin-left: auto;
+}
+
+.header {
+    height: 3.5rem;
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.catalog-button {
+    background: #0E6466;
+    border-radius: 15px;
+    padding: 8px 20px;
+    color: #FFFFFF;
+    font-family: 'Inter';
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 120%;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    border: none;
+}
+
+.user-controls {
+    display: flex;
+    gap: 16px;
+}
+
+.login-button {
+    background: #E7F0F2;
+    border-radius: 15px;
+    padding: 8px 20px;
+    font-family: 'Inter';
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 130%;
+    color: #0E6466;
+    border: none;
+    cursor: pointer;
+}
+
+.register-button {
+    background: #0E6466;
+    border-radius: 15px;
+    padding: 8px 20px;
+    font-family: 'Inter';
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 130%;
+    color: #FFFFFF;
+    border: none;
+    cursor: pointer;
+}
+
+.catalog-btn {
+    background: var(--primary-color);
+    border-radius: 15px;
+    color: var(--white);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    padding: 8px 20px;
+}
+
+.login-btn {
+    background: var(--accent-light);
+    border-radius: 15px;
+    color: var(--primary-color);
+    font-weight: 500;
+    padding: 8px 20px;
+}
+
+.register-btn {
+    background: var(--primary-color);
+    border-radius: 15px;
+    color: var(--white);
+    font-weight: 500;
+    padding: 8px 20px;
+}
+
+
+/* Выезжающее меню */
+.catalog {
+    transition: background-color 0.5s ease;
+    background-color: white;
+    border: solid;
+    border-width: 1px;
+    color: black;
+    height: 3em;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.5) inset;
+}
+
+/* Основной контент */
+.main {
+    padding-top: 100px; /* Увеличенный отступ после шапки */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 4rem; /* Дополнительный отступ снизу */
+}
+.title {
+    margin-bottom: 4rem; /* Увеличенный отступ под заголовком */
+    text-align: center;
+    font-size: 2.5rem;
+    color: var(--text-color); /* Черный цвет */
+}
+.buttons {
+    display: flex;
+    justify-content: space-between; /* Распределение по краям */
+    gap: 5rem; /* Увеличенное расстояние между кнопками */
+    margin-bottom: 4rem;
+    width: 100%; /* Полная ширина */
+    max-width: 650px; /* Максимальная ширина, как у формы */
+    padding: 0 2rem; /* Отступы слева и справа */
+}
+.btn {
+    padding: 1.2rem 2rem; /* Уменьшенные отступы */
+    border-radius: 10px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    flex: 1; /* Равномерное распределение ширины */
+    max-width: 200px; /* Увеличена максимальная ширина кнопок */
+}
+.btn-white {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+.btn-green {
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    border: none;
+}
+.btn:hover {
+    transform: translateY(-3px);
+}
+
+.form-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 3rem;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    box-shadow: 0 0 15px var(--shadow-color);
+}
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--label-color); /* Серый цвет для надписей */
+}
+.input-field {
+    width: 100%;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    transition: border-color 0.3s ease; /* Эффект при фокусе */
+}
+.input-field:focus {
+    border-color: var(--focus-color); /* Цвет фокуса */
+    outline: none;
+}
+.select-field {
+    width: 634px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    -webkit-appearance: none; /* Убираем стандартный стиль select */
+    appearance: none;
+    background: url("arrow-down.svg") 95% center no-repeat; /* Стрелка вниз */
+    background-size: 15px; /* Размер стрелки */
+    background-color: white; /* Цвет фона */
+}
+.select-field option {
+    padding: 0.5rem;
+    border: none;
+    background: var(--secondary-color);
+}
+.btn-submit {
+    width: 100%;
+    padding: 1.2rem;
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    border: none;
+    border-radius: 5px;
+    margin-top: 2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.btn-submit:hover {
+    transform: translateY(-3px);
+}
+
+/*Футер*/
+
+footer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    font-size: 14px;
+    color: var(--text-color);
+    padding: 10px 180px;
+    background: #0E6466;
+    justify-content: left 1rem;
+    color: white;
+    gap: 1rem;
+    position: relative;
+}
+
+.contacts {
+    margin-left: 10rem;
+}
+
+.interm {
+    height: 10rem;
+}
+
+/* Медиазапросы для адаптивного дизайна */
+@media (max-width: 768px) {
+    .header {
+        padding: 1rem;
+    }
+    .header__inner {
+        justify-content: space-between;
+    }
+    .menu-icon {
+        font-size: 2rem;
+        margin-right: 0.5rem;
+    }
+    .logo {
+        height: 30px;
+    }
+    .gradient-border {
+        top: 50px; /* Высота шапки */
+    }
+    .main {
+        padding-top: 80px; /* Уменьшенный отступ после шапки */
+    }
+    .title {
+        font-size: 2rem;
+    }
+    .buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding: 0 1rem;
+    }
+    .btn {
+        max-width: 100%;
+        width: 100%;
+    }
+    .form-container {
+        padding: 2rem;
+    }
+    .form-label {
+        font-size: 0.9rem;
+    }
+    .input-field {
+        font-size: 0.9rem;
+    }
+    .select-field {
+        font-size: 0.9rem;
+    }
+    .btn-submit {
+        font-size: 0.9rem;
+    }
+    .footer {
+        padding: 2rem 1rem;
+    }
+    .footer-col {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+}
+@media (max-width: 480px) {
+    .header {
+        padding: 0.5rem;
+    }
+    .menu-icon {
+        font-size: 1.8rem;
+    }
+    .logo {
+        height: 25px;
+    }
+    .gradient-border {
+        top: 45px; /* Высота шапки */
+    }
+    .main {
+        padding-top: 70px; /* Уменьшенный отступ после шапки */
+    }
+    .title {
+        font-size: 1.8rem;
+    }
+    .form-container {
+        padding: 1.5rem;
+    }
+    .form-label {
+        font-size: 0.8rem;
+    }
+    .input-field {
+        font-size: 0.8rem;
+    }
+    .select-field {
+        font-size: 0.8rem;
+    }
+    .btn-submit {
+        font-size: 0.8rem;
+    }
+    .footer {
+        padding: 1.5rem 0.5rem;
+    }
+    .footer-col {
+        margin-bottom: 0.5rem;
+    }
+}
+
+.form-container {
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.form-container.fade-out {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.form-container.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+}

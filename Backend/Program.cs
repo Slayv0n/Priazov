@@ -42,8 +42,6 @@ builder.Services.Configure<DadataSettings>(builder.Configuration.GetSection("Dad
 
 builder.Services.Configure<TurnstileSettings>(builder.Configuration.GetSection("Turnstile"));
 
-builder.Services.AddRazorPages();
-
 builder.Services.AddHttpClient();
 
 builder.Services.AddMemoryCache();
@@ -134,6 +132,7 @@ else
 
 app.UseForwardedHeaders();
 
+app.UseDefaultFiles();
 app.UseStaticFiles();
 
 app.UseAuthentication();
@@ -147,7 +146,6 @@ app.MapScalarApiReference(opt =>
     opt.DefaultHttpClient = new(ScalarTarget.Http, ScalarClient.Http11);
 });
 
-app.MapRazorPages();
 app.MapCompanyEndpoints();
 app.MapManagerEndpoints();
 

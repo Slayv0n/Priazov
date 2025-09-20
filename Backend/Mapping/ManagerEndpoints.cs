@@ -20,8 +20,8 @@ namespace Backend.Mapping
 
         private static async Task<IResult> Create(
             [FromBody] ManagerCreateDto managerDto,
-            ManagerService service,
-            Logger<ManagerService> logger)
+            [FromServices] ManagerService service,
+            [FromServices] Logger<ManagerService> logger)
         {
             var validationResults = new List<ValidationResult>();
             bool isValid = Validator.TryValidateObject(
@@ -63,8 +63,8 @@ namespace Backend.Mapping
         [Authorize]
         public static async Task<IResult> Account(
             [FromQuery] Guid? id,
-            ManagerService service,
-            Logger<ManagerService> logger)
+            [FromServices] ManagerService service,
+            [FromServices] Logger<ManagerService> logger)
         {
             if (id == null)
             {
@@ -80,8 +80,8 @@ namespace Backend.Mapping
         public static async Task<IResult> Update(
             [FromQuery] Guid? id,
             [FromBody] ManagerChangeDto managerDto,
-            ManagerService service,
-            Logger<ManagerService> logger)
+            [FromServices] ManagerService service,
+            [FromServices] Logger<ManagerService> logger)
         {
             var validationResults = new List<ValidationResult>();
             bool isValid = Validator.TryValidateObject(

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Itim&family=Natasha:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@500;600&family=Inter:wght@400;500;600&family=Itim&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/natasha" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="styles/prof_organ.css">
+    <title>ГБУСОН РО "ТАГАНРОГСКИЙ ДИ"</title>
+</head>
+<div>
+  <!-- Шапка -->
+   <div class="page-container">
+    <header class="header py-2 sticky-top bg-white mb-0 p-3">
+        <div class="container-fluid px-0">
+            <div class="d-flex align-items-center">
+                <!-- Меню -->
+                <button class="btn p-0 me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+                    <svg width="30" height="30" viewBox="0 0 30 30">
+                        <path d="M5,9 H25 M5,15 H25 M5,21 H25"
+                              stroke="#000"
+                              stroke-width="2"
+                              stroke-linecap="round" />
+                    </svg>
+                </button>
+
+                <!-- Логотип -->
+                <div class="logo me-3">
+                    <img src="static/Logo.jpg" alt="Logo" width="65" height="42" onclick="location.href='index.html'">
+                </div>
+
+                <!-- Кнопки для широких экранов -->
+                <div class="right-section">
+                    <div class="catalog-button" onclick="location.href='search.html'">
+                        <span>Каталог организаций</span>
+                    </div>
+                    <div class="login-button" onclick="location.href='prof_organ.html'">
+                        <span>Вход</span>
+                    </div>
+                    <div class="register-button" onclick="location.href='registration.html'">
+                        <span>Регистрация</span>
+                    </div>
+                </div>
+
+                <!-- Кнопки для телефонов -->
+                <div class="mobile ms-auto d-lg-none w-50 h-50 d-flex justify-content-end">
+                    <button class="btn catalog-btn me-4" onclick="location.href='registration.html'">Каталог</button>
+                    <div class="profile-dropdown">
+                        <button class="mobile-profile p-0 btn border-0" id="profileDropdownButton">
+                            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="15" cy="10" r="5" fill="#012021"/>
+                                <path d="M15 17C10 17 5 19 5 24V27H25V24C25 19 20 17 15 17Z" fill="#012021"/>
+                            </svg>
+                        </button>
+                        
+                        <div class="dropdown-menu" id="profileDropdownMenu">
+                            <button class="dropdown-item" onclick="location.href='prof_organ.html'">
+                                Вход
+                            </button>
+                            <div class="dropdown-divider"></div>
+                            <button class="dropdown-item" onclick="location.href='registration.html'">
+                                Регистрация
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Выезжающее меню -->
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileMenu">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title">Меню</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+            </div>
+            <div class="offcanvas-body">
+                <button class="btn w-100 mb-2 login-btn catalog" onclick="location.href='index.html'">Главная страница</button>
+                <button class="btn w-100 mb-2 login-btn catalog" onclick="location.href='search.html'">Проекты</button>
+                <button class="btn w-100 mb-2 login-btn catalog" class="scroll-btn" onclick="scrollToBottom()">О нас</button>
+                <button class="btn w-100 mb-2 login-btn catalog" class="scroll-btn" onclick="scrollToBottom()">Помощь</button>
+                <br><br>
+                <button class="btn w-100 mb-2 login-btn catalog" onclick="location.href='prof_organ.html'">Войти</button>    
+                <button class="btn w-100 mb-2 login-btn catalog" onclick="location.href='registration.html'">Зарегистрироваться</button>    
+            </div>
+        </div>
+    </header>
+    
+    <main class="main">
+        <div class="banner">
+            <div class="edit-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 10px;">
+                    <path d="M14.06 9.02L14.98 9.94L5.92 19H5V18.08L14.06 9.02ZM17.66 3C17.41 3 17.15 3.1 16.96 3.29L15.13 5.12L18.88 8.87L20.71 7.04C21.1 6.65 21.1 6.02 20.71 5.63L18.37 3.29C18.17 3.09 17.92 3 17.66 3ZM14.06 6.19L3 17.25V21H6.75L17.81 9.94L14.06 6.19Z" fill="currentColor"/>
+                </svg>
+                <span>редактировать профиль</span>
+            </div>
+        </div>
+        <div class="photo-container"></div>
+        <div class="content container">
+            <div class="content-wrapper">
+                <div class="left-column">
+                    <div class="contact-info">
+                        <h3>Руководитель:</h3>
+                        <p class="director-name">Ольга Анатольевна Михайлова</p>
+                        <div class="contact-details">
+                            <div class="phone">
+                                <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="#666">
+                                    <path d="M20.487 17.14L18.387 15.79C17.447 15.15 16.217 15.41 15.587 16.34L14.517 17.95C12.997 17.35 9.66705 14.33 9.03705 12.81L10.647 11.75C11.587 11.12 11.847 9.89 11.207 8.95L9.85705 6.85C9.21705 5.91 7.98705 5.66 7.05705 6.29L4.50705 8.09C3.57705 8.72 3.32705 9.96 3.96705 10.89L5.72705 13.9C7.96705 18.22 11.647 21.43 16.187 22.71C16.967 22.93 17.787 22.71 18.337 22.11L20.337 19.91C21.107 19.03 20.997 17.67 20.487 17.14Z"/>
+                                </svg>
+                                +7 (863)-461-26-36
+                            </div>
+                            <div class="email">
+                                <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="#666">
+                                    <path d="M20 4H4C2.897 4 2 4.897 2 6V18C2 19.103 2.897 20 4 20H20C21.103 20 22 19.103 22 18V6C22 4.897 21.103 4 20 4ZM20 6V6.511L12 12.734L4 6.511V6H20ZM4 18V9.044L11.386 14.789C11.561 14.93 11.78 15 12 15C12.22 15 12.439 14.93 12.614 14.789L20 9.044V18H4Z"/>
+                                </svg>
+                                galla5@mail.ru
+                            </div>
+                            <div class="website">
+                                <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="#666">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z"/>
+                                    <path d="M12 6C8.69 6 6 8.69 6 12C6 15.31 8.69 18 12 18C15.31 18 18 15.31 18 12C18 8.69 15.31 6 12 6ZM12 16C9.79 16 8 14.21 8 12C8 9.79 9.79 8 12 8C14.21 8 16 9.79 16 12C16 14.21 14.21 16 12 16Z"/>
+                                    <path d="M12 10C10.895 10 10 10.895 10 12C10 13.105 10.895 14 12 14C13.105 14 14 13.105 14 12C14 10.895 13.105 10 12 10Z"/>
+                                </svg>
+                                taganrogdi.ru
+                            </div>
+                            <div class="address">
+                                <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="#666">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z"/>
+                                </svg>
+                                Ростовская обл. г. Таганрог Розы Люксембург ул 115
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="right-column">
+                    <div class="info">
+                        <h1>ГБУСОН РО "ТАГАНРОГСКИЙ ДИ"</h1>
+                        <p>Государственное Бюджетное Учреждение Социального Обслуживания Населения Ростовской области "ТАГАНРОГСКИЙ ДОМ ИНВАЛИДОВ"</p>
+                        <p>Деятельность по уходу за престарелыми и инвалидами с обеспечением проживания</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+   <footer>
+        <div class="footer-content">
+            <div class="contacts">
+                <h3>Контакты</h3>
+                <div class="contact-item">
+                    <span>✉</span>
+                    <a href="mailto:yugolets@priazovsocialimpact.ru">yugolets@priazovsocialimpact.ru</a>
+                </div>
+                <div class="contact-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20.487 17.14L18.387 15.79C17.447 15.15 16.217 15.41 15.587 16.34L14.517 17.95C12.997 17.35 9.66705 14.33 9.03705 12.81L10.647 11.75C11.587 11.12 11.847 9.89 11.207 8.95L9.85705 6.85C9.21705 5.91 7.98705 5.66 7.05705 6.29L4.50705 8.09C3.57705 8.72 3.32705 9.96 3.96705 10.89L5.72705 13.9C7.96705 18.22 11.647 21.43 16.187 22.71C16.967 22.93 17.787 22.71 18.337 22.11L20.337 19.91C21.107 19.03 20.997 17.67 20.487 17.14Z" fill="currentColor" />
+                    </svg>
+                    <a href="tel:+79185009038">+7 (918) 500-9039</a>
+                </div>
+            </div>
+            <div class="help-section">
+                <div class="help-title">Помощь?</div>
+                <a href="tel:+79185009038">+7 (918) 500-9039</a>
+            </div>
+        </div>
+    </footer>
+  
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

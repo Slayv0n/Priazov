@@ -4,39 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Поиск организаций</title>
-    <link rel="stylesheet" href="styles/search.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Itim&family=Natasha:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@500;600&family=Inter:wght@400;500;600&family=Itim&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/natasha" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <link rel="stylesheet" href="styles/search.css">
 </head>
 <body>
-    <div class="page-container">
-        <header class="header">
-            <div class="header-content">
-                <div class="logo-container">
-                    <button class="menu-button">
-                        <span class="menu-icon"></span>
-                    </button>
-                    <div class="logo">LOGO</div>
+    
+        <!-- Шапка -->
+    <header class="header py-2 sticky-top bg-white mb-0 p-3">
+        <div class="container-fluid px-0">
+            <div class="d-flex align-items-center">
+                <!-- Меню -->
+                <button class="btn p-0 me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+                    <svg width="30" height="30" viewBox="0 0 30 30">
+                        <path d="M5,9 H25 M5,15 H25 M5,21 H25"
+                              stroke="#000"
+                              stroke-width="2"
+                              stroke-linecap="round" />
+                    </svg>
+                </button>
+
+                <!-- Логотип -->
+                <div class="logo me-3">
+                    <img src="static/Logo.jpg" alt="Logo" width="65" height="42" onclick="location.href='index.html'">
                 </div>
-                
-                <div class="header-controls">
-                    <button class="catalog-button">
-                        Каталог проектов
-                    </button>
-                    
-                    <div class="user-menu">
-                        <button class="user-button">
-                            <span class="user-icon"></span>
-                            <span class="chevron-down"></span>
-                        </button>
-                        <div class="dropdown-menu">
-                            <a href="#" class="menu-item">Выход</a>
-                            <a href="#" class="menu-item">Сменить пароль</a>
-                        </div>
+
+                <!-- Кнопки для широких экранов -->
+                <div class="right-section">
+                    <div class="login-button" onclick="location.href='prof_organ.html'">
+                        <span>Вход</span>
+                    </div>
+                    <div class="register-button" onclick="location.href='registration.html'">
+                        <span>Регистрация</span>
                     </div>
                 </div>
-            </div>
-        </header>
 
+                <!-- Кнопки для телефонов -->
+                <div class="ms-auto d-lg-none w-50 h-50 d-flex justify-content-end">
+                    <button class="btn catalog-btn me-4">Каталог</button>
+                    <button class="mobile-profile p-0 btn border-0">
+                        <svg width="30" height="30" onclick="location.href='organ.html'" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15 0.0126953C16.9439 0.0126953 18.7778 0.358224 20.502 1.0498L20.8447 1.19238C22.5542 1.93005 24.0554 2.915 25.3477 4.14648L25.6035 4.39648C26.868 5.66092 27.8856 7.13378 28.6562 8.81543L28.8076 9.15527C29.5943 10.9785 29.9873 12.9268 29.9873 15C29.9873 16.9439 29.6418 18.7778 28.9502 20.502L28.8076 20.8447C28.0207 22.6683 26.9524 24.2547 25.6035 25.6035C24.3391 26.868 22.8662 27.8856 21.1846 28.6562L20.8447 28.8076C19.0215 29.5943 17.0732 29.9873 15 29.9873C13.0561 29.9873 11.2222 29.6418 9.49805 28.9502L9.15527 28.8076C7.44576 28.07 5.94463 27.085 4.65234 25.8535L4.39648 25.6035C3.13205 24.3391 2.11437 22.8662 1.34375 21.1846L1.19238 20.8447C0.405701 19.0215 0.0126953 17.0732 0.0126953 15C0.0126953 13.0561 0.358224 11.2222 1.0498 9.49805L1.19238 9.15527C1.93005 7.44577 2.915 5.94463 4.14648 4.65234L4.39648 4.39648C5.66092 3.13205 7.13378 2.11437 8.81543 1.34375L9.15527 1.19238C10.9785 0.405701 12.9268 0.0126953 15 0.0126953ZM15 2.9873C11.8799 2.9873 9.19389 4.01592 6.94238 6.07227L6.49707 6.49707C4.15721 8.83693 2.9873 11.6717 2.9873 15C2.9873 16.2919 3.17418 17.5169 3.54785 18.6748L3.71973 19.167C4.20772 20.4683 4.88969 21.6321 5.76562 22.6582L5.77344 22.667L5.78223 22.6602C6.89681 21.8078 8.12655 21.113 9.4707 20.5762L10.0547 20.3555C11.6282 19.7936 13.2765 19.5127 15 19.5127C16.5083 19.5127 17.9591 19.7278 19.3525 20.1582L19.9453 20.3555C21.5191 20.9176 22.9438 21.686 24.2178 22.6602L24.2266 22.667L24.2344 22.6582C25.0008 21.7604 25.6185 20.7569 26.0879 19.6484L26.2803 19.167C26.7683 17.8655 27.0127 16.4764 27.0127 15C27.0127 11.8799 25.9841 9.19389 23.9277 6.94238L23.5029 6.49707C21.1631 4.15721 18.3283 2.9873 15 2.9873ZM15 6.0127C16.3797 6.0127 17.5564 6.45612 18.5303 7.34375L18.7227 7.52734C19.7327 8.53742 20.2373 9.7782 20.2373 11.25C20.2373 12.6297 19.7939 13.8064 18.9062 14.7803L18.7227 14.9727C17.7126 15.9827 16.4718 16.4873 15 16.4873C13.6203 16.4873 12.4436 16.0439 11.4697 15.1562L11.2773 14.9727C10.2673 13.9626 9.7627 12.7218 9.7627 11.25C9.7627 9.7782 10.2673 8.53742 11.2773 7.52734C12.2874 6.51727 13.5282 6.0127 15 6.0127Z" fill="#012021" stroke="#E7F0F2" stroke-width="0.025" />
+                        </svg>
+                    </button>
+                    <button class="mobile-profile p-0 btn border-0">
+                        <svg width="30" height="30" onclick="location.href='organ.html'" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 11L15 19L23 11" stroke="#012021" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Выезжающее меню -->
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileMenu">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title">Меню</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+            </div>
+            <div class="offcanvas-body">
+                <button class="btn w-100 mb-2 login-btn catalog" onclick="location.href='index.html'">Главная страница</button>
+                <button class="btn w-100 mb-2 login-btn catalog" onclick="location.href='search.html'">Проекты</button>
+                <button class="btn w-100 mb-2 login-btn catalog" class="scroll-btn" onclick="scrollToBottom()">О нас</button>
+                <button class="btn w-100 mb-2 login-btn catalog" class="scroll-btn" onclick="scrollToBottom()">Помощь</button>
+                <br><br>
+                <button class="btn w-100 mb-2 login-btn catalog" onclick="location.href='prof_organ.html'">Войти</button>    
+                <button class="btn w-100 mb-2 login-btn catalog" onclick="location.href='registration.html'">Зарегистрироваться</button>  
+            </div>
+        </div>
+    </header>
+    <div class="page-container">
         <main class="main-content">
             <div class="content-container">
                 <h1 class="page-title">Поиск организаций</h1>
@@ -72,71 +114,37 @@
                     </button>
                 </div>
                 
-                <div class="results-grid">
-                    <!-- Карточка организации -->
-                    <div class="organization-card">
-                        <div class="card-image"></div>
-                        <div class="card-content">
-                            <h3 class="org-name">Название организации</h3>
-                            <p class="org-description">Краткое описание проекта, цели и что-то там еще что захочет написать исполнитель проекта</p>
-                            <button class="details-button">Подробнее</button>
-                        </div>
-                    </div>
+                <div id="post-wrapper" class="results-grid">
                     
-                    <!-- Повторяющиеся карточки -->
-                    <div class="organization-card">
-                        <div class="card-image"></div>
-                        <div class="card-content">
-                            <h3 class="org-name">Название организации</h3>
-                            <p class="org-description">Краткое описание проекта, цели и что-то там еще что захочет написать исполнитель проекта</p>
-                            <button class="details-button">Подробнее</button>
-                        </div>
-                    </div>
-                    
-                    <div class="organization-card">
-                        <div class="card-image"></div>
-                        <div class="card-content">
-                            <h3 class="org-name">Название организации</h3>
-                            <p class="org-description">Краткое описание проекта, цели и что-то там еще что захочет написать исполнитель проекта</p>
-                            <button class="details-button">Подробнее</button>
-                        </div>
-                    </div>
-                    
-                    <div class="organization-card">
-                        <div class="card-image"></div>
-                        <div class="card-content">
-                            <h3 class="org-name">Название организации</h3>
-                            <p class="org-description">Краткое описание проекта, цели и что-то там еще что захочет написать исполнитель проекта</p>
-                            <button class="details-button">Подробнее</button>
-                        </div>
-                    </div>
-                    
-                    <div class="organization-card">
-                        <div class="card-image"></div>
-                        <div class="card-content">
-                            <h3 class="org-name">Название организации</h3>
-                            <p class="org-description">Краткое описание проекта, цели и что-то там еще что захочет написать исполнитель проекта</p>
-                            <button class="details-button">Подробнее</button>
-                        </div>
-                    </div>
-                    
-                    <div class="organization-card">
-                        <div class="card-image"></div>
-                        <div class="card-content">
-                            <h3 class="org-name">Название организации</h3>
-                            <p class="org-description">Краткое описание проекта, цели и что-то там еще что захочет написать исполнитель проекта</p>
-                            <button class="details-button">Подробнее</button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </main>
         
-        <footer class="footer">
-            <div class="footer-content">
-                <p class="footer-text">© 2023 Все права защищены</p>
+  <footer>
+        <div class="footer-content">
+            <div class="contacts">
+                <h3>Контакты</h3>
+                <div class="contact-item">
+                    <span>✉</span>
+                    <a href="mailto:yugolets@priazovsocialimpact.ru">yugolets@priazovsocialimpact.ru</a>
+                </div>
+                <div class="contact-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20.487 17.14L18.387 15.79C17.447 15.15 16.217 15.41 15.587 16.34L14.517 17.95C12.997 17.35 9.66705 14.33 9.03705 12.81L10.647 11.75C11.587 11.12 11.847 9.89 11.207 8.95L9.85705 6.85C9.21705 5.91 7.98705 5.66 7.05705 6.29L4.50705 8.09C3.57705 8.72 3.32705 9.96 3.96705 10.89L5.72705 13.9C7.96705 18.22 11.647 21.43 16.187 22.71C16.967 22.93 17.787 22.71 18.337 22.11L20.337 19.91C21.107 19.03 20.997 17.67 20.487 17.14Z" fill="currentColor" />
+                    </svg>
+                    <a href="tel:+79185009038">+7 (918) 500-9039</a>
+                </div>
             </div>
-        </footer>
+            <div class="help-section">
+                <div class="help-title">Помощь?</div>
+                <a href="tel:+79185009038">+7 (918) 500-9039</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="scripts/searchScripts.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     </div>
 </body>
 </html>
