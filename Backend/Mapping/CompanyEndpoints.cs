@@ -2,22 +2,10 @@
 using Backend.Models.Dto;
 using Backend.Services;
 using Backend.Validation;
-using Dadata;
-using Dadata.Model;
-using DataBase;
-using DataBase.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Options;
-using Microsoft.Net.Http.Headers;
-using Org.BouncyCastle.Asn1.Ocsp;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+
 
 namespace Backend.Mapping
 {
@@ -27,32 +15,66 @@ namespace Backend.Mapping
         public static void MapCompanyEndpoints(this WebApplication app)
         {
             var group = app.MapGroup("/companies");
-            //group.MapPost("/create", Create);
-            //group.MapGet("/review", Review);
+            group.MapPost("/create", Create);
+            group.MapGet("/review", Review);
             group.MapGet("account", Account);
-            //group.MapGet("/filterMap", FilterMap);
+            group.MapGet("/filterMap", FilterMap);
             group.MapGet("/search", Search);
             group.MapPut("/update", Update);
         }
 
-        //private static async Task<IResult> Create(
-        //    [FromBody] CompanyCreateDto companyDto,
-        //    [FromServices] CompanyService service)
-        //{
-        //    return await service.CreateCompanyAsync(companyDto);
-        //}
+        private static async Task<IResult> Create(
+            [FromBody] CompanyCreateDto companyDto,
+            [FromServices] CompanyService service,
+            [FromServices] Logger<CompanyService> logger)
+        {
+            var validationResults = new List<ValidationResult>();
+            bool isValid = Validator.TryValidateObject(
+                companyDto,
+                new ValidationContext(companyDto),
+                validationResults,
+                validateAllProperties: true
+            );
 
-        //private static async Task<IResult> Review(
-        //    [FromServices] CompanyService service)
-        //{
-        //    //return await service.ReviewCompanyAsync();
-        //}
+            if (!isValid)
+            {
+                logger.LogWarning($"Ошибка валидации при создании инвестора: {validationResults}");
+                var errors = validationResults
+                    .GroupBy(v => v.MemberNames.FirstOrDefault() ?? "")
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Select(v => v.ErrorMessage ?? "Неизвестная ошибка").ToArray()
+                    );
+                return Results.ValidationProblem(errors);
+            }
+            var company = await service.CreateCompanyAsync(companyDto);
+            if (company == null)
+            {
+                return Results.BadRequest("Регистрация не успешна");
+            }
+            return Results.Ok(company);
+        }
+
+        private static async Task<IResult> Review(
+            [FromServices] CompanyService service)
+        {
+            var company = await service.ReviewCompanyAsync();
+            var count = await service.CountCompaniesAsync();
+            return Results.Ok(new { Count = count, Companies = company });
+        }
 
         [Authorize]
         public static async Task<IResult> Account([FromQuery] Guid? id,
-            [FromServices] CompanyService service)
+            [FromServices] CompanyService service,
+            [FromServices] Logger<CompanyService> logger)
         {
-            return await service.AccountCompanyAsync(id);
+            if (id == null)
+            {
+                logger.LogWarning("Id компании отсутствует");
+                return Results.BadRequest("Id пуст");
+            }
+            var company = await service.AccountCompanyAsync(id);
+            return Results.Ok(company);
         }
 
         [Authorize]
@@ -64,18 +86,48 @@ namespace Backend.Mapping
         {
             return await service.SearchCompanyAsync(industry, region, searchTerm);
         }
-        //public static async Task<IResult> FilterMap(
-        //    [FromQuery] string? industries,
-        //    [FromServices] CompanyService service)
-        //{
-        //    return await service.FilterMapCompanyAsync(industries);
-        //}
-        //[Authorize]
-        public static async Task<IResult> Update([FromQuery] Guid? id,
-            [FromBody] CompanyChangeDto companyDto,
+        public static async Task<IResult> FilterMap(
+            [FromQuery] string? industries,
             [FromServices] CompanyService service)
         {
-            return await service.UpdateCompanyAsync(id, companyDto);
+            //var addresses = await service.FilterMapCompanyAsync(industries);
+
+            return Results.Ok();
+        }
+        [Authorize]
+        public static async Task<IResult> Update([FromQuery] Guid? id,
+            [FromBody] CompanyChangeDto companyDto,
+            [FromServices] CompanyService service,
+            [FromServices] Logger<CompanyService> logger)
+        {
+            var validationResults = new List<ValidationResult>();
+            bool isValid = Validator.TryValidateObject(
+                companyDto,
+                new ValidationContext(companyDto),
+                validationResults,
+                validateAllProperties: true
+            );
+
+            if (!isValid)
+            {
+                logger.LogWarning($"Ошибка валидации при создании инвестора: {validationResults}");
+                var errors = validationResults
+                    .GroupBy(v => v.MemberNames.FirstOrDefault() ?? "")
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Select(v => v.ErrorMessage ?? "Неизвестная ошибка").ToArray()
+                    );
+                return Results.ValidationProblem(errors);
+            }
+
+            if (id == null)
+            {
+                logger.LogWarning("Id компании отсутствует");
+                return Results.BadRequest("Id пуст");
+            }
+            var company = await service.UpdateCompanyAsync(id, companyDto);
+
+            return Results.Ok(company);
         }
     }
 }

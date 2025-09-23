@@ -21,7 +21,7 @@ namespace Backend.Services
     public interface ICompanyService
     {
         Task<CompanyResponseDto> CreateCompanyAsync(CompanyCreateDto companyDto);
-        Task<IResult> AccountCompanyAsync(Guid? id);
+        Task<CompanyResponseDto> AccountCompanyAsync(Guid? id);
         Task<List<CompanyResponseDto>> ReviewCompanyAsync();
         Task<int> CountCompaniesAsync();
         Task<IResult> SearchCompanyAsync(string? industry, string? region, string? searchTerm);
@@ -128,19 +128,13 @@ namespace Backend.Services
             return new CompanyResponseDto(company, company.Address.FullAddress);
         }
 
-        public async Task<IResult> AccountCompanyAsync(Guid? id)
+        public async Task<CompanyResponseDto> AccountCompanyAsync(Guid? id)
         {
-            if (id == null)
-            {
-                _logger.LogWarning("Id компании отсутствует");
-                return Results.BadRequest("Id пуст");
-            }
-
             var cacheKey = $"companies_{id}";
             if (_cache.TryGetValue(cacheKey, out CompanyResponseDto? cachedCompany))
             {
                 _logger.LogInformation($"Ответ взят из кэша: {cacheKey}");
-                return Results.Ok(cachedCompany);
+                return cachedCompany!;
             }
             else
             {
@@ -154,7 +148,7 @@ namespace Backend.Services
             if (company == null)
             {
                 _logger.LogWarning($"Компания не найдена по Id: {id}");
-                return Results.NotFound();
+                throw new NotFoundException("Компания не найдена");
             }
 
             var companyResponse = new CompanyResponseDto(company, company.Address.FullAddress);
@@ -162,7 +156,7 @@ namespace Backend.Services
             _cache.Set(cacheKey, companyResponse, CacheOptions);
             _logger.LogInformation($"Компания успешно найдена Id: {id}");
 
-            return Results.Ok(companyResponse);
+            return companyResponse;
         }
 
         public async Task<List<CompanyResponseDto>> ReviewCompanyAsync()

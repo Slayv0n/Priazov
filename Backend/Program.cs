@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog;
@@ -132,8 +134,22 @@ else
 
 app.UseForwardedHeaders();
 
+var baseUploadsPath = Path.Combine(builder.Environment.WebRootPath, "uploads");
+var usersPath = Path.Combine(baseUploadsPath, "users");
+
+if (!Directory.Exists(baseUploadsPath)) Directory.CreateDirectory(baseUploadsPath);
+if (!Directory.Exists(usersPath)) Directory.CreateDirectory(usersPath);
+
 app.UseDefaultFiles();
 app.UseStaticFiles();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.WebRootPath, "uploads")),
+    RequestPath = "/uploads",
+    ContentTypeProvider = new FileExtensionContentTypeProvider()
+});
 
 app.UseAuthentication();
 app.UseMiddleware<TokenRefreshMiddleware>();
@@ -148,6 +164,7 @@ app.MapScalarApiReference(opt =>
 
 app.MapCompanyEndpoints();
 app.MapManagerEndpoints();
+app.MapImageEnpoints();
 
 app.Run();
 
