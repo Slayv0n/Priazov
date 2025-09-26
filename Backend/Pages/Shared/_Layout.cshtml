@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/styles/layout.css" asp-append-version="true">
+    <link rel="shortcut icon" href="~/static/main/Logo.svg" asp-append-version="true" />
+    @await RenderSectionAsync("Links", required: false)
+</head>
+<body>
+    @Html.AntiForgeryToken()
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-group">
+                <button class="menu-icon">
+                    <div class="menu-icon-bar"></div>
+                    <div class="menu-icon-bar"></div>
+                    <div class="menu-icon-bar"></div>
+                </button>
+                <div class="logo">
+                    <img src="/static/main/Logo.svg" onclick="location.href='/'">
+                </div>
+            </div>
+            
+            <div class="right-section">                
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <div class="icon">
+                        <img src="/static/img/header-icon.png" onclick="location.href='/'">
+                    </div>
+                    <div class="catalog-button">
+                        <span>Каталог организаций</span>
+                    </div>
+                }
+                else {
+                <div class="login-button" onclick="location.href='/auth'">
+                    <span>Вход</span>
+                </div>
+                <div class="register-button" onclick="location.href='/registration'">
+                    <span>Регистрация</span>
+                </div>
+                }
+                
+            </div>
+        </div>
+    </header>
+    <div>
+        @RenderBody()
+    </div>
+    <footer>
+        <div class="contacts">
+            <h3>Контакты</h3>
+            <div class="contact-item">
+                <span>✉</span>
+                <a href="mailto:yugolets@priazovsocialimpact.ru" style="color: white; text-decoration: none">yugolets@priazovsocialimpact.ru</a>
+            </div>
+            <div class="contact-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20.487 17.14L18.387 15.79C17.447 15.15 16.217 15.41 15.587 16.34L14.517 17.95C12.997 17.35 9.66705 14.33 9.03705 12.81L10.647 11.75C11.587 11.12 11.847 9.89 11.207 8.95L9.85705 6.85C9.21705 5.91 7.98705 5.66 7.05705 6.29L4.50705 8.09C3.57705 8.72 3.32705 9.96 3.96705 10.89L5.72705 13.9C7.96705 18.22 11.647 21.43 16.187 22.71C16.967 22.93 17.787 22.71 18.337 22.11L20.337 19.91C21.107 19.03 20.997 17.67 20.487 17.14Z" fill="currentColor" />
+                </svg>
+                <a href="callto:+79185009038" style="color: white; text-decoration: none">+7 (918) 500-9039</a>
+            </div>
+        </div>
+    </footer>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,106 @@
+﻿@page
+@model Backend.Pages.RegistrationModel
+@{
+    ViewData["Title"] = "Регистрация";
+}
+@section Links
+{
+    <link rel="stylesheet" href="~/styles/registrationPage.css" asp-append-version="true" />
+}
+
+
+<!-- Основное содержимое -->
+<main class="main-container">
+    <h1 class="registration-title">@ViewData["Title"]</h1>
+    <div class="registration-container">
+        <div class="tabs-container">
+            <button class="tab executor-tab">
+                <span class="tab-text">исполнитель</span>
+            </button>
+            <button class="tab investor-tab">
+                <span class="tab-text" style = "color: white">инвестор</span>
+            </button>
+        </div>
+        <form class="registration-form" asp-page="Registration">
+            <div class="field">
+                <label asp-for="Company.Name"></label>
+                <div class="form-field">
+                    <input asp-for="Company.Name" placeholder="краткое название организации" id="organizationName">
+                </div>
+                <span asp-validation-for="Company.Name" class="validate"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Company.FullAddress"></label>
+                <div class="form-field">
+                    <input asp-for="Company.FullAddress" placeholder="юридический адрес" id="address">
+                </div>
+                <span asp-validation-for="Company.FullAddress" class="validate"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Company.Industry"></label>
+                <div class="form-field">
+                    <input asp-for="Company.Industry" placeholder="сфера интересов" list="browsers" id="industry">
+                </div>
+                <span asp-validation-for="Company.Industry" class="validate"></span>
+                <datalist id="browsers">
+                    <option value="" disabled selected hidden>категория (с выбором)</option>
+                    <option value="Образовательное учреждение">Образовательное учреждение</option>
+                    <option value="Научно-исследовательский институт">Научно-исследовательский институт</option>
+                    <option value="Научно-образовательный проект">Научно-образовательный проект</option>
+                    <option value="Государственное учреждение">Государственное учреждение</option>
+                    <option value="Коммерческая деятельность">Коммерческая деятельность</option>
+                    <option value="Стартап">Стартап</option>
+                    <option value="Финансы">Финансы</option>
+                    <option value="Акселератор / инкубатор / технопарк">Акселератор / инкубатор / технопарк</option>
+                    <option value="Ассоциация / объединение">Ассоциация / объединение</option>
+                    <option value="Инициатива">Инициатива</option>
+                    <option value="Отраслевое событие / научная конференция">Отраслевое событие / научная конференция</option>
+                    <option value="Другое">Другое</option>
+                </datalist>
+            </div>
+            <div class="field">
+                <label asp-for="Company.LeaderName"></label>
+                <div class="form-field">
+                    <input asp-for="Company.LeaderName" placeholder="ФИО руководителя" id="FIO">
+                </div>
+                <span asp-validation-for="Company.LeaderName" class="validate"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Company.Phone"></label>
+                <div class="form-field">
+                    <input asp-for="Company.Phone" id="phone" placeholder="7 (XXX) XXX-XX-XX"/>
+                </div>
+                <span asp-validation-for="Company.Phone" class="validate"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Company.Email"></label>
+                <div class="form-field">
+                    <input asp-for="Company.Email" placeholder="электронная почта" id="mail">
+                </div>
+                <span asp-validation-for="Company.Email" class="validate"></span>
+            </div>
+            
+            <div class="field">
+                <label asp-for="Company.Password"></label>
+            <div class="form-field">
+                    <input asp-for="Company.Password" type="password" placeholder="пароль" id="password">
+            </div>
+                <span asp-validation-for="Company.Password" class="validate"></span>
+            </div>
+            
+            <div class="field">
+                <label asp-for="Company.Password2"></label>
+                <div class="form-field">
+                    <input asp-for="Company.Password2" type="password" placeholder="повторите пароль" id="password2">
+                </div>
+                <span asp-validation-for="Company.Password2" class="validate"></span>
+            </div>
+            <span class="validate">@Model.ValidationResult</span>
+            
+            <button type="submit" class="submit-btn">Зарегистрироваться</button>
+        </form>
+    </div>
+</main>
+
+
+
