@@ -31,32 +31,36 @@
 
                 <!-- Логотип -->
                 <div class="logo me-3">
-                    <img src="static/Logo.jpg" alt="Logo" width="65" height="42" onclick="location.href='index.html'">
+                    <img src="static/Logo.jpg" onclick="location.href='index.html'" alt="Logo" width="65" height="42">
                 </div>
 
                 <!-- Кнопки для широких экранов -->
                 <div class="right-section">
-                    <div class="login-button" onclick="location.href='prof_organ.html'">
-                        <span>Вход</span>
-                    </div>
-                    <div class="register-button" onclick="location.href='registration.html'">
-                        <span>Регистрация</span>
-                    </div>
+                <div class="catalog-button" onclick="location.href='search.html'">Каталог проектов</div>
+                <div class="auth-block-header"></div>
                 </div>
 
                 <!-- Кнопки для телефонов -->
-                <div class="ms-auto d-lg-none w-50 h-50 d-flex justify-content-end">
-                    <button class="btn catalog-btn me-4">Каталог</button>
-                    <button class="mobile-profile p-0 btn border-0">
-                        <svg width="30" height="30" onclick="location.href='organ.html'" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M15 0.0126953C16.9439 0.0126953 18.7778 0.358224 20.502 1.0498L20.8447 1.19238C22.5542 1.93005 24.0554 2.915 25.3477 4.14648L25.6035 4.39648C26.868 5.66092 27.8856 7.13378 28.6562 8.81543L28.8076 9.15527C29.5943 10.9785 29.9873 12.9268 29.9873 15C29.9873 16.9439 29.6418 18.7778 28.9502 20.502L28.8076 20.8447C28.0207 22.6683 26.9524 24.2547 25.6035 25.6035C24.3391 26.868 22.8662 27.8856 21.1846 28.6562L20.8447 28.8076C19.0215 29.5943 17.0732 29.9873 15 29.9873C13.0561 29.9873 11.2222 29.6418 9.49805 28.9502L9.15527 28.8076C7.44576 28.07 5.94463 27.085 4.65234 25.8535L4.39648 25.6035C3.13205 24.3391 2.11437 22.8662 1.34375 21.1846L1.19238 20.8447C0.405701 19.0215 0.0126953 17.0732 0.0126953 15C0.0126953 13.0561 0.358224 11.2222 1.0498 9.49805L1.19238 9.15527C1.93005 7.44577 2.915 5.94463 4.14648 4.65234L4.39648 4.39648C5.66092 3.13205 7.13378 2.11437 8.81543 1.34375L9.15527 1.19238C10.9785 0.405701 12.9268 0.0126953 15 0.0126953ZM15 2.9873C11.8799 2.9873 9.19389 4.01592 6.94238 6.07227L6.49707 6.49707C4.15721 8.83693 2.9873 11.6717 2.9873 15C2.9873 16.2919 3.17418 17.5169 3.54785 18.6748L3.71973 19.167C4.20772 20.4683 4.88969 21.6321 5.76562 22.6582L5.77344 22.667L5.78223 22.6602C6.89681 21.8078 8.12655 21.113 9.4707 20.5762L10.0547 20.3555C11.6282 19.7936 13.2765 19.5127 15 19.5127C16.5083 19.5127 17.9591 19.7278 19.3525 20.1582L19.9453 20.3555C21.5191 20.9176 22.9438 21.686 24.2178 22.6602L24.2266 22.667L24.2344 22.6582C25.0008 21.7604 25.6185 20.7569 26.0879 19.6484L26.2803 19.167C26.7683 17.8655 27.0127 16.4764 27.0127 15C27.0127 11.8799 25.9841 9.19389 23.9277 6.94238L23.5029 6.49707C21.1631 4.15721 18.3283 2.9873 15 2.9873ZM15 6.0127C16.3797 6.0127 17.5564 6.45612 18.5303 7.34375L18.7227 7.52734C19.7327 8.53742 20.2373 9.7782 20.2373 11.25C20.2373 12.6297 19.7939 13.8064 18.9062 14.7803L18.7227 14.9727C17.7126 15.9827 16.4718 16.4873 15 16.4873C13.6203 16.4873 12.4436 16.0439 11.4697 15.1562L11.2773 14.9727C10.2673 13.9626 9.7627 12.7218 9.7627 11.25C9.7627 9.7782 10.2673 8.53742 11.2773 7.52734C12.2874 6.51727 13.5282 6.0127 15 6.0127Z" fill="#012021" stroke="#E7F0F2" stroke-width="0.025" />
-                        </svg>
-                    </button>
-                    <button class="mobile-profile p-0 btn border-0">
-                        <svg width="30" height="30" onclick="location.href='organ.html'" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7 11L15 19L23 11" stroke="#012021" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </button>
+                <div class="mobile ms-auto d-lg-none w-50 h-50 d-flex justify-content-end">
+                    <button class="btn catalog-btn me-4" onclick="location.href='registration.html'">Каталог</button>
+                    <div class="profile-dropdown">
+                        <button class="mobile-profile p-0 btn border-0" id="profileDropdownButton">
+                            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="15" cy="10" r="5" fill="#012021"/>
+                                <path d="M15 17C10 17 5 19 5 24V27H25V24C25 19 20 17 15 17Z" fill="#012021"/>
+                            </svg>
+                        </button>
+                        
+                        <div class="dropdown-menu" id="profileDropdownMenu">
+                            <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            Вход
+                            </button>
+                            <div class="dropdown-divider"></div>
+                            <button class="dropdown-item" onclick="location.href='registration.html'">
+                                Регистрация
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -68,16 +72,38 @@
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
             </div>
             <div class="offcanvas-body">
-                <button class="btn w-100 mb-2 login-btn catalog" onclick="location.href='index.html'">Главная страница</button>
-                <button class="btn w-100 mb-2 login-btn catalog" onclick="location.href='search.html'">Проекты</button>
-                <button class="btn w-100 mb-2 login-btn catalog" class="scroll-btn" onclick="scrollToBottom()">О нас</button>
-                <button class="btn w-100 mb-2 login-btn catalog" class="scroll-btn" onclick="scrollToBottom()">Помощь</button>
-                <br><br>
-                <button class="btn w-100 mb-2 login-btn catalog" onclick="location.href='prof_organ.html'">Войти</button>    
-                <button class="btn w-100 mb-2 login-btn catalog" onclick="location.href='registration.html'">Зарегистрироваться</button>  
-            </div>
+                <button class="btn w-100 mb-2 catalog" onclick="location.href='index.html'">Главная страница</button>
+                <button class="btn w-100 mb-2 catalog" onclick="location.href='search.html'">Проекты</button>
+                <button class="btn w-100 mb-2 catalog" onclick="scrollToBottom()">О нас</button>
+                <button class="btn w-100 mb-2 catalog" onclick="scrollToBottom()">Помощь</button>
+
+                <!-- 🔽 этот блок будем обновлять -->
+                <div class="auth-block mt-3"></div>
+                </div>
         </div>
     </header>
+
+    
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Авторизация</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm" class="space-y-3">
+                <input type="email" class="form-control mb-3" placeholder="электронная почта" required>
+                <input type="password" class="form-control mb-3" placeholder="пароль" required>
+                <div class="text-center mb-3">
+                    <a href="#" class="small text-primary">Забыли пароль?</a>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Войти</button>
+                </form>
+            </div>
+            </div>
+        </div>
+        </div>
     <div class="page-container">
         <main class="main-content">
             <div class="content-container">
@@ -143,7 +169,41 @@
     </footer>
 
     <script src="scripts/searchScripts.js"></script>
+    <script src="scripts/auth.js"></script>
     
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pageId = urlParams.get("id");
+
+    if (!pageId) {
+        document.querySelector(".main").innerHTML = "<h1>Профиль не найден</h1>";
+        return;
+    }
+
+    fetch("data/companies.json")
+        .then(res => res.json())
+        .then(data => {
+        const org = data.organizations.find(o => o.id == pageId);
+        if (!org) {
+            document.querySelector(".main").innerHTML = "<h1>Профиль не найден</h1>";
+            return;
+        }
+
+        // например меняем заголовок и описание
+        document.title = org.title;
+        document.querySelector(".right-column .info h1").textContent = org.title;
+        document.querySelector(".right-column .info p").textContent = org.description;
+
+        // при необходимости подставляем остальные данные (почту, сайт и т.д.)
+        })
+        .catch(err => {
+        console.error("Ошибка загрузки профиля:", err);
+        document.querySelector(".main").innerHTML = "<h1>Ошибка загрузки</h1>";
+        });
+    });
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     </div>
 </body>

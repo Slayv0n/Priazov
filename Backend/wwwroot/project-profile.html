@@ -15,79 +15,93 @@
 
         <!-- Шапка -->
         <header class="header py-2 sticky-top bg-white mb-0 p-3">
-            <div class="container-fluid px-0">
-                <div class="d-flex align-items-center">
-                    <!-- Меню -->
-                    <button class="btn p-0 me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
-                        <svg width="30" height="30" viewBox="0 0 30 30">
-                            <path d="M5,9 H25 M5,15 H25 M5,21 H25"
-                                  stroke="#000"
-                                  stroke-width="2"
-                                  stroke-linecap="round" />
-                        </svg>
-                    </button>
+        <div class="container-fluid px-0">
+            <div class="d-flex align-items-center">
+                <!-- Меню -->
+                <button class="btn p-0 me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+                    <svg width="30" height="30" viewBox="0 0 30 30">
+                        <path d="M5,9 H25 M5,15 H25 M5,21 H25"
+                              stroke="#000"
+                              stroke-width="2"
+                              stroke-linecap="round" />
+                    </svg>
+                </button>
 
-                    <!-- Логотип -->
-                    <div class="logo me-3">
-                        <img src="static/Logo.jpg" alt="Logo" width="65" height="42" onclick="location.href='index.html'">
-                    </div>
+                <!-- Логотип -->
+                <div class="logo me-3">
+                    <img src="static/Logo.jpg" onclick="location.href='index.html'" alt="Logo" width="65" height="42">
+                </div>
 
-                    <!-- Кнопки для широких экранов -->
-                    <div class="right-section">
-                        <div class="catalog-button" onclick="location.href='search.html'">
-                            <span>Каталог организаций</span>
-                        </div>
-                        <div class="login-button" onclick="location.href='prof_organ.html'">
-                            <span>Вход</span>
-                        </div>
-                        <div class="register-button" onclick="location.href='registration.html'">
-                            <span>Регистрация</span>
-                        </div>
-                    </div>
+                <!-- Кнопки для широких экранов -->
+                <div class="right-section">
+                <div class="catalog-button" onclick="location.href='search.html'">Каталог проектов</div>
+                <div class="auth-block-header"></div>
+                </div>
 
-                    <!-- Кнопки для телефонов -->
-                    <div class="mobile ms-auto d-lg-none w-50 h-50 d-flex justify-content-end">
-                        <button class="btn catalog-btn me-4" onclick="location.href='search.html'">Каталог</button>
-                        <div class="profile-dropdown">
-                            <button class="mobile-profile p-0 btn border-0" id="profileDropdownButton">
-                                <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="15" cy="10" r="5" fill="#012021"/>
-                                    <path d="M15 17C10 17 5 19 5 24V27H25V24C25 19 20 17 15 17Z" fill="#012021"/>
-                                </svg>
+                <!-- Кнопки для телефонов -->
+                <div class="mobile ms-auto d-lg-none w-50 h-50 d-flex justify-content-end">
+                    <button class="btn catalog-btn me-4" onclick="location.href='search.html'">Каталог</button>
+                    <div class="profile-dropdown">
+                        <button class="mobile-profile p-0 btn border-0" id="profileDropdownButton">
+                            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="15" cy="10" r="5" fill="#012021"/>
+                                <path d="M15 17C10 17 5 19 5 24V27H25V24C25 19 20 17 15 17Z" fill="#012021"/>
+                            </svg>
+                        </button>
+                        
+                        <div class="dropdown-menu" id="profileDropdownMenu">
+                            <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            Вход
                             </button>
-                            
-                            <div class="dropdown-menu" id="profileDropdownMenu">
-                                <button class="dropdown-item" onclick="location.href='prof_organ.html'">
-                                    Вход
-                                </button>
-                                <div class="dropdown-divider"></div>
-                                <button class="dropdown-item" onclick="location.href='registration.html'">
-                                    Регистрация
-                                </button>
-                            </div>
+                            <div class="dropdown-divider"></div>
+                            <button class="dropdown-item" onclick="location.href='registration.html'">
+                                Регистрация
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Выезжающее меню -->
-            <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileMenu">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title">Меню</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <button class="btn w-100 mb-2 login-btn catalog" onclick="location.href='index.html'">Главная страница</button>
-                    <button class="btn w-100 mb-2 login-btn catalog" onclick="location.href='search.html'">Проекты</button>
-                    <button class="btn w-100 mb-2 login-btn catalog" class="scroll-btn" onclick="scrollToBottom()">О нас</button>
-                    <button class="btn w-100 mb-2 login-btn catalog" class="scroll-btn" onclick="scrollToBottom()">Помощь</button>
-                    <br><br>
-                    <button class="btn w-100 mb-2 login-btn catalog" onclick="location.href='prof_organ.html'">Войти</button>    
-                    <button class="btn w-100 mb-2 login-btn catalog" onclick="location.href='registration.html'">Зарегистрироваться</button>    
-                </div>
+        <!-- Выезжающее меню -->
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileMenu">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title">Меню</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
             </div>
-        </header>
+            <div class="offcanvas-body">
+                <button class="btn w-100 mb-2 catalog" onclick="location.href='index.html'">Главная страница</button>
+                <button class="btn w-100 mb-2 catalog" onclick="location.href='search.html'">Проекты</button>
+                <button class="btn w-100 mb-2 catalog" onclick="scrollToBottom()">О нас</button>
+                <button class="btn w-100 mb-2 catalog" onclick="scrollToBottom()">Помощь</button>
 
+                <!-- 🔽 этот блок будем обновлять -->
+                <div class="auth-block mt-3"></div>
+                </div>
+        </div>
+    </header>
+
+
+        <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Авторизация</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm" class="space-y-3">
+                <input type="email" class="form-control mb-3" placeholder="электронная почта" required>
+                <input type="password" class="form-control mb-3" placeholder="пароль" required>
+                <div class="text-center mb-3">
+                    <a href="#" class="small text-primary">Забыли пароль?</a>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Войти</button>
+                </form>
+            </div>
+            </div>
+        </div>
+        </div>
         <div class="page-container">
             <main class="main-content">
                 <div class="content-container">
@@ -150,10 +164,46 @@
             </div>
         </footer>
 
+        <!-- Локальные скрипты -->
+        <script src="scripts/auth.js"></script>
+        <script src="scripts/projectScript.js"></script>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="scripts/projectScript.js">
+        <script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pageId = urlParams.get("id");
+
+    if (!pageId) {
+        document.querySelector(".main").innerHTML = "<h1>Профиль не найден</h1>";
+        return;
+    }
+
+    fetch("data/companies.json")
+        .then(res => res.json())
+        .then(data => {
+        const org = data.organizations.find(o => o.id == pageId);
+        if (!org) {
+            document.querySelector(".main").innerHTML = "<h1>Профиль не найден</h1>";
+            return;
+        }
+
+        // например меняем заголовок и описание
+        document.title = org.title;
+        document.querySelector(".right-column .info h1").textContent = org.title;
+        document.querySelector(".right-column .info p").textContent = org.description;
+
+        // при необходимости подставляем остальные данные (почту, сайт и т.д.)
+        })
+        .catch(err => {
+        console.error("Ошибка загрузки профиля:", err);
+        document.querySelector(".main").innerHTML = "<h1>Ошибка загрузки</h1>";
+        });
+    });
+    </script>
+        <!-- Bootstrap -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     </script>
 </body>
 </html>

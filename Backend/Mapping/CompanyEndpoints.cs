@@ -48,7 +48,7 @@ namespace Backend.Mapping
 
             if (!isValid)
             {
-                logger.LogWarning($"Ошибка валидации при создании инвестора: {validationResults}");
+                logger.LogWarning($"Ошибка валидации при создании организации: {validationResults}");
                 var errors = validationResults
                     .GroupBy(v => v.MemberNames.FirstOrDefault() ?? "")
                     .ToDictionary(
@@ -125,7 +125,7 @@ namespace Backend.Mapping
 
             if (!isValid)
             {
-                logger.LogWarning($"Ошибка валидации при создании инвестора: {validationResults}");
+                logger.LogWarning($"Ошибка валидации при создании организации: {validationResults}");
                 var errors = validationResults
                     .GroupBy(v => v.MemberNames.FirstOrDefault() ?? "")
                     .ToDictionary(

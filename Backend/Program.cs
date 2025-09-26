@@ -166,6 +166,7 @@ app.MapScalarApiReference(opt =>
 
 app.MapCompanyEndpoints();
 app.MapManagerEndpoints();
+app.MapAuthEndpoints();
 app.MapImageEnpoints();
 
 app.Run();

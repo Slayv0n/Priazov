@@ -276,21 +276,6 @@ body {
 
 .project-heading {
     max-width: 833px;
-    min-width: 0; /* ✅ позволяет flex-сетке сжимать блок */
-    overflow: hidden;
-}
-
-.project-title {
-    font-size: 32px;
-    font-weight: 700;
-    margin: 0 0 8px 0;
-    line-height: 1.2;
-    font-family: 'Natasha', sans-serif;
-
-    /* ✅ перенос длинных слов и предотвращение выхода */
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
 }
 
 .project-location {
@@ -299,6 +284,13 @@ body {
     margin-bottom: 8px;
 }
 
+.project-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    line-height: 1.2;
+    font-family: 'Natasha', sans-serif;
+}
 
 .project-category {
     display: block;

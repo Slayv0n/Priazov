@@ -1,0 +1,115 @@
+[
+  {
+    "UserType": "investor",
+    "dataId": 0,
+    "Name": "СТАРТ+",
+    "LeaderName": "Кузнецова Мария Сергеевна",
+    "Phone": "79293471138",
+    "Email": "user0@example.com",
+    "Password": "557233984067",
+    "FullAddress": "г Краснодар, ул Красная, д 55",
+    "RegistrationDate": "2025-09-22T10:46:30.949958"
+  },
+  {
+    "UserType": "organization",
+    "dataId": 1,
+    "Name": "СТРОЙТЕХ",
+    "LeaderName": "Кузнецова Мария Сергеевна",
+    "Phone": "79890534545",
+    "Email": "user1@example.com",
+    "Password": "66416119417378688098",
+    "FullAddress": "г Казань, ул Баумана, д 7",
+    "RegistrationDate": "2025-09-22T10:46:30.949993",
+    "Industry": "category1"
+  },
+  {
+    "UserType": "organization",
+    "dataId": 2,
+    "Name": "ООО Альфа",
+    "LeaderName": "Морозова Елена Викторовна",
+    "Phone": "79122294431",
+    "Email": "user2@example.com",
+    "Password": "85841289",
+    "FullAddress": "г Нижний Новгород, ул Большая Покровская, д 33",
+    "RegistrationDate": "2025-09-22T10:46:30.950019",
+    "Industry": "category3"
+  },
+  {
+    "UserType": "investor",
+    "dataId": 3,
+    "Name": "СТАРТ+",
+    "LeaderName": "Васькин Андрей Юрьевич",
+    "Phone": "79826698289",
+    "Email": "user3@example.com",
+    "Password": "70780859074779593",
+    "FullAddress": "г Казань, ул Баумана, д 7",
+    "RegistrationDate": "2025-09-22T10:46:30.950051"
+  },
+  {
+    "UserType": "investor",
+    "dataId": 4,
+    "Name": "ЗАО Бета",
+    "LeaderName": "Кузнецова Мария Сергеевна",
+    "Phone": "79404939446",
+    "Email": "user4@example.com",
+    "Password": "87284277653280205",
+    "FullAddress": "Ростовская обл, г Волгодонск, Приморский б-р, д 29",
+    "RegistrationDate": "2025-09-22T10:46:30.950072"
+  },
+  {
+    "UserType": "organization",
+    "dataId": 5,
+    "Name": "СТ 222",
+    "LeaderName": "Морозова Елена Викторовна",
+    "Phone": "79586528912",
+    "Email": "user5@example.com",
+    "Password": "5598881745439777076",
+    "FullAddress": "г Санкт-Петербург, Невский пр-кт, д 45",
+    "RegistrationDate": "2025-09-22T10:46:30.950096",
+    "Industry": "category2"
+  },
+  {
+    "UserType": "investor",
+    "dataId": 6,
+    "Name": "СТ 222",
+    "LeaderName": "Фёдоров Николай Павлович",
+    "Phone": "79056466634",
+    "Email": "user6@example.com",
+    "Password": "465387884",
+    "FullAddress": "г Москва, ул Тверская, д 10",
+    "RegistrationDate": "2025-09-22T10:46:30.950115"
+  },
+  {
+    "UserType": "investor",
+    "dataId": 7,
+    "Name": "Бизнес Групп",
+    "LeaderName": "Сидоров Алексей Николаевич",
+    "Phone": "79114324535",
+    "Email": "user7@example.com",
+    "Password": "50499885920101301",
+    "FullAddress": "г Челябинск, ул Кирова, д 9",
+    "RegistrationDate": "2025-09-22T10:46:30.950140"
+  },
+  {
+    "UserType": "organization",
+    "dataId": 8,
+    "Name": "Бизнес Групп",
+    "LeaderName": "Васькин Андрей Юрьевич",
+    "Phone": "79139142932",
+    "Email": "user8@example.com",
+    "Password": "46686555481983193",
+    "FullAddress": "г Челябинск, ул Кирова, д 9",
+    "RegistrationDate": "2025-09-22T10:46:30.950163",
+    "Industry": "category2"
+  },
+  {
+    "UserType": "investor",
+    "dataId": 9,
+    "Name": "СТ 222",
+    "LeaderName": "Егоров Дмитрий Владимирович",
+    "Phone": "79787644156",
+    "Email": "user9@example.com",
+    "Password": "719557606",
+    "FullAddress": "Ростовская обл, г Волгодонск, Приморский б-р, д 29"
+  }
+]
