@@ -15,9 +15,10 @@ using Microsoft.OpenApi.Models;
 using NLog;
 using NLog.Web;
 using Scalar.AspNetCore;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder();
+
+builder.Services.AddRazorPages();
 
 builder.Logging.ClearProviders();
 builder.Host.UseNLog();
@@ -163,6 +164,8 @@ app.MapScalarApiReference(opt =>
     opt.Theme = ScalarTheme.BluePlanet;
     opt.DefaultHttpClient = new(ScalarTarget.Http, ScalarClient.Http11);
 });
+
+app.MapRazorPages();
 
 app.MapCompanyEndpoints();
 app.MapManagerEndpoints();

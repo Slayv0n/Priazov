@@ -28,9 +28,6 @@
 
     <section class="about-section">
         <div class="about-container">
-            <button class="nav-button prev-button">
-                <div class="nav-icon">←</div>
-            </button>
             <div class="about-card">
                 <div class="about-image">
                     <img src="static/main/Social-effect.svg" alt="#">
@@ -43,9 +40,6 @@
                     <button class="about-button">Подробнее</button>
                 </div>
             </div>
-            <button class="nav-button next-button">
-                <div class="nav-icon">→</div>
-            </button>
         </div>
     </section>
 
@@ -117,7 +111,7 @@
                     @foreach (var company in Model.Query)
                     {
                         <div class="organization-card">
-                            <div class="org-image">@company.PhotoIcon</div>
+                            <div class="org-image"></div>
                             <h3 class="org-title">@company.Name</h3> <!--Problem zone-->
                             <p class="org-description">@company.Description</p>
                             <div class="org-details">
@@ -132,14 +126,16 @@
                             </div>
                         </div>
                     }
-
-                    <div class="organization-card more-projects">
-                        <div class="more-number">ЕЩЕ @Model.Count</div>
-                        <div class="more-label">
-                            @ViewData["Organization"]
+                    @if (Model.Count > 5)
+                    {
+                        <div class="organization-card more-projects">
+                            <div class="more-number">ЕЩЕ @Model.Count</div>
+                            <div class="more-label">
+                                @ViewData["Organization"]
+                            </div>
+                            <button class="view-all-button">Смотреть все</button>
                         </div>
-                        <button class="view-all-button">Смотреть все</button>
-                    </div>
+                    }
                 </div>
             </div>
         </div>

@@ -1,4 +1,46 @@
-﻿/* Шапка */
+﻿
+:root {
+    font-size: 16px;
+    --primary-color: #0e6466;
+    --secondary-color: #e7f0f1;
+    --accent-color: #8CB5BB;
+    --text-color: #1E1E1E;
+    --light-text: #FFFFFF;
+    --border-color: var(--primary-color);
+    --header-bg: #FFFFFF;
+    --header-border: #e0e0e0;
+    --menu-hover: #ececec;
+    --logo-bg: var(--accent-color);
+    --container-bg: var(--secondary-color);
+    --container-border: rgba(70, 70, 70, 0.8);
+    --tab-gradient-start: var(--primary-color);
+    --tab-gradient-end: var(--header-bg);
+    --executor-text: var(--primary-color);
+    --investor-text: var(--secondary-color);
+    --field-bg: var(--header-bg);
+    --btn-hover: #073434;
+    --shadow-color: rgba(0, 0, 0, 1);
+    --light-gray: #F0F0F0;
+    --medium-gray: #D9D9D9;
+    --dark-gray: #5C5B5B;
+    --white: #FFFFFF;
+    --border-radius: 8px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    background: #FFFFFF;
+    color: #012021;
+}
+/* Шапка */
 .header {
     background: linear-gradient(#ffffff 98%,rgba(31, 111, 112, 0.01) 2%);
     height: 3.125rem;
