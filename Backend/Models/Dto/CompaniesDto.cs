@@ -41,8 +41,8 @@ namespace Backend.Models.Dto
         public Guid Id { get; set; }
         [MaxLength(1024)]
         public string? Description { get; set; }
-        public byte[]? PhotoIcon { get; set; }
-        public byte[]? PhotoHeader { get; set; }
+        public Guid AvatarId { get; set; }
+        public Guid MainId { get; set; }
         public JsonList<string> Contacts { get; set; } = new JsonList<string>();
         public CompanyResponseDto() { }
         public CompanyResponseDto(Company company, string address)
@@ -54,8 +54,8 @@ namespace Backend.Models.Dto
             FullAddress = address;
             Industry = company.Industry;
             LeaderName = company.LeaderName;
-            PhotoIcon = company.PhotoIcon;
-            PhotoHeader = company.PhotoHeader;
+            AvatarId = company.AvatarId;
+            MainId = company.MainId;
             Contacts = company.Contacts;
             Description = company.Description;
         }
@@ -66,7 +66,7 @@ namespace Backend.Models.Dto
         [JsonListValidation]
         public JsonList<string> Contacts { get; set; } = new JsonList<string>();
         public string? Description { get; set; }
-        public byte[]? PhotoIcon { get; set; }
-        public byte[]? PhotoHeader { get; set; }
+        public Guid AvatarId { get; set; }
+        public Guid MainId { get; set; }
     }
 }

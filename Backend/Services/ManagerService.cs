@@ -11,12 +11,11 @@ using System.Globalization;
 
 namespace Backend.Services
 {
-    interface IManagerService
+    public interface IManagerService
     {
         Task<ManagerResponseDto> CreateManagerAsync(ManagerCreateDto dto);
         Task<ManagerResponseDto> AccountManagerAsync(Guid? id);
         Task<ManagerResponseDto> UpdateManagerAsync(Guid? id, ManagerChangeDto dto);
-        
     }
 
     public class ManagerService : IManagerService
@@ -147,7 +146,7 @@ namespace Backend.Services
             manager.Name = managerDto.Name;
             manager.Email = managerDto.Email;
             manager.Phone = managerDto.Phone;
-            manager.PhotoIcon = managerDto.PhotoIcon;
+            manager.AvatarId = managerDto.AvatarId;
             manager.Address = new ShortAddressDto()
             {
                 FullAddress = cleanedAddress.result,

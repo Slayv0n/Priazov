@@ -14,19 +14,29 @@ namespace Backend.Mapping
 
         public static void MapCompanyEndpoints(this WebApplication app)
         {
-            var group = app.MapGroup("/companies");
-            group.MapPost("/create", Create);
-            group.MapGet("/review", Review);
-            group.MapGet("account", Account);
+            var group = app.MapGroup("/companies").WithTags("Companies");
+            group.MapPost("/create", Create)
+                .Produces<CompanyResponseDto>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status400BadRequest);
+            group.MapGet("/review", Review)
+                 .Produces<ReviewDto>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status400BadRequest);
+            group.MapGet("/account", Account)
+                .Produces<CompanyResponseDto>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status400BadRequest);
             group.MapGet("/filterMap", FilterMap);
-            group.MapGet("/search", Search);
-            group.MapPut("/update", Update);
+            group.MapGet("/search", Search)
+                .Produces<List<CompanyResponseDto>>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status400BadRequest);
+            group.MapPut("/update", Update)
+                .Produces<CompanyResponseDto>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status400BadRequest);
         }
 
         private static async Task<IResult> Create(
             [FromBody] CompanyCreateDto companyDto,
-            [FromServices] CompanyService service,
-            [FromServices] Logger<CompanyService> logger)
+            [FromServices] ICompanyService service,
+            [FromServices] ILogger<CompanyService> logger)
         {
             var validationResults = new List<ValidationResult>();
             bool isValid = Validator.TryValidateObject(
@@ -56,22 +66,25 @@ namespace Backend.Mapping
         }
 
         private static async Task<IResult> Review(
-            [FromServices] CompanyService service)
+            [FromServices] ICompanyService service)
         {
-            var company = await service.ReviewCompanyAsync();
+            var companies = await service.ReviewCompanyAsync();
             var count = await service.CountCompaniesAsync();
-            return Results.Ok(new { Count = count, Companies = company });
+
+            var response = new ReviewDto { Count = count, Companies = companies };
+
+            return Results.Ok(response);
         }
 
         [Authorize]
         public static async Task<IResult> Account([FromQuery] Guid? id,
-            [FromServices] CompanyService service,
-            [FromServices] Logger<CompanyService> logger)
+            [FromServices] ICompanyService service,
+            [FromServices] ILogger<CompanyService> logger)
         {
             if (id == null)
             {
-                logger.LogWarning("Id компании отсутствует");
-                return Results.BadRequest("Id пуст");
+                logger.LogError("Id компании отсутствует");
+                return Results.BadRequest("Id компании отсутствует");
             }
             var company = await service.AccountCompanyAsync(id);
             return Results.Ok(company);
@@ -82,13 +95,15 @@ namespace Backend.Mapping
             [FromQuery] string? industry,
             [FromQuery] string? region,
             [FromQuery] string? searchTerm,
-            [FromServices] CompanyService service)
+            [FromServices] ICompanyService service)
         {
-            return await service.SearchCompanyAsync(industry, region, searchTerm);
+            var companies = await service.SearchCompanyAsync(industry, region, searchTerm);
+
+            return Results.Ok(companies);
         }
         public static async Task<IResult> FilterMap(
             [FromQuery] string? industries,
-            [FromServices] CompanyService service)
+            [FromServices] ICompanyService service)
         {
             //var addresses = await service.FilterMapCompanyAsync(industries);
 
@@ -97,8 +112,8 @@ namespace Backend.Mapping
         [Authorize]
         public static async Task<IResult> Update([FromQuery] Guid? id,
             [FromBody] CompanyChangeDto companyDto,
-            [FromServices] CompanyService service,
-            [FromServices] Logger<CompanyService> logger)
+            [FromServices] ICompanyService service,
+            [FromServices] ILogger<CompanyService> logger)
         {
             var validationResults = new List<ValidationResult>();
             bool isValid = Validator.TryValidateObject(

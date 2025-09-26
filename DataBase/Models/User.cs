@@ -17,7 +17,7 @@ namespace DataBase.Models
         [Required]
         [MaxLength(24)]
         public string Phone { get; set; } = null!;
-        public byte[]? PhotoIcon { get; set; }
+        public Guid AvatarId { get; set; }
         [Required]
         [MaxLength(255)]
         public ShortAddressDto Address { get; set; } = null!;
@@ -34,7 +34,7 @@ namespace DataBase.Models
         public string LeaderName { get; set; } = null!;
         [MaxLength(1024)]
         public string? Description { get; set; }
-        public byte[]? PhotoHeader { get; set; }
+        public Guid MainId { get; set; }
         [MaxLength(1024)]
         public JsonList<string> Contacts { get; set; } = new JsonList<string>();
         public List<Project>? Projects { get; set; }

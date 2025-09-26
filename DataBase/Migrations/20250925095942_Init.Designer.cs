@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataBase.Migrations
 {
     [DbContext(typeof(PriazovContext))]
-    [Migration("20250917193525_Init")]
+    [Migration("20250925095942_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -144,6 +144,9 @@ namespace DataBase.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("AvatarId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -158,9 +161,6 @@ namespace DataBase.Migrations
                         .IsRequired()
                         .HasMaxLength(24)
                         .HasColumnType("character varying(24)");
-
-                    b.Property<byte[]>("PhotoIcon")
-                        .HasColumnType("bytea");
 
                     b.Property<string>("Role")
                         .IsRequired()
@@ -270,8 +270,8 @@ namespace DataBase.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<byte[]>("PhotoHeader")
-                        .HasColumnType("bytea");
+                    b.Property<Guid>("MainId")
+                        .HasColumnType("uuid");
 
                     b.HasDiscriminator().HasValue("Company");
                 });

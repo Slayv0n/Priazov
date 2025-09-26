@@ -24,7 +24,7 @@ namespace Backend.Services
         Task<CompanyResponseDto> AccountCompanyAsync(Guid? id);
         Task<List<CompanyResponseDto>> ReviewCompanyAsync();
         Task<int> CountCompaniesAsync();
-        Task<IResult> SearchCompanyAsync(string? industry, string? region, string? searchTerm);
+        Task<List<CompanyResponseDto>> SearchCompanyAsync(string? industry, string? region, string? searchTerm);
         Task<List<AddressDto>> FilterMapCompanyAsync(List<Filter> industries);
         Task<IResult> UpdateCompanyAsync(Guid? id, CompanyChangeDto companyDto);
     }
@@ -78,7 +78,7 @@ namespace Backend.Services
 
             if (companyDto.Password.ToLower().Contains("script"))
             {
-                _logger.LogWarning("Попытка зарегистрировать опасный контент");
+                _logger.LogError("Попытка зарегистрировать опасный контент");
                 throw new UnsafeContentException("Попытка зарегистрировать опасный контент");
             }
 
@@ -87,7 +87,7 @@ namespace Backend.Services
             if (db.Users.Any(u => u.Email == companyDto.Email &&
             u.Address.FullAddress == companyDto.FullAddress))
             {
-                _logger.LogWarning($"Пользователь с таким email и адресом уже существует: {companyDto.Email}, {companyDto.FullAddress}");
+                _logger.LogError($"Пользователь с таким email и адресом уже существует: {companyDto.Email}, {companyDto.FullAddress}");
                 throw new ConflictException("Повтор уникальных данных");
             }
 
@@ -195,14 +195,14 @@ namespace Backend.Services
             return await db.Users.OfType<Company>().CountAsync();
         }
 
-        public async Task<IResult> SearchCompanyAsync(string? industry, string? region, string? searchTerm)
+        public async Task<List<CompanyResponseDto>> SearchCompanyAsync(string? industry, string? region, string? searchTerm)
         {
             var cacheKey = $"companies_search_{industry ?? "all"}_{region ?? "all"}_{searchTerm ?? "all"}";
 
             if (_cache.TryGetValue(cacheKey, out List<CompanyResponseDto>? cachedCompanies))
             {
                 _logger.LogInformation($"Ответ взят из кэша: {cacheKey}");
-                return Results.Ok(cachedCompanies);
+                return cachedCompanies!;
             }
             else
             {
@@ -211,8 +211,8 @@ namespace Backend.Services
 
             if (region != null && !_allowedRegions.Contains(region))
             {
-                _logger.LogInformation($"Недопустимое значение региона: {region}");
-                return Results.BadRequest("Недопустимые значения региона");
+                _logger.LogError($"Недопустимое значение региона: {region}");
+                throw new Exception("Недопустимые значения региона");
             }
 
             using var db = await _factory.CreateDbContextAsync();
@@ -227,7 +227,7 @@ namespace Backend.Services
             _cache.Set(cacheKey, companies, CacheOptions);
             _logger.LogInformation("Поиск и фильтрация компаний завершились успешно");
 
-            return Results.Ok(companies);
+            return companies;
         }
 
         public async Task<List<AddressDto>> FilterMapCompanyAsync(List<Filter>? industries)
@@ -333,8 +333,8 @@ namespace Backend.Services
             company.Email = companyDto.Email;
             company.Phone = companyDto.Phone;
             company.Industry = companyDto.Industry;
-            company.PhotoIcon = companyDto.PhotoIcon;
-            company.PhotoHeader = companyDto.PhotoHeader;
+            company.AvatarId = companyDto.AvatarId;
+            company.MainId = companyDto.MainId;
             company.Address = new ShortAddressDto()
             {
                 FullAddress = cleanedAddress.result,

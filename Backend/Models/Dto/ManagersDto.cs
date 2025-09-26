@@ -8,8 +8,8 @@ namespace Backend.Models.Dto
         [Required]
         [StringLength(30, MinimumLength = 8,
             ErrorMessage = "Длина пароля 8-30 символов")]
-        //[RegularExpression(@"^\s*(?=.*[a-zа-яё])(?=.*[A-ZА-ЯЁ])(?=.*\d)(?=.*[^\da-zA-Zа-яА-ЯЁё]).{8,30}\s*$",
-        //ErrorMessage = "Пароль слишком слабый")]
+        [RegularExpression(@"^\s*(?=.*[a-zа-яё])(?=.*[A-ZА-ЯЁ])(?=.*\d)(?=.*[^\da-zA-Zа-яА-ЯЁё]).{8,30}\s*$",
+        ErrorMessage = "Пароль слишком слабый")]
         public string Password { get; set; } = null!;
         [Required]
         public string Token { get; set; } = null!;
@@ -18,7 +18,7 @@ namespace Backend.Models.Dto
     public class ManagerResponseDto : UserDto
     {
         public Guid Id { get; set; }
-        public byte[]? PhotoIcon { get; set; }
+        public Guid AvatarId { get; set; }
 
         public ManagerResponseDto() { }
         public ManagerResponseDto(Manager manager)
@@ -32,6 +32,6 @@ namespace Backend.Models.Dto
     }
     public class ManagerChangeDto : UserDto
     {
-        public byte[]? PhotoIcon { get; set; }
+        public Guid AvatarId { get; set; }
     }
 }

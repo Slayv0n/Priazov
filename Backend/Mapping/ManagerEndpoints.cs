@@ -11,16 +11,22 @@ namespace Backend.Mapping
     {
         public static void MapManagerEndpoints(this WebApplication app)
         {
-            var group = app.MapGroup("/managers");
-            group.MapPost("/create", Create);
-            group.MapGet("account", Account);
-            group.MapPut("/update", Update);
+            var group = app.MapGroup("/managers").WithTags("Managers");
+            group.MapPost("/create", Create)
+                .Produces<ManagerResponseDto>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status400BadRequest);
+            group.MapGet("/account", Account)
+                .Produces<ManagerResponseDto>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status400BadRequest);
+            group.MapPut("/update", Update)
+                .Produces<ManagerResponseDto>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status400BadRequest);
         }
 
         private static async Task<IResult> Create(
             [FromBody] ManagerCreateDto managerDto,
-            [FromServices] ManagerService service,
-            [FromServices] Logger<ManagerService> logger)
+            [FromServices] IManagerService service,
+            [FromServices] ILogger<ManagerService> logger)
         {
             var validationResults = new List<ValidationResult>();
             bool isValid = Validator.TryValidateObject(
@@ -62,8 +68,8 @@ namespace Backend.Mapping
         [Authorize]
         public static async Task<IResult> Account(
             [FromQuery] Guid? id,
-            [FromServices] ManagerService service,
-            [FromServices] Logger<ManagerService> logger)
+            [FromServices] IManagerService service,
+            [FromServices] ILogger<ManagerService> logger)
         {
             if (id == null)
             {
@@ -79,8 +85,8 @@ namespace Backend.Mapping
         public static async Task<IResult> Update(
             [FromQuery] Guid? id,
             [FromBody] ManagerChangeDto managerDto,
-            [FromServices] ManagerService service,
-            [FromServices] Logger<ManagerService> logger)
+            [FromServices] IManagerService service,
+            [FromServices] ILogger<ManagerService> logger)
         {
             var validationResults = new List<ValidationResult>();
             bool isValid = Validator.TryValidateObject(

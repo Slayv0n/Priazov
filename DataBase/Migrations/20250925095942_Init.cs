@@ -34,12 +34,12 @@ namespace DataBase.Migrations
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     Phone = table.Column<string>(type: "character varying(24)", maxLength: 24, nullable: false),
-                    PhotoIcon = table.Column<byte[]>(type: "bytea", nullable: true),
+                    AvatarId = table.Column<Guid>(type: "uuid", nullable: false),
                     Role = table.Column<string>(type: "character varying(12)", maxLength: 12, nullable: false),
                     Industry = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     LeaderName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     Description = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true),
-                    PhotoHeader = table.Column<byte[]>(type: "bytea", nullable: true),
+                    MainId = table.Column<Guid>(type: "uuid", nullable: true),
                     Contacts_JsonString = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>

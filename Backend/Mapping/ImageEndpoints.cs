@@ -1,5 +1,7 @@
 ﻿using Backend.Models.Dto;
+using Backend.Services;
 using DataBase.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Mapping
 {
@@ -7,16 +9,23 @@ namespace Backend.Mapping
     {
         public static void MapImageEnpoints(this WebApplication app)
         {
-            var group = app.MapGroup("/images");
-            group.MapPost("/create", Create).Accepts<ImageUploadDto>("multipart/form-data")
+            var group = app.MapGroup("/images").WithTags("Images");
+            group.MapPost("/upload", Upload).Accepts<ImageUploadDto>("multipart/form-data")
                 .Produces<ImageResponseDto>(StatusCodes.Status200OK)
-                .Produces(StatusCodes.Status400BadRequest)
-                .WithName("UploadUserImage")
-                .WithTags("Images");
-            group.MapGet("user/{userId}/{imageId}", Image);
+                .Produces(StatusCodes.Status400BadRequest);
+            group.MapGet("/avatar/{userId}", Avatar)
+                .Produces<ImageResponseDto>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status400BadRequest);
+            group.MapGet("/main/{userId}", Main)
+                .Produces<ImageResponseDto>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status400BadRequest);
         }
 
-        private static async Task<IResult> Create(HttpContext context, IWebHostEnvironment env)
+       
+
+        private static async Task<IResult> Upload(
+            HttpContext context,
+            [FromServices] IImageService service)
         {
             var form = await context.Request.ReadFormAsync();
             var file = form.Files["file"];
@@ -27,81 +36,75 @@ namespace Backend.Mapping
             if (!Guid.TryParse(form["userId"], out var userId))
                 return Results.BadRequest("User ID не предоставлен");
 
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".bmp", ".webp" };
-            var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (!bool.TryParse(form["isAvatar"], out var isAvatar))
+                return Results.BadRequest("Не предоставлена информация о типе изображения");
 
-            if (string.IsNullOrEmpty(extension) || !allowedExtensions.Contains(extension))
-                return Results.BadRequest("Недопустимый формат файла");
+            var image = await service.Upload(file, userId, isAvatar);
 
-            if (file.Length > 10 * 1024 * 1024)
-                return Results.BadRequest("Файл слишком большой (макс. 10MB)");
-
-            var imageId = Guid.NewGuid();
-            var fileName = $"{imageId}{extension}";
-            var originalFileName = Path.GetFileNameWithoutExtension(file.FileName);
-
-            var userImagesPath = Path.Combine(env.WebRootPath, "uploads", "users", userId.ToString());
-
-            if (!Directory.Exists(userImagesPath))
-                Directory.CreateDirectory(userImagesPath);
-
-            var userFilePath = Path.Combine(userImagesPath, fileName);
-            using (var stream = new FileStream(userFilePath, FileMode.Create))
+            if (image == null)
             {
-                await file.CopyToAsync(stream);
+                return Results.BadRequest();
             }
 
             var request = context.Request;
-            var imageUrl = $"{request.Scheme}://{request.Host}/uploads/users/{userId}/{fileName}";
+            var url = $"{request.Scheme}://{request.Host}/uploads/users/{userId}/{image.FileName}";
 
-            var response = new ImageResponseDto
+            var response = new ImageResponseUrlDto
             {
-                Id = imageId,
-                FileName = fileName,
-                OriginalName = originalFileName,
-                Url = imageUrl,
-                Size = file.Length,
+                Id = image.Id,
+                FileName = image.FileName,
+                OriginalName = image.OriginalName,
+                Size = image.Size,
+                Url = url,
                 UserId = userId,
-                UploadDate = DateTime.UtcNow
+                IsAvatar = isAvatar
             };
 
             return Results.Ok(response);
         }
-        private static async Task<IResult> Image(
+        private static async Task<IResult> Avatar(
             Guid userId,
-            Guid imageId,
             HttpContext context,
-            IWebHostEnvironment env)
+            [FromServices] IImageService service)
         {
-            var userImagesPath = Path.Combine(env.WebRootPath, "uploads", "users", userId.ToString());
+            var image = await service.Image(userId, true);
 
-            if (!Directory.Exists(userImagesPath))
-                return Results.NotFound("Папка пользователя не найдена");
+            var request = context.Request;
+            var url = $"{request.Scheme}://{request.Host}/uploads/users/{userId}/{image.FileName}";
 
-            // Ищем файл по ID (имя файла = imageId + расширение)
-            var files = Directory.GetFiles(userImagesPath, $"{imageId}.*");
-
-            if (files.Length == 0)
-                return Results.NotFound("Изображение не найдено");
-
-            var filePath = files[0];
-            var fileInfo = new FileInfo(filePath);
-            var fileName = Path.GetFileName(filePath);
-            var extension = Path.GetExtension(filePath);
-            var originalName = Path.GetFileNameWithoutExtension(filePath);
-
-            var imageResponse = new ImageResponseDto
+            var response = new ImageResponseUrlDto
             {
-                Id = imageId,
-                FileName = fileName,
-                OriginalName = originalName,
-                Url = $"{context.Request.Scheme}://{context.Request.Host}/uploads/users/{userId}/{fileName}",
-                Size = fileInfo.Length,
+                Id = image.Id,
+                FileName = image.FileName,
+                OriginalName = image.OriginalName,
+                Size = image.Size,
+                Url = url,
                 UserId = userId,
-                UploadDate = fileInfo.CreationTimeUtc
+                IsAvatar = true
             };
 
-            return Results.Ok(imageResponse);
+            return Results.Ok(response);
+        }
+        private static async Task<IResult> Main(
+           HttpContext context,
+           Guid userId,
+           [FromServices] IImageService service)
+        {
+            var image = await service.Image(userId, false);
+
+            var response = image as ImageResponseUrlDto;
+
+            if (response == null)
+            {
+                return Results.BadRequest();
+            }
+
+            var request = context.Request;
+            var url = $"{request.Scheme}://{request.Host}/uploads/users/{userId}/{image.FileName}";
+
+            response.Url = url;
+
+            return Results.Ok(response);
         }
     }
 }

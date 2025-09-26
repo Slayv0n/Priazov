@@ -61,6 +61,8 @@ builder.Services.AddScoped<ICompanyService, CompanyService>();
 
 builder.Services.AddScoped<ICommentService, CommentService>();
 
+builder.Services.AddScoped<IImageService, ImageService>();
+
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddScoped<IPasswordService, PasswordService>();    
