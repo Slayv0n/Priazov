@@ -25,8 +25,8 @@ namespace Backend.Services
         Task<List<CompanyResponseDto>> ReviewCompanyAsync();
         Task<int> CountCompaniesAsync();
         Task<List<CompanyResponseDto>> SearchCompanyAsync(string? industry, string? region, string? searchTerm);
-        Task<List<AddressDto>> FilterMapCompanyAsync(List<Filter> industries);
-        Task<IResult> UpdateCompanyAsync(Guid? id, CompanyChangeDto companyDto);
+        Task<List<AddressDto>> FilterMapCompanyAsync(List<string> industries);
+        Task<CompanyResponseDto> UpdateCompanyAsync(Guid? id, CompanyChangeDto companyDto);
     }
 
     public class CompanyService : ICompanyService
@@ -230,18 +230,15 @@ namespace Backend.Services
             return companies;
         }
 
-        public async Task<List<AddressDto>> FilterMapCompanyAsync(List<Filter>? industries)
+        public async Task<List<AddressDto>> FilterMapCompanyAsync(List<string>? industries)
         {
             StringBuilder key = new StringBuilder();
 
-            if (industries != null && industries.Any(i => i.IsChecked))
+            if (industries != null)
             {
-                foreach (Filter filter in industries)
+                foreach (var filter in industries)
                 {
-                    if (filter.IsChecked)
-                    {
-                        key.Append(filter.Industry);
-                    }
+                    key.Append(filter);
                 }
             }
             
@@ -261,15 +258,11 @@ namespace Backend.Services
 
             var companies = db.Users.OfType<Company>();
 
-            if (industries != null && industries.Any(i => i.IsChecked))
+            if (industries != null)
             {
-                List<string>? industryList = industries.Where(filter => filter.IsChecked)
-                .Select(filter => filter.Industry)
-                .ToList();
+                companies = companies.Where(c => industries.Contains(c.Industry));
+            }     
 
-                companies = companies.Where(c => industryList.Contains(c.Industry));
-            }
-                
             var addresses = companies
                 .Include(c => c.Address)
                 .AsEnumerable()
@@ -287,14 +280,8 @@ namespace Backend.Services
             return addresses;
         }
 
-        public async Task<IResult> UpdateCompanyAsync(Guid? id, CompanyChangeDto companyDto)
+        public async Task<CompanyResponseDto> UpdateCompanyAsync(Guid? id, CompanyChangeDto companyDto)
         {
-            if (id == null)
-            {
-                _logger.LogWarning("Id компании отсутствует");
-                return Results.BadRequest("Id пуст");
-            }
-
             companyDto.Name = companyDto.Name.Trim();
             companyDto.FullAddress = companyDto.FullAddress.Trim();
             companyDto.Email = companyDto.Email.Trim();
@@ -310,14 +297,13 @@ namespace Backend.Services
             if (company == null)
             {
                 _logger.LogWarning($"Компания не найдена по Id: {id}");
-                return Results.NotFound();
+                throw new NotFoundException("Компания не найдена по Id");
             }
 
-            if (db.Users.Any(u => u.Email == companyDto.Email &&
-            u.Address.FullAddress == companyDto.FullAddress && u.Id != id))
+            if (db.Users.Any(u => u.Email == companyDto.Email && u.Id != id))
             {
-                _logger.LogWarning($"Пользователь с таким email и адресом уже существует: {companyDto.Email}, {companyDto.FullAddress}");
-                return Results.Conflict("Повтор уникальных данных");
+                _logger.LogWarning($"Пользователь с таким email уже существует: {companyDto.Email}");
+                throw new ConflictException("Повтор уникальных данных");
             }
 
             var api = new CleanClientAsync(_dadata.ApiKey, _dadata.SecretKey);
@@ -326,7 +312,7 @@ namespace Backend.Services
             if (cleanedAddress.result == null)
             {
                 _logger.LogWarning($"Адрес не найден: {companyDto.FullAddress}");
-                return Results.NotFound("Адрес не найден");
+                throw new NotFoundException("Адрес не найден");
             }
 
             company.Name = companyDto.Name;
@@ -348,7 +334,7 @@ namespace Backend.Services
             await db.SaveChangesAsync();
             _logger.LogInformation($"Компания успешно изменена: {id}");
 
-            return Results.Ok(new CompanyResponseDto(company, company.Address.FullAddress));
+            return new CompanyResponseDto(company, company.Address.FullAddress);
         }
     }
 }

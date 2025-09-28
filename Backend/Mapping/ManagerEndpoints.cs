@@ -65,7 +65,6 @@ namespace Backend.Mapping
             return Results.Ok(response);
         }
 
-        [Authorize]
         public static async Task<IResult> Account(
             [FromQuery] Guid? id,
             [FromServices] IManagerService service,

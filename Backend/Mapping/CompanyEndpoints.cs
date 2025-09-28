@@ -76,7 +76,6 @@ namespace Backend.Mapping
             return Results.Ok(response);
         }
 
-        [Authorize]
         public static async Task<IResult> Account([FromQuery] Guid? id,
             [FromServices] ICompanyService service,
             [FromServices] ILogger<CompanyService> logger)
@@ -90,7 +89,6 @@ namespace Backend.Mapping
             return Results.Ok(company);
         }
 
-        [Authorize]
         private static async Task<IResult> Search(
             [FromQuery] string? industry,
             [FromQuery] string? region,
@@ -102,14 +100,14 @@ namespace Backend.Mapping
             return Results.Ok(companies);
         }
         public static async Task<IResult> FilterMap(
-            [FromQuery] string? industries,
+            List<string>?  industries,
             [FromServices] ICompanyService service)
         {
-            //var addresses = await service.FilterMapCompanyAsync(industries);
+            var addresses = await service.FilterMapCompanyAsync(industries);
 
             return Results.Ok();
         }
-        [Authorize]
+
         public static async Task<IResult> Update([FromQuery] Guid? id,
             [FromBody] CompanyChangeDto companyDto,
             [FromServices] ICompanyService service,
