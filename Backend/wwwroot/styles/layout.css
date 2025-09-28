@@ -1,52 +1,7 @@
 ﻿/* Шапка */
 .header {
-    background: linear-gradient(#ffffff 98%,rgba(31, 111, 112, 0.01) 2%);
-    height: 3.125rem;
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    padding: 0 1.875rem;
-    box-sizing: border-box;
-    border-bottom: 1px solid var(--header-border);
-    width: 100%;
-    box-shadow: 0px 48px 19px rgba(31, 111, 112, 0.01), 
-                0px 27px 16px rgba(31, 111, 112, 0.03), 
-                0px 12px 12px rgba(31, 111, 112, 0.04), 
-                0px 3px 7px rgba(31, 111, 112, 0.05);
-}
-
-.header-container {
-    width: 100%;
-    display: flex;
-}
-
-.logo-group {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.menu-icon {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 5px;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-.menu-icon-bar {
-    margin-top: 2px;
-    width: 30px;
-    height: 3px;
-    background: #012021;
-}
-
-.logo {
-    width: 65px;
-    height: 42px;
-    cursor: pointer;
+    height: 3.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .right-section {
@@ -56,12 +11,23 @@
     margin-left: auto;
 }
 
-.icon {
-    width: 28px;
-    height: 42px;
-    cursor: pointer;
+/* Контейнер для кнопок авторизации в шапке */
+.auth-block-header {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* расстояние между кнопками */
 }
 
+/* Кнопки в правой части шапки */
+.right-section .catalog-button,
+.right-section .profile-button,
+.right-section .login-button,
+.right-section .register-button,
+.right-section .logout-button {
+    margin: 0 2px;
+}
+
+/* Каталог */
 .catalog-button {
     background: #0E6466;
     border-radius: 15px;
@@ -76,11 +42,7 @@
     border: none;
 }
 
-.user-controls {
-    display: flex;
-    gap: 16px;
-}
-
+/* Кнопки авторизации */
 .login-button {
     background: #E7F0F2;
     border-radius: 15px;
@@ -106,6 +68,149 @@
     border: none;
     cursor: pointer;
 }
+
+/* Новые стили для кнопок Профиль / Выход */
+.profile-button {
+    background: #E7F0F2;
+    border-radius: 15px;
+    padding: 8px 20px;
+    font-family: 'Inter';
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 130%;
+    color: #0E6466;
+    border: none;
+    cursor: pointer;
+}
+
+.logout-button {
+    background: #f8d7da;
+    border-radius: 15px;
+    padding: 8px 20px;
+    font-family: 'Inter';
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 130%;
+    color: #721c24;
+    border: none;
+    cursor: pointer;
+}
+
+/* Каталог для мобильного меню */
+.catalog-btn {
+    background: #0E6466;
+    border-radius: 15px;
+    color: #FFFFFF;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    padding: 8px 20px;
+    border: none;
+}
+
+.login-btn {
+    background: #E7F0F2;
+    border-radius: 15px;
+    color: #0E6466;
+    font-weight: 500;
+    padding: 8px 20px;
+    border: none;
+}
+
+.register-btn {
+    background: #0E6466;
+    border-radius: 15px;
+    color: #FFFFFF;
+    font-weight: 500;
+    padding: 8px 20px;
+    border: none;
+}
+
+/* Стили для выезжающего меню */
+.offcanvas-start {
+    width: 300px;
+}
+
+.catalog {
+    transition: background-color 0.5s ease;
+    background-color: white;
+    border: solid;
+    border-width: 1px;
+    color: black;
+    height: 3em;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.5) inset;
+}
+
+/* Стили для выпадающего меню профиля */
+.profile-dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: 1000;
+    display: none;
+    min-width: 150px;
+    padding: 0.5rem 0;
+    margin: 0.125rem 0 0;
+    font-size: 1rem;
+    color: #212529;
+    text-align: left;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 0.25rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.175);
+}
+
+    .dropdown-menu.show {
+        display: block;
+    }
+
+.dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 0.25rem 1.5rem;
+    clear: both;
+    font-weight: 400;
+    color: #212529;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+}
+
+    .dropdown-item:hover {
+        background-color: #f8f9fa;
+    }
+
+.dropdown-divider {
+    height: 0;
+    margin: 0.5rem 0;
+    overflow: hidden;
+    border-top: 1px solid #e9ecef;
+}
+
+/* Медиазапросы для мобильной версии шапки */
+@media (max-width: 992px) {
+    .right-section {
+        display: none;
+    }
+
+    .mobile {
+        display: flex !important;
+        align-items: center;
+    }
+}
+
+@media (min-width: 993px) {
+    .mobile {
+        display: none !important;
+    }
+}
+
 /* Футер */
 footer {
     display: flex;
