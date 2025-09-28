@@ -53,75 +53,100 @@
                     </div>
                     <div class="filters-menu">
                         @Html.AntiForgeryToken()
-                        <div class="filter-item">
+
+                        <label class="filter-item">
                             <input type="checkbox" id="filter1" class="filter-checkbox">
-                            <label for="filter1">Образовательное учреждение</label>
-                        </div>
-                        <div class="filter-item">
+                            <span class="checkmark"></span>
+                            <span class="filter-text">Образовательное учреждение</span>
+                        </label>
+
+                        <label class="filter-item">
                             <input type="checkbox" id="filter2" class="filter-checkbox">
-                            <label for="filter2">Научно-исследовательский институт</label>
-                        </div>
-                        <div class="filter-item">
+                            <span class="checkmark"></span>
+                            <span class="filter-text">Научно-исследовательский институт</span>
+                        </label>
+
+                        <label class="filter-item">
                             <input type="checkbox" id="filter3" class="filter-checkbox">
-                            <label for="filter3">Научно-образовательный проект</label>
-                        </div>
-                        <div class="filter-item">
+                            <span class="checkmark"></span>
+                            <span class="filter-text">Научно-образовательный проект</span>
+                        </label>
+
+                        <label class="filter-item">
                             <input type="checkbox" id="filter4" class="filter-checkbox">
-                            <label for="filter4">Государственное учреждение</label>
-                        </div>
-                        <div class="filter-item">
+                            <span class="checkmark"></span>
+                            <span class="filter-text">Государственное учреждение</span>
+                        </label>
+
+                        <label class="filter-item">
                             <input type="checkbox" id="filter5" class="filter-checkbox">
-                            <label for="filter5">Коммерческая деятельность</label>
-                        </div>
-                        <div class="filter-item">
+                            <span class="checkmark"></span>
+                            <span class="filter-text">Коммерческая деятельность</span>
+                        </label>
+
+                        <label class="filter-item">
                             <input type="checkbox" id="filter6" class="filter-checkbox">
-                            <label for="filter6">Некоммерческая организация</label>
-                        </div>
-                        <div class="filter-item">
+                            <span class="checkmark"></span>
+                            <span class="filter-text">Некоммерческая организация</span>
+                        </label>
+
+                        <label class="filter-item">
                             <input type="checkbox" id="filter7" class="filter-checkbox">
-                            <label for="filter7">Финансы</label>
-                        </div>
-                        <div class="filter-item">
+                            <span class="checkmark"></span>
+                            <span class="filter-text">Финансы</span>
+                        </label>
+
+                        <label class="filter-item">
                             <input type="checkbox" id="filter8" class="filter-checkbox">
-                            <label for="filter8">Акселератор / инкубатор / технопарк</label>
-                        </div>
-                        <div class="filter-item">
+                            <span class="checkmark"></span>
+                            <span class="filter-text">Акселератор / инкубатор / технопарк</span>
+                        </label>
+
+                        <label class="filter-item">
                             <input type="checkbox" id="filter9" class="filter-checkbox">
-                            <label for="filter9">Ассоциация / объединение</label>
-                        </div>
-                        <div class="filter-item">
+                            <span class="checkmark"></span>
+                            <span class="filter-text">Ассоциация / объединение</span>
+                        </label>
+
+                        <label class="filter-item">
                             <input type="checkbox" id="filter10" class="filter-checkbox">
-                            <label for="filter10">Инициатива</label>
-                        </div>
-                        <div class="filter-item">
+                            <span class="checkmark"></span>
+                            <span class="filter-text">Инициатива</span>
+                        </label>
+
+                        <label class="filter-item">
                             <input type="checkbox" id="filter11" class="filter-checkbox">
-                            <label for="filter11">Отраслевое событие / научная конференция</label>
-                        </div>
-                        <div class="filter-item">
+                            <span class="checkmark"></span>
+                            <span class="filter-text">Отраслевое событие / научная конференция</span>
+                        </label>
+
+                        <label class="filter-item">
                             <input type="checkbox" id="filter12" class="filter-checkbox">
-                            <label for="filter12">Другое</label>
-                        </div>
+                            <span class="checkmark"></span>
+                            <span class="filter-text">Другое</span>
+                        </label>
                     </div>
                 </div>
-
 
                 <!--Организации-->
                 <div class="organizations-grid">
 
-                    @foreach (var company in Model.Query)
+                    @for (int i = 0; i < Model.Query.Count; i++)
                     {
                         <div class="organization-card">
-                            <div class="org-image"></div>
-                            <h3 class="org-title">@company.Name</h3> <!--Problem zone-->
-                            <p class="org-description">@company.Description</p>
+                            <img class="org-image" src="@Model.Images[i]" asp-append-version="true">
+                            <div class="org-text">
+                                <h3 class="org-title">@Model.Query[i].Name</h3> <!--Problem zone-->
+                                <p class="org-description">@Model.Query[i].Description</p>
+                            </div>
                             <div class="org-details">
                                 <div class="detail">
-                                    <span class="detail-icon">📍</span>
-                                    <span class="detail-text">@company.FullAddress</span>
+                                    <span class="detail-icon"><img src="~/static/img/location_on.svg" asp-append-version="true" /></span>
+                                    <span class="detail-text">@Model.Query[i].FullAddress</span>
                                 </div>
                                 <div class="detail">
-                                    <span class="detail-icon">🏛️</span>
-                                    <span class="detail-text">@company.Industry</span>
+                                    <span class="detail-icon"><img src="~/static/img/gmail_groups.svg" asp-append-version="true" /></span>
+                                    <span class="detail-text">@Model.Query[i].Industry</span>
                                 </div>
                             </div>
                         </div>
@@ -224,10 +249,33 @@
 
         function init() {
             // Создаем карту
-            myMap = new ymaps.Map("map", {
-                center: [55.76, 37.64], // Центр по умолчанию (Москва)
-                zoom: 10
-            });
+        myMap = new ymaps.Map("map", {
+            center: [47.2225, 39.7186],
+            zoom: 12
+        }, {
+            controls: [],
+            suppressMapOpenBlock: true,
+            suppressObsoleteBrowserNotifier: true,
+            yandexMapDisablePoiInteractivity: true
+        });
+
+        // Явно удаляем все возможные контролы
+        myMap.controls.remove('searchControl');
+        myMap.controls.remove('trafficControl');
+        myMap.controls.remove('geolocationControl');
+        myMap.controls.remove('typeSelector');
+        myMap.controls.remove('fullscreenControl');
+        myMap.controls.remove('routeButtonControl');
+        myMap.controls.remove('rulerControl');
+        myMap.controls.remove('zoomControl');
+
+        myMap.behaviors.disable('all');
+
+            setTimeout(() => {
+            if (myMap) {
+                myMap.container.fitToViewport();
+            }
+        }, 1000);
 
             // Инициализируем кластеризатор
             clusterer = new ymaps.Clusterer();
@@ -280,11 +328,11 @@
         document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
             checkbox.addEventListener('change', function() {
                 const allCheckboxesData = Array.from(document.querySelectorAll('.filter-checkbox')).map(checkbox => {
-                    const label = document.querySelector(`label[for="${checkbox.id}"]`);
-                    return {
-                        Industry: label ? label.textContent.trim() : '',
-                        IsChecked: checkbox.checked
-                    };
+                const filterText = checkbox.closest('.filter-item').querySelector('.filter-text');
+                return {
+                    Industry: filterText ? filterText.textContent.trim() : '',
+                    IsChecked: checkbox.checked
+                };
                 });
 
                 console.log('Текущее состояние всех чекбоксов:', allCheckboxesData);

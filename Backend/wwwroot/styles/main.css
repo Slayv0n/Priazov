@@ -1,4 +1,4 @@
-/* Базовые параметры */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
 body {
     margin: 0;
     padding: 0;
@@ -12,15 +12,14 @@ body {
 /* Заголовок и картинка */
 .hero-section {
     width: 100%;
-    height: 300px;
-    background: linear-gradient(rgba(14, 100, 102, 0.19), #F5F5F5);
+    padding: 64px 0;
+    background: linear-gradient(rgba(14, 100, 102, 0.2), #ffffff);
     background-size: cover;
     background-position: center;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-    filter: blur(0.5px);
 }
 
 .hero-container {
@@ -30,9 +29,10 @@ body {
 
 .hero-title {
     font-family: 'Natasha', sans-serif;
-    font-weight: 700;
-    font-size: 72px;
-    line-height: 1.2;
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 120%;
+    letter-spacing: 0%;
     color: var(--primary-color);
     text-shadow: none;
     margin: 0;
@@ -42,9 +42,8 @@ body {
 /* Плашка со скролляшейся информацией */
 .about-section {
     width: 100%;
-    padding: 65px 0;
-    text-align: center;
-    background: #F5F5F5;
+    margin: 64px 0;
+    background: white;
 }
 
 .about-container {
@@ -59,11 +58,12 @@ body {
 .about-card {
     width: 100%;
     background: #FFFFFF;
-    border-radius: 20px;
+    border-radius: 50px;
+    border: 1px solid #7A989A;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
+    transition: 0.5s;
 }
 
 .about-image {
@@ -73,26 +73,30 @@ body {
 }
 
 .about-content {
-    padding: 30px;
     display: flex;
-    flex-direction: column;
+    flex-direction: column;  
+    padding: 16px 32px;
 }
 
 .about-title {
-    font-family: 'Inter', sans-serif;
+    font-family: "Fira Code", monospace;
     font-weight: 600;
-    font-size: 32px;
+    font-size: 24px;
+    line-height: 120%;
+    letter-spacing: 4%;
     color: #012021;
-    margin-bottom: 20px;
+    text-align: center;
+    margin: 0;
 }
 
 .about-text {
     font-family: 'Inter', sans-serif;
     font-weight: 400;
     font-size: 18px;
-    line-height: 1.5;
-    color: #012021;
-    margin-bottom: 30px;
+    line-height: 130%;
+    letter-spacing: 4%;
+    color: black;
+    margin: 16px 0;
 }
 
 .about-button {
@@ -101,44 +105,23 @@ body {
     background-color: #FFFFFF;
     padding: 12px 24px;
     font-family: 'Inter', sans-serif;
-    font-weight: 500;
+    line-height: 130%;
+    letter-spacing: 4%;
+    font-weight: 400;
     font-size: 16px;
     cursor: pointer;
     align-self: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border: 1px solid #0E6466;
     border-radius: 8px;
+    transition: 0.25s;
 }
 
-about-button:hover {
+.about-button:hover {
     background-color: #0E6466;
     color: white;
-    transform: rotate(-90deg);
-}
-.nav-button {
-    background: none;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-}
-
-.prev-button {
-    left: -50px;
-}
-
-.next-button {
-    right: -50px;
-}
-
-.nav-icon {
-    font-size: 32px;
-    color: #0E6466;
-    font-weight: bold;
 }
 
 /* Секция с картой, фильтрами и организациями */
@@ -146,135 +129,171 @@ about-button:hover {
 
 .organizations-section {
     width: 100%;
-    padding: 60px 0;
-    background: #F5F5F5;
-}
-
-.section-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 32px 0;
 }
 
 .section-title {
     font-family: 'Natasha', sans-serif;
-    font-weight: 700;
+    font-weight: 400;
     font-size: 32px;
+    line-height: 120%;
+    letter-spacing: 0%;
     text-align: center;
     text-transform: uppercase;
     color: #012021;
-    margin-top: 10px;
-    margin-bottom: 32px;
-}
-
-.organizations-content {
-    background: #FFFFFF;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .map-filters-container {
     display: flex;
+    margin: 32px 0;
     gap: 24px;
-    margin-bottom: 40px;
-    
 }
-
-.map-container {
-    flex: 2.3;
-    background: #E7F0F2;
-    display: flex;
-    border: 1px solid;
-    border-color: gray;
+#map {
+    width: 792px;
+    height: 630px;
+    border-radius: 15px;
+    overflow: hidden;
 }
-
+.ymaps-2-1-79-copyrights-pane,
+.ymaps-2-1-79-controls__control {
+    display: none !important;
+}
 .map-placeholder {
     width: 100%;
     height: 100%;
+    border: 1px solid #7A989A;
+    border-radius: 16px;
+    overflow: hidden;
 }
 
 .filters-menu {
-    flex: 1;
-    background: #FFFFFF;
     background-color: #E7F0F2;
-    padding: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    border: 1px solid;
+    border: 1px solid #7A989A;
     border-radius: 16px;
-    border-color: gray;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    max-width: 384px;
+    gap: 22px;
 }
 
 .filter-item {
-    margin-bottom: 15px;
     display: flex;
     align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
+/* Скрываем стандартный чекбокс */
 .filter-checkbox {
-    margin-right: 10px;
-    width: 18px;
-    height: 18px;
+    display: none;
 }
 
-.filter-item label {
+/* Кастомный круглый чекбокс */
+.checkmark {
+    width: 24px;
+    height: 24px;
+    background: #FFFFFF;
+    border: 1px solid #7A989A;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+    .checkmark:hover {
+        background-color: #9FC1C2;
+    }
+
+    /* Галочка внутри круга */
+    .checkmark::after {
+        content: "";
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #0E6466;
+        opacity: 0;
+        transition: all 0.2s ease;
+    }
+
+/* Состояние отмеченного чекбокса */
+.filter-checkbox:checked + .checkmark {
+    background: #FFFFFF;
+    border-color: #0E6466;
+}
+
+    .filter-checkbox:checked + .checkmark::after {
+        opacity: 1;
+    }
+
+.filter-text {
     font-family: 'Inter', sans-serif;
-    font-weight: 400;
     font-size: 16px;
-    color: #012021;
+    font-weight: 400;
+    line-height: 130%;
+    letter-spacing: 4%;
+    user-select: none;
+    gap: 8px;
+}
+
+/* Состояние когда чекбокс отмечен */
+.filter-checkbox:checked ~ .filter-text {
+    color: #0E6466;
 }
 
 .organizations-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 24px;
-    margin-top: 40px;
 }
 
 .organization-card {
     background: #FFFFFF;
-    padding: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s, box-shadow 0.3s;
+    padding: 16px;
+    transition: box-shadow 0.3s;
     display: flex;
     flex-direction: column;
+    gap: 16px;
+    border: 1px solid #7A989A;
+    border-radius: 24px;
 }
 
 .organization-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-.organization-card, .organization-card:hover {
-    border: 1px solid;
-    border-radius: 16px;
-    border-color: gray;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
 }
 
 .org-image {
     width: 100%;
     height: 180px;
-    background: #D9D9D9;
-    border-radius: 12px;
-    margin-bottom: 20px;
+    background: grey;
+    border-radius: 20px;
+}
+
+.org-text {
+    gap: 8px;
 }
 
 .org-title {
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
+    font-family: "Fira Code", monospace;
+    font-weight: 500;
     font-size: 20px;
-    color: #012021;
-    margin-bottom: 10px;
+    line-height: 120%;
+    letter-spacing: 4%;
 }
 
 .org-description {
     font-family: 'Inter', sans-serif;
     font-weight: 400;
     font-size: 16px;
-    line-height: 1.5;
-    color: #012021;
-    margin-bottom: 20px;
-    flex-grow: 1;
+    line-height: 130%;
+    letter-spacing: 4%;
 }
 
 .org-details {
@@ -348,7 +367,7 @@ about-button:hover {
 .faq-section {
     width: 100%;
     padding: 60px 0;
-    background: #F5F5F5;
+    background: #FFFFFF;
 }
 
 .faq-content {

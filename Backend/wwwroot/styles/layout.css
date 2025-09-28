@@ -9,6 +9,7 @@
     align-items: center;
     gap: 32px;
     margin-left: auto;
+    margin-right: 30px;
 }
 
 /* Контейнер для кнопок авторизации в шапке */
@@ -16,15 +17,6 @@
     display: flex;
     align-items: center;
     gap: 8px; /* расстояние между кнопками */
-}
-
-/* Кнопки в правой части шапки */
-.right-section .catalog-button,
-.right-section .profile-button,
-.right-section .login-button,
-.right-section .register-button,
-.right-section .logout-button {
-    margin: 0 2px;
 }
 
 /* Каталог */
@@ -36,10 +28,11 @@
     font-family: 'Inter';
     font-weight: 400;
     font-size: 16px;
-    line-height: 120%;
-    letter-spacing: 0.04em;
+    line-height: 130%;
+    letter-spacing: 4%;
     cursor: pointer;
-    border: none;
+    border: 1px solid #7A989A;
+    gap: 16px;
 }
 
 /* Кнопки авторизации */
@@ -51,9 +44,12 @@
     font-weight: 500;
     font-size: 14px;
     line-height: 130%;
+    letter-spacing: 4%;
     color: #0E6466;
     border: none;
     cursor: pointer;
+    transition: 0.5s;
+    gap: 10px;
 }
 
 .register-button {
@@ -64,10 +60,23 @@
     font-weight: 500;
     font-size: 14px;
     line-height: 130%;
+    letter-spacing: 4%;
     color: #FFFFFF;
     border: none;
     cursor: pointer;
+    transition: 0.5s;
+    gap: 10px;
 }
+
+.login-button:hover {
+    background: #0E6466;
+    color: #FFFFFF;    
+}
+
+    .login-button:hover + .register-button {
+        background: #E7F0F2;
+        color: #0E6466;
+    }
 
 /* Новые стили для кнопок Профиль / Выход */
 .profile-button {

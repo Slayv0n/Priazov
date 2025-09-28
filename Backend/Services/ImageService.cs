@@ -1,9 +1,11 @@
 ﻿using Backend.Models.Dto;
 using Backend.Validation;
+using Dadata.Model;
 using DataBase;
 using DataBase.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Backend.Services
@@ -18,6 +20,15 @@ namespace Backend.Services
 
     public class ImageService : IImageService
     {
+        private ImageResponseDto _default = new ImageResponseDto
+        {
+            Id = default,
+            FileName = "",
+            OriginalName = "",
+            Size = default,
+            UserId = default,
+            UploadDate = default,
+        };
         private IWebHostEnvironment _env;
         private IDbContextFactory<PriazovContext> _factory;
         private ILogger<ImageService> _logger;
@@ -33,15 +44,6 @@ namespace Backend.Services
 
         public async Task<ImageResponseDto> Image(Guid userId, bool isAvatar)
         {
-            var userImagesPath = Path.Combine(_env.WebRootPath, "uploads", "users", userId.ToString());
-
-            if (!Directory.Exists(userImagesPath))
-            {
-                _logger.LogError($"Папка пользователя не найдена {userId}");
-                throw new NotFoundException("Папка пользователя не найдена");
-
-            }
-
             var db = await _factory.CreateDbContextAsync();
 
             var user = await db.Users.FirstOrDefaultAsync(u => u.Id == userId);
@@ -50,6 +52,14 @@ namespace Backend.Services
             {
                 _logger.LogError($"Пользователь не найден {userId}");
                 throw new NotFoundException("Пользователь не найден");
+            }
+
+            var userImagesPath = Path.Combine(_env.WebRootPath, "uploads", "users", userId.ToString());
+
+            if (!Directory.Exists(userImagesPath))
+            {
+                _logger.LogError($"Папка пользователя не найдена {userId}");
+                return _default;
             }
 
             Guid imageId = default;
@@ -82,13 +92,13 @@ namespace Backend.Services
 
             var image = new ImageResponseDto
             {
-                Id = user.AvatarId,
+                Id = imageId,
                 FileName = fileName,
                 OriginalName = originalName,
                 Size = fileInfo.Length,
                 UserId = userId,
                 UploadDate = fileInfo.CreationTimeUtc,
-                IsAvatar = true
+                IsAvatar = isAvatar
             };
 
             return image;
