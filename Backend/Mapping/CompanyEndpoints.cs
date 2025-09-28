@@ -100,7 +100,7 @@ namespace Backend.Mapping
             return Results.Ok(companies);
         }
         public static async Task<IResult> FilterMap(
-            List<string>?  industries,
+            [FromBody] List<string>?  industries,
             [FromServices] ICompanyService service)
         {
             var addresses = await service.FilterMapCompanyAsync(industries);
