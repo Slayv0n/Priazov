@@ -134,25 +134,10 @@ namespace Backend.Services
                 throw new ConflictException("Повтор уникальных данных");
             }
 
-            var api = new CleanClientAsync(_dadata.Value.ApiKey, _dadata.Value.SecretKey);
-            var cleanedAddress = await api.Clean<Dadata.Model.Address>(managerDto.FullAddress); 
-
-            if (cleanedAddress.result == null)
-            {
-                _logger.LogWarning($"Адрес не найден: {managerDto.FullAddress}");
-                throw new NotFoundException("Адрес не найден");
-            }
-
             manager.Name = managerDto.Name;
             manager.Email = managerDto.Email;
             manager.Phone = managerDto.Phone;
             manager.AvatarId = managerDto.AvatarId;
-            manager.Address = new ShortAddressDto()
-            {
-                FullAddress = cleanedAddress.result,
-                Latitude = decimal.Parse(cleanedAddress.geo_lat, CultureInfo.InvariantCulture),
-                Longitude = decimal.Parse(cleanedAddress.geo_lon, CultureInfo.InvariantCulture),
-            };
 
             await db.SaveChangesAsync();
             _logger.LogInformation($"Инвестор успешно изменен: {id}");
