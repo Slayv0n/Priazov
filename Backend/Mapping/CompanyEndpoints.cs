@@ -24,7 +24,9 @@ namespace Backend.Mapping
             group.MapGet("/account", Account)
                 .Produces<CompanyResponseDto>(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status400BadRequest);
-            group.MapGet("/filterMap", FilterMap);
+            group.MapGet("/filterMap", FilterMap)
+                .Produces<AddressDto>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status400BadRequest); ;
             group.MapGet("/search", Search)
                 .Produces<List<CompanyResponseDto>>(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status400BadRequest);
@@ -105,7 +107,7 @@ namespace Backend.Mapping
         {
             var addresses = await service.FilterMapCompanyAsync(industries);
 
-            return Results.Ok();
+            return Results.Ok(addresses);
         }
 
         public static async Task<IResult> Update([FromQuery] Guid? id,
