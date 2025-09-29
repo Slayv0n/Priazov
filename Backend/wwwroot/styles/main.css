@@ -434,18 +434,23 @@ body {
     font-size: 16px;
     line-height: 130%;
     letter-spacing: 4%;
-    margin-top: 24px;
-    padding: 0 16px 32px 16px;
-    display: none;
+    margin-top: 0;
+    padding: 0 16px;
+    max-height: 0;
+    overflow: hidden;
+    transition: 0.3s ease-out;
 }
 
 .faq-item.active {
     height: auto;
 }
 
-.faq-item.active .faq-answer {
-    display: block;
-}
+    .faq-item.active .faq-answer {
+        max-height: 500px;
+        margin-top: 24px;
+        padding-bottom: 32px;
+        transition: 0.3s ease-in;
+    }
 
 
 

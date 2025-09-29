@@ -18,19 +18,17 @@
         <div class="container-fluid px-0">
             <div class="d-flex align-items-center">
                 <!-- Меню -->
-                <button style="margin-left: 20px;" class="btn p-0 me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
-                    <svg width="30" height="30" viewBox="0 0 30 30">
-                        <path d="M5,10 H35 M5,15 H35 M5,20 H35"
-                              stroke="#000"
-                              stroke-width="2"
-                              stroke-linecap="round" />
-                    </svg>
-                </button>
+                <div class="left-section">
+                    <button class="sticks" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+                        <img src="~/static/main/sticks.svg" asp-append-version="true" />
+                    </button>
 
-                <!-- Логотип -->
-                <div class="logo me-3" style="cursor: pointer">
-                    <img src="~/static/main/Logo.svg" asp-append-version="true" onclick="location.href='/'" alt="Logo" width="65" height="42">
+                    <!-- Логотип -->
+                    <div class="logo" style="cursor: pointer">
+                        <img src="~/static/main/Logo.svg" asp-append-version="true" onclick="location.href='/'" alt="Logo" width="65" height="42">
+                    </div>
                 </div>
+
 
                 <!-- Кнопки для широких экранов -->
                 <div class="right-section">
