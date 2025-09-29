@@ -7,6 +7,7 @@ using DataBase.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
 using System.Globalization;
 
 namespace Backend.Services
@@ -20,10 +21,22 @@ namespace Backend.Services
 
     public class ManagerService : IManagerService
     {
-        private readonly MemoryCacheEntryOptions CacheOptions = new()
+        private CancellationTokenSource _cacheResetToken = new();
+
+        private MemoryCacheEntryOptions CreateCacheOptions(TimeSpan? expiration = null)
         {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-        };
+            return new MemoryCacheEntryOptions()
+            {
+                AbsoluteExpirationRelativeToNow = expiration ?? TimeSpan.FromMinutes(5)
+            }
+            .AddExpirationToken(new CancellationChangeToken(_cacheResetToken.Token));
+        }
+
+        public void ResetManagersCache()
+        {
+            _cacheResetToken.Cancel();
+            _cacheResetToken = new CancellationTokenSource();
+        }
 
         private readonly IDbContextFactory<PriazovContext> _factory;
         private readonly IOptions<DadataSettings> _dadata;
@@ -83,6 +96,8 @@ namespace Backend.Services
             await _message.SendRegistrationEmail(manager);
             _logger.LogInformation($"Инвестор зарегистрирована: {managerDto.Email}");
 
+            ResetManagersCache();
+
             return new ManagerResponseDto(manager);
         }
         public async Task<ManagerResponseDto> AccountManagerAsync(Guid? id)
@@ -110,7 +125,7 @@ namespace Backend.Services
 
             var managerResponse = new ManagerResponseDto(manager);
 
-            _cache.Set(cacheKey, managerResponse, CacheOptions);
+            _cache.Set(cacheKey, managerResponse, CreateCacheOptions(TimeSpan.FromMinutes(30)));
             _logger.LogInformation($"Инвестор успешно найдена Id: {id}");
 
             return managerResponse;
@@ -141,6 +156,8 @@ namespace Backend.Services
 
             await db.SaveChangesAsync();
             _logger.LogInformation($"Инвестор успешно изменен: {id}");
+
+            ResetManagersCache();
 
             return new ManagerResponseDto(manager);
         }
