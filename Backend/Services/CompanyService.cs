@@ -1,20 +1,21 @@
 ﻿using Backend.Models;
 using Backend.Models.Dto;
-using Dadata.Model;
+using Backend.Validation;
 using Dadata;
+using Dadata.Model;
 using DataBase;
 using DataBase.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
 using NLog.Config;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using Microsoft.AspNetCore.Mvc;
 using System.Runtime.CompilerServices;
 using System.Text;
-using Backend.Validation;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Backend.Services
 {
@@ -41,10 +42,22 @@ namespace Backend.Services
             "Херсонская область",
             "Запорожская область"
         };
-        private readonly MemoryCacheEntryOptions CacheOptions = new()
+        private CancellationTokenSource _cacheResetToken = new();
+
+        private MemoryCacheEntryOptions CreateCacheOptions(TimeSpan? expiration = null)
         {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-        };
+            return new MemoryCacheEntryOptions()
+            {
+                AbsoluteExpirationRelativeToNow = expiration ?? TimeSpan.FromMinutes(5)
+            }
+            .AddExpirationToken(new CancellationChangeToken(_cacheResetToken.Token));
+        }
+
+        public void ResetCompaniesCache()
+        {
+            _cacheResetToken.Cancel();
+            _cacheResetToken = new CancellationTokenSource();
+        }
 
         private readonly IDbContextFactory<PriazovContext> _factory;
         private readonly DadataSettings _dadata;
@@ -125,6 +138,8 @@ namespace Backend.Services
             await _messageService.SendRegistrationEmail(company);
             _logger.LogInformation($"Компания зарегистрирована: {companyDto.Email}");
 
+            ResetCompaniesCache();
+
             return new CompanyResponseDto(company, company.Address.FullAddress);
         }
 
@@ -153,7 +168,7 @@ namespace Backend.Services
 
             var companyResponse = new CompanyResponseDto(company, company.Address.FullAddress);
 
-            _cache.Set(cacheKey, companyResponse, CacheOptions);
+            _cache.Set(cacheKey, companyResponse, CreateCacheOptions(TimeSpan.FromMinutes(30)));
             _logger.LogInformation($"Компания успешно найдена Id: {id}");
 
             return companyResponse;
@@ -183,7 +198,7 @@ namespace Backend.Services
                 .Select(c => new CompanyResponseDto(c, c.Address.FullAddress))
                 .ToListAsync();
 
-            _cache.Set(cacheKey, query, CacheOptions);
+            _cache.Set(cacheKey, query, CreateCacheOptions(TimeSpan.FromMinutes(15)));
             _logger.LogInformation("Краткий просмотр компаний выполнен");
 
             return query;
@@ -224,7 +239,7 @@ namespace Backend.Services
 
             var companies = await query.OrderBy(c => c.Name).Select(c => new CompanyResponseDto(c, c.Address.FullAddress)).ToListAsync();
 
-            _cache.Set(cacheKey, companies, CacheOptions);
+            _cache.Set(cacheKey, companies, CreateCacheOptions());
             _logger.LogInformation("Поиск и фильтрация компаний завершились успешно");
 
             return companies;
@@ -281,7 +296,7 @@ namespace Backend.Services
                 })
                 .ToList();
 
-            _cache.Set(cacheKey, addresses, CacheOptions);
+            _cache.Set(cacheKey, addresses, CreateCacheOptions(TimeSpan.FromMinutes(15)));
             _logger.LogInformation("Фильтрация адресов завершилась успешно");
 
             return addresses;
@@ -347,6 +362,8 @@ namespace Backend.Services
 
             await db.SaveChangesAsync();
             _logger.LogInformation($"Компания успешно изменена: {id}");
+
+            ResetCompaniesCache();
 
             return Results.Ok(new CompanyResponseDto(company, company.Address.FullAddress));
         }

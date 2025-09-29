@@ -357,34 +357,36 @@ body {
 /* Секция с часто задаваемыми вопросами */
 .faq-section {
     width: 100%;
-    padding: 60px 0;
-    background: #FFFFFF;
+    margin-top: 64px;
+    padding: 32px 120px 240px 120px;
+    gap: 32px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 
-.faq-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    background: #FFFFFF;
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.faq-list {
-    width: 100%;
-    margin: 0 auto;
+.faq-title {
+    font-family: 'Natasha', sans-serif;
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    color: #012021;
+    text-align: center;
 }
 
 .faq-item {
-    background: #E7F0F2;
-    border: 1px solid #E7F0F2;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    border: 1px solid;
+    max-width: 1200px;
+    font-family: "Fira Code", monospace;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: 4%;
+    background-color: #E7F0F2;
+    gap: 18px;
+    padding: 16px 24px;
     border-radius: 16px;
-    border-color: gray;
+    border: 1px solid #7A989A;
 }
 
 .faq-question {
