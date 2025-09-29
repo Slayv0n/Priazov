@@ -30,7 +30,7 @@ namespace Backend
                 string url;
                 if (image.Id == default)
                 {
-                    url = $"{Request.Scheme}://{Request.Host}/static/img/default/{isAvatar.ToString()}/default.svg";
+                    url = $"{Request.Scheme}://{Request.Host}/static/img/default/{isAvatar.ToString()}/default.png";
                 }
                 else
                 {

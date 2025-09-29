@@ -174,8 +174,8 @@
                             <span class="farrow"></span>
                         </div>
                         <div class="faq-answer">
-                            Очень важный ответ
-                        </div>
+                Проект социального воздействия — это комплекс мероприятий, направленных на достижение измеримого социального эффекта в жизни конкретных людей-участников проекта. Например, мероприятия по повышению успеваемости школьников на определенной территории или вовлечение людей в диспансеризацию, содействие в получении мер социальной поддержки.
+            </div>
                     </div>
                     <div class="faq-item">
                         <div class="faq-question">
@@ -183,8 +183,8 @@
                             <span class="farrow"></span>
                         </div>
                         <div class="faq-answer">
-                            Очень важный ответ
-                        </div>
+                ВЭБ.РФ при методологической поддержке Минфина России выступает оператором проектов: помогает регионам, инвесторам и исполнителям в структурировании проектов, мониторинге достижения эффектов реализации проектов и их независимой оценке. Также задача ВЭБ.РФ - способствовать масштабированию успешных практик.
+            </div>
                     </div>
                     <div class="faq-item">
                         <div class="faq-question">
@@ -192,8 +192,11 @@
                             <span class="farrow"></span>
                         </div>
                         <div class="faq-answer">
-                            Очень важный ответ
-                        </div>
+                <p><a href="https://вэб.рф/files/?file=b80cc6857acc7f13d4ff3116a5f9a5d3.pdf" target="_blank">Постановление Правительства РФ от 21.11.2019 г. №1491 «Об&nbsp;организации проведения субъектами РФ в 2019–2024 годах пилотной апробации проектов социального воздействия»</a></p>
+                <p><a href="https://вэб.рф/files/?file=0f7890fd21e47b7a68b06e2f8b8ea134.pdf" target="_blank">Распоряжение от 26.12.2023 № Р-1337 «Об&nbsp;утверждении Регламента принятия ВЭБ.РФ решений об осуществлении функции оператора проектов социального воздействия»</a></p>
+                <p><a href="https://вэб.рф/files/?file=c0363d34f8db412db87d351839dc2bed.pdf" target="_blank">Распоряжение от 23.12.2021 Р-1086 «Об утверждении порядка проведения мониторинга и итоговой формы отчета»</a></p>
+
+            </div>
                     </div>
                     <div class="faq-item">
                         <div class="faq-question">
@@ -201,7 +204,7 @@
                             <span class="farrow"></span>
                         </div>
                         <div class="faq-answer">
-                            Очень важный ответ
+                            <a href="https://вэб.рф/agent-pravitelstva/psv/socialnye-proekty/" target="_blank">Реализованные проекты социального воздействия</a>
                         </div>
                     </div>
     </section>
@@ -211,8 +214,11 @@
 {
     <script src="https://api-maps.yandex.ru/2.1/?apikey=79291f02-351a-4139-9402-f2037856fba7&lang=ru_RU" type="text/javascript"></script>
 
+
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+
+                document.addEventListener('DOMContentLoaded', function() {
             const faqItems = document.querySelectorAll('.faq-item');
 
             faqItems.forEach(item => {
@@ -220,15 +226,8 @@
                 const arrow = item.querySelector('.farrow');
 
                 question.addEventListener('click', () => {
-                    // Закрываем все открытые элементы, кроме текущего
-                    faqItems.forEach(otherItem => {
-                        if (otherItem !== item && otherItem.classList.contains('active')) {
-                            otherItem.classList.remove('active');
-                            otherItem.querySelector('.farrow').classList.remove('farrow-rotated');
-                        }
-                    });
-
-                    // Переключаем текущий элемент
+                    // Убираем логику закрытия других элементов
+                    // и просто переключаем текущий элемент
                     item.classList.toggle('active');
                     arrow.classList.toggle('farrow-rotated');
                 });
@@ -271,7 +270,10 @@
         }, 1000);
 
             // Инициализируем кластеризатор
-            clusterer = new ymaps.Clusterer();
+            clusterer = new ymaps.Clusterer({
+            preset: 'islands#greenClusterIcons', // Базовый зеленый
+            clusterIconColor: '#0E6466' // Ваш цвет
+            });
             myMap.geoObjects.add(clusterer);
 
             // Первоначальная загрузка меток
