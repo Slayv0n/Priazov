@@ -1,4 +1,4 @@
-
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
 /* Основной контент */
 .main {
     display: flex;
@@ -16,93 +16,128 @@
     color: #1E1E1E
 }
 .register-container {
-    
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
 }
 
 .buttons {
     display: flex;
-    justify-content: space-between; /* Распределение по краям */
+    justify-content: space-between;
+    gap: 150px;
 }
-.btn-o {
+.button-choice {
+    font-family: "Fira Code", monospace;
+    line-height: 120%;
+    letter-spacing: 4%;
+    display: flex;
     padding: 16px 40px; /* Уменьшенные отступы */
     gap: 10px;
+    border-radius: 16px;
+    transition: 0.3s;
 }
-.btn-white {
-    background: var(--secondary-color);
-    color: var(--primary-color);
-    border: 2px solid var(--primary-color);
+.button-white {
+    height: 99%;
+    font-size: 16px;
+    font-weight: 500;
+    background: #FFFFFF;
+    color: #0E6466;
+    border: 1px solid #7A989A;
 }
-.btn-green {
+.button-green {
+    font-size: 24px;
+    font-weight: 600;
     background-color: #0E6466;
-    color: var(--secondary-color);
+    color: #FFFFFF;
     border: none;
-}
-.btn:hover {
-    transform: translateY(-3px);
+    cursor: none;
 }
 
 .form-container {
-    width: 100%;
-    max-width: 600px;
-    padding: 3rem;
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    box-shadow: 0 0 15px var(--shadow-color);
+    padding: 32px;
+    border: 1px solid #7A989A;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    transition: opacity 0.3s ease;
 }
+.fields-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+.field {
+    display: flex;
+    flex-direction: column;
+}
+
 .form-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: var(--label-color); /* Серый цвет для надписей */
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 130%;
+    letter-spacing: 4%;
+    color: #5C5B5B;
 }
 .input-field {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 120%;
+    letter-spacing: 10%;
+    color: #787878;
+    padding: 8px 16px;
+    border: 1px solid #7A989A;
+    border-radius: 8px;
+    display: flex;
+    gap: 8px;
+}
+
+.select-wrapper {
+    position: relative;
+    display: inline-block;
     width: 100%;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    transition: border-color 0.3s ease; /* Эффект при фокусе */
-}
-.input-field:focus {
-    border-color: var(--focus-color); /* Цвет фокуса */
-    outline: none;
-}
-select.input-field {
-    -webkit-appearance: none;
-    appearance: none;
-    background: white;
-}
-.select-field {
-    width: 634px;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    -webkit-appearance: none; /* Убираем стандартный стиль select */
-    appearance: none;
-    background: url("arrow-down.svg") 95% center no-repeat; /* Стрелка вниз */
-    background-size: 15px; /* Размер стрелки */
-    background-color: white; /* Цвет фона */
-}
-.select-field option {
-    padding: 0.5rem;
-    border: none;
-    background: var(--secondary-color);
-}
-.btn-submit {
-    width: 100%;
-    padding: 1.2rem;
-    background: var(--primary-color);
-    color: var(--secondary-color);
-    border: none;
-    border-radius: 5px;
-    margin-top: 2rem;
     cursor: pointer;
-    transition: all 0.3s ease;
 }
-.btn-submit:hover {
-    transform: translateY(-3px);
+
+    .select-wrapper .input-field {
+        width: 100%;
+        appearance: none; /* Убираем стандартную стрелку */
+        background-color: #FFFFFF;
+    }
+
+.select-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none; /* Чтобы клик проходил через иконку к select */
+    width: 16px;
+    height: 16px;
 }
+
+
+.button-submit {
+    font-family: "Fira Code", monospace;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 120%;
+    letter-spacing: 4%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 0;
+    border: none;
+    border-radius: 16px;
+    background-color: #0E6466;
+    color: #FFFFFF;
+    transition: 0.25s;
+}
+    .button-submit:hover {
+        background-color: #E7F0F2;
+        color: #0E6466;
+    }
 
 /* Стили для подсказок Dadata */
 .suggestions-wrapper {
@@ -137,4 +172,53 @@ select.input-field {
     color: #999;
     font-size: 0.9em;
     padding: 8px 12px;
+}
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.fade-in {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+/* Стили для ошибок */
+.field-error {
+    color: #ff4444;
+    font-size: 14px;
+    margin-top: 5px;
+    display: block;
+}
+
+.form-error {
+    color: #ff4444;
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #fff5f5;
+    border-radius: 5px;
+    border: 1px solid #ff4444;
+    font-size: 14px;
+}
+
+.input-field:invalid,
+.input-field.error {
+    border-color: #ff4444 !important;
+}
+
+/* Анимация появления ошибок */
+.field-error {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

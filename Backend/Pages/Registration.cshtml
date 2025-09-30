@@ -6,6 +6,10 @@
 @section Links
 {
     <link rel="stylesheet" href="~/styles/registration.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/suggestions-jquery@21.12.0/dist/css/suggestions.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/suggestions-jquery@21.12.0/dist/js/jquery.suggestions.min.js"></script>
 }
 
 
@@ -14,48 +18,517 @@
     <h1 class="title">РЕГИСТРАЦИЯ</h1>
     <div class="register-container">
         <div class="buttons">
-            <button type="button" class="btn-o btn-white">Организация</button>
-            <button type="button" class="btn-o btn-green">инвестор</button>
+            <button type="button" class="button-choice button-green" style="padding: 16px 20px;">организация</button>
+            <button type="button" class="button-choice button-white">инвестор</button>
         </div>
 
         <form class="form-container" id="registrationForm">
-            <input type="hidden" id="userType" name="userType" value="organization">
+            <div class="fields-container">
+                <input type="hidden" id="userType" name="userType" value="organization">
+                <div class="field">
+                    <label class="form-label">Краткое название организации</label>
+                    <input type="text" placeholder="Название" class="input-field" id="organizationName" name="organizationName">
+                </div>
+                <div class="field">
+                    <label class="form-label">Юридический адрес</label>
+                    <input type="text" placeholder="Адрес" class="input-field" id="address" name="address">
+                </div>
 
-            <label class="form-label">Краткое название организации</label>
-            <input type="text" placeholder="Название" class="input-field" id="organizationName" name="organizationName">
+                <div class="field">
+                    <label class="form-label">Категория</label>
+                    <div class="select-wrapper">
+                        <select class="input-field" name="industry" required id="industry">
+                            <option value="" disabled selected hidden>Выберите категорию</option>
+                            <option value="Образовательное учреждение">Образовательное учреждение</option>
+                            <option value="Научно-исследовательский институт">Научно-исследовательский институт</option>
+                            <option value="Научно-образовательный проект">Научно-образовательный проект</option>
+                            <option value="Государственное учреждение">Государственное учреждение</option>
+                            <option value="Коммерческая деятельность">Коммерческая деятельность</option>
+                            <option value="Некоммерческая организация">Некоммерческая организация</option>
+                            <option value="Финансы">Финансы</option>
+                            <option value="Акселератор / инкубатор / технопарк">Акселератор / инкубатор / технопарк</option>
+                            <option value="Ассоциация / объединение">Ассоциация / объединение</option>
+                            <option value="Инициатива">Инициатива</option>
+                            <option value="Отраслевое событие / научная конференция">Отраслевое событие / научная конференция</option>
+                            <option value="Другое">Другое</option>
+                        </select>
+                        <img src="~/static/img/Chevron down.svg" class="select-arrow" asp-append-version="true" />
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="form-label">ФИО руководителя/контактного лица</label>
+                    <input type="text" placeholder="ФИО" class="input-field" id="FIO" name="FIO">
+                </div>
 
-            <label class="form-label">Юридический адрес</label>
-            <input type="text" placeholder="Адрес" class="input-field" id="address" name="address">
+                <div class="field">
+                    <label class="form-label">Телефон руководителя/контактного лица</label>
+                    <input type="tel" placeholder="Номер телефона" class="input-field" id="phone" name="phone">
+                </div>
+                <div class="field">
+                    <label class="form-label">Электронная почта</label>
+                    <input type="email" placeholder="Почта" class="input-field" id="mail" name="mail">
+                </div>
 
-            <label class="form-label">Категория</label>
-            <select class="input-field" name="category" required id="industry">
-                <option value="" disabled selected>Выберите категорию</option>
-                <option value="category1">Категория 1</option>
-                <option value="category2">Категория 2</option>
-                <option value="category3">Категория 3</option>
-                <option value="category4">Категория 4</option>
-            </select>
-
-            <label class="form-label">ФИО руководителя/контактного лица</label>
-            <input type="text" placeholder="ФИО" class="input-field" id="FIO" name="FIO">
-
-            <label class="form-label">Телефон руководителя/контактного лица</label>
-            <input type="tel" placeholder="Номер телефона" class="input-field" id="phone" name="phone">
-
-            <label class="form-label">Электронная почта</label>
-            <input type="email" placeholder="Почта" class="input-field" id="mail" name="mail">
-
-            <label class="form-label">Пароль</label>
-            <input type="password" placeholder="Пароль" class="input-field" id="password" name="password">
-
-            <label class="form-label">Повторите пароль</label>
-            <input type="password" placeholder="Пароль" class="input-field" id="password2" name="password2">
-
-            <button type="submit" class="btn-submit">зарегистрироваться</button>
+                <div class="field">
+                    <label class="form-label">Пароль</label>
+                    <input type="password" placeholder="Пароль" class="input-field" id="password" name="password">
+                </div>
+                <div class="field">
+                    <label class="form-label">Повторите пароль</label>
+                    <input type="password" placeholder="Пароль" class="input-field" id="password2" name="password2">
+                </div>
+            </div>
+            
+            <button type="submit" class="button-submit">зарегистрироваться</button>
         </form>
     </div>
     
 </main>
+@section Scripts {
+    <script>
+        (function() {
+            'use strict';
 
+            const DADATA_TOKEN = "6f0a740c5107e8a21febe0725d566d25de7c4c1a";
+
+            // -------------------
+            // Инициализация DaData
+            // -------------------
+            function initDadataSuggestions() {
+                if (!window.jQuery || !$.fn || !$.fn.suggestions) {
+                    console.warn("jQuery или DaData suggestions ещё не загружены");
+                    return;
+                }
+
+                try {
+                    $("#organizationName").suggestions({
+                        token: DADATA_TOKEN,
+                        type: "PARTY",
+                        count: 7,
+                        minChars: 2,
+                        onSelect: function (suggestion) {
+                            const data = suggestion?.data;
+                            if (data?.address?.value) {
+                                $("#address").val(data.address.value);
+                            }
+                            if (data?.management?.name) {
+                                $("#FIO").val(data.management.name);
+                            }
+                        }
+                    });
+
+                    $("#address").suggestions({
+                        token: DADATA_TOKEN,
+                        type: "ADDRESS",
+                        count: 7,
+                        minChars: 3
+                    });
+
+                    console.log("DaData: подсказки инициализированы");
+                } catch (err) {
+                    console.warn("DaData init error:", err);
+                }
+            }
+
+            // -------------------
+            // Функции для работы с ошибками
+            // -------------------
+            function showFieldError(fieldId, message) {
+                const field = document.getElementById(fieldId);
+                if (!field) return;
+
+                // Удаляем старую ошибку
+                clearFieldError(fieldId);
+
+                // Создаем элемент ошибки
+                const errorElement = document.createElement('div');
+                errorElement.className = 'field-error';
+                errorElement.textContent = message;
+                errorElement.style.color = '#ff4444';
+                errorElement.style.fontSize = '14px';
+                errorElement.style.marginTop = '5px';
+
+                // Добавляем красную обводку полю
+                field.style.borderColor = '#ff4444';
+
+                // Вставляем ошибку после поля
+                field.parentNode.appendChild(errorElement);
+            }
+
+            function clearFieldError(fieldId) {
+                const field = document.getElementById(fieldId);
+                if (!field) return;
+
+                // Убираем красную обводку
+                field.style.borderColor = '';
+
+                // Удаляем элемент ошибки
+                const existingError = field.parentNode.querySelector('.field-error');
+                if (existingError) {
+                    existingError.remove();
+                }
+            }
+
+            function clearAllErrors() {
+                const fields = document.querySelectorAll('.input-field, select.input-field');
+                fields.forEach(field => {
+                    clearFieldError(field.id);
+                });
+            }
+
+            function showFormError(message) {
+                // Создаем контейнер для общей ошибки формы
+                let errorContainer = document.querySelector('.form-error');
+                if (!errorContainer) {
+                    errorContainer = document.createElement('div');
+                    errorContainer.className = 'form-error';
+                    errorContainer.style.color = '#ff4444';
+                    errorContainer.style.textAlign = 'center';
+                    errorContainer.style.marginBottom = '20px';
+                    errorContainer.style.padding = '10px';
+                    errorContainer.style.backgroundColor = '#fff5f5';
+                    errorContainer.style.borderRadius = '5px';
+                    errorContainer.style.border = '1px solid #ff4444';
+
+                    const form = document.querySelector('.form-container');
+                    form.insertBefore(errorContainer, form.firstChild);
+                }
+
+                errorContainer.textContent = message;
+            }
+
+            function clearFormError() {
+                const errorContainer = document.querySelector('.form-error');
+                if (errorContainer) {
+                    errorContainer.remove();
+                }
+            }
+            // -------------------
+            // Переключение форм
+            // -------------------
+            document.addEventListener('DOMContentLoaded', function () {
+                const orgButton = document.querySelector('.button-green');
+                const investorButton = document.querySelector('.button-white');
+                const form = document.querySelector('.form-container');
+
+                let currentUserType = 'organization';
+
+                // Сохраняем исходную разметку формы
+                const originalFormHTML = form.innerHTML;
+
+                function createInvestorFormHTML() {
+                    return `
+            <div class="fields-container">
+                <input type="hidden" id="userType" name="userType" value="organization">
+                <div class="field">
+                    <label class="form-label">Название организации</label>
+                    <input type="text" placeholder="Название" class="input-field" id="organizationName" name="organizationName">
+                </div>
+                <div class="field">
+                    <label class="form-label">Юридический адрес</label>
+                    <input type="text" placeholder="Адрес" class="input-field" id="address" name="address">
+                </div>
+
+                <div class="field">
+                    <label class="form-label">ФИО руководителя/контактного лица</label>
+                    <input type="text" placeholder="ФИО" class="input-field" id="FIO" name="FIO">
+                </div>
+
+                <div class="field">
+                    <label class="form-label">Телефон руководителя/контактного лица</label>
+                    <input type="tel" placeholder="Номер телефона" class="input-field" id="phone" name="phone">
+                </div>
+                <div class="field">
+                    <label class="form-label">Электронная почта</label>
+                    <input type="email" placeholder="Почта" class="input-field" id="mail" name="mail">
+                </div>
+
+                <div class="field">
+                    <label class="form-label">Пароль</label>
+                    <input type="password" placeholder="Пароль" class="input-field" id="password" name="password">
+                </div>
+                <div class="field">
+                    <label class="form-label">Повторите пароль</label>
+                    <input type="password" placeholder="Пароль" class="input-field" id="password2" name="password2">
+                </div>
+
+
+            </div>
+
+            <button type="submit" class="button-submit">зарегистрироваться</button>
+                    `;
+                }
+
+                function activateOrgButton() {
+                    form.classList.add('fade-out');
+                    setTimeout(() => {
+                        currentUserType = 'organization';
+
+                        orgButton.classList.add('button-green');
+                        orgButton.classList.remove('button-white');
+                        investorButton.classList.add('button-white');
+                        investorButton.classList.remove('button-green');
+
+                        // Восстанавливаем исходную разметку
+                        form.innerHTML = originalFormHTML;
+
+                        // Обновляем hidden поле
+                        const userTypeEl = document.getElementById('userType');
+                        if (userTypeEl) userTypeEl.value = 'organization';
+
+                        setupPhoneFormatting();
+                        setupFormSubmit();
+                        initDadataSuggestions();
+
+                        form.classList.remove('fade-out');
+                        form.classList.add('fade-in');
+                        setTimeout(() => form.classList.remove('fade-in'), 300);
+                    }, 300);
+                }
+
+                function activateInvestorButton() {
+                    form.classList.add('fade-out');
+                    setTimeout(() => {
+                        currentUserType = 'investor';
+
+                        investorButton.classList.add('button-green');
+                        investorButton.classList.remove('button-white');
+                        orgButton.classList.add('button-white');
+                        orgButton.classList.remove('button-green');
+
+                        form.innerHTML = createInvestorFormHTML();
+
+                        // Обновляем hidden поле
+                        const userTypeEl = document.getElementById('userType');
+                        if (userTypeEl) userTypeEl.value = 'investor';
+
+                        setupPhoneFormatting();
+                        setupFormSubmit();
+                        initDadataSuggestions();
+
+                        form.classList.remove('fade-out');
+                        form.classList.add('fade-in');
+                        setTimeout(() => form.classList.remove('fade-in'), 300);
+                    }, 300);
+                }
+
+                function setupPhoneFormatting() {
+                    const phoneInput = document.getElementById('phone');
+                    if (phoneInput) {
+                        phoneInput.oninput = function (e) {
+                            let digits = e.target.value.replace(/\D/g, "");
+
+                            if (digits.startsWith("8")) {
+                                digits = "7" + digits.substring(1);
+                            }
+                            if (!digits.startsWith("7")) {
+                                digits = "7" + digits;
+                            }
+                            digits = digits.substring(0, 11);
+
+                            let formatted = "+7";
+                            if (digits.length > 1) formatted += " (" + digits.substring(1, 4);
+                            if (digits.length >= 4) formatted += ") " + digits.substring(4, 7);
+                            if (digits.length >= 7) formatted += "-" + digits.substring(7, 9);
+                            if (digits.length >= 9) formatted += "-" + digits.substring(9, 11);
+
+                            e.target.value = formatted;
+                        };
+                    }
+                }
+
+                function setupFormSubmit() {
+                    const formElement = document.querySelector('.form-container');
+                    if (!formElement) return;
+
+                    formElement.onsubmit = async function (e) {
+                        e.preventDefault();
+
+                        clearAllErrors();
+                        clearFormError();
+
+                        let hasErrors = false;
+
+                        const password = document.getElementById('password')?.value.trim() || "";
+                        const confirmPassword = document.getElementById('password2')?.value.trim() || "";
+
+                        if (password.length < 8 || password.length > 20) {
+                            showFieldError('password', 'Пароль должен содержать от 8 до 20 символов!');
+                            hasErrors = true;
+                        }
+
+                        if (password !== confirmPassword) {
+                            showFieldError('password2', 'Пароли не совпадают!');
+                            hasErrors = true;
+                        }
+
+                        const userType = currentUserType;
+
+                        function getValue(id) {
+                            const el = document.getElementById(id);
+                            return el ? el.value.trim() : "";
+                        }
+
+                        function getDigits(id) {
+                            const el = document.getElementById(id);
+                            return el ? el.value.replace(/\D/g, '') : "";
+                        }
+
+                        const formData = {
+                            Name: getValue('organizationName'),
+                            LeaderName: getValue('FIO'),
+                            Phone: getDigits('phone'),
+                            Email: getValue('mail'),
+                            Password: password,
+                            Password2: password,
+                            FullAddress: getValue('address'),
+                        };
+
+                        const requiredFields = [
+                            { id: 'organizationName', name: 'Название организации' },
+                            { id: 'address', name: 'Юридический адрес' },
+                            { id: 'FIO', name: 'ФИО руководителя' },
+                            { id: 'phone', name: 'Телефон' },
+                            { id: 'mail', name: 'Электронная почта' },
+                            { id: 'password', name: 'Пароль' },
+                            { id: 'password2', name: 'Подтверждение пароля' }
+                        ];
+
+                        requiredFields.forEach(field => {
+                            if (!getValue(field.id)) {
+                                showFieldError(field.id, `Поле "${field.name}" обязательно для заполнения`);
+                                hasErrors = true;
+                            }
+                        });
+
+
+                        if (userType === 'organization') {
+                            const industryElement = document.getElementById('industry');
+                            if (industryElement) {
+                                formData.Industry = industryElement.value.trim();
+                                if (!formData.Industry) {
+                                    showFieldError('industry', 'Поле "Категория" обязательно для организаций!');
+                                    hasErrors = true;
+                                }
+                            } else {
+                                showFormError('Поле "Категория" обязательно для организаций!');
+                                hasErrors = true;
+                            }
+                        }
+
+                        if (hasErrors) {
+                            return;
+                        }
+
+        const submitBtn = formElement.querySelector('.button-submit');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Регистрация...';
+                submitBtn.disabled = true;
+
+                try {
+                    const endpoint = userType === 'organization'
+                        ? '/companies/create'
+                        : '/managers/create';
+
+                    const response = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                                // Успешная регистрация
+                                showFormError(''); // Очищаем ошибки
+                                window.location.href = '/auth';
+                    } else {
+                                // Обработка ошибок валидации с сервера
+                        if (result.errors) {
+                            // Преобразуем имена полей из C# в HTML id
+                            const fieldMapping = {
+                                'Name': 'organizationName',
+                                'LeaderName': 'FIO',
+                                'Phone': 'phone',
+                                'Email': 'mail',
+                                'Password': 'password',
+                                'Password2': 'password2',
+                                'FullAddress': 'address',
+                                'Industry': 'industry'
+                            };
+
+                            // Показываем ошибки для каждого поля
+                            Object.keys(result.errors).forEach(fieldKey => {
+                                const htmlFieldId = fieldMapping[fieldKey] || fieldKey;
+                                const errorMessages = result.errors[fieldKey];
+
+                                if (Array.isArray(errorMessages) && errorMessages.length > 0) {
+                                    // Берем первую ошибку для поля (обычно их одна)
+                                    showFieldError(htmlFieldId, errorMessages[0]);
+                                }
+                            });
+                        } else if (result.title === 'One or more validation errors occurred.') {
+                            // Стандартный формат ошибок валидации ASP.NET
+                            if (result.errors) {
+                                const fieldMapping = {
+                                    'Name': 'organizationName',
+                                    'LeaderName': 'FIO',
+                                    'Phone': 'phone',
+                                    'Email': 'mail',
+                                    'Password': 'password',
+                                    'Password2': 'password2',
+                                    'FullAddress': 'address',
+                                    'Industry': 'industry'
+                                };
+
+                                Object.keys(result.errors).forEach(fieldKey => {
+                                    const htmlFieldId = fieldMapping[fieldKey] || fieldKey;
+                                    const errorMessages = result.errors[fieldKey];
+
+                                    if (Array.isArray(errorMessages) && errorMessages.length > 0) {
+                                        showFieldError(htmlFieldId, errorMessages[0]);
+                                    }
+                                });
+                            }
+                        } else {
+                            // Общая ошибка
+                            showFormError(result.detail || 'Ошибка регистрации');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                    showFormError('Произошла ошибка при регистрации');
+                } finally {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }
+            };
+            }
+            function setupFieldValidation() {
+                    const fields = document.querySelectorAll('.input-field, select.input-field');
+                    fields.forEach(field => {
+                        field.addEventListener('input', function() {
+                            clearFieldError(this.id);
+                        });
+
+                        field.addEventListener('change', function() {
+                            clearFieldError(this.id);
+                        });
+                    });
+                }
+
+                // Подключаем обработчики
+                if (orgButton) orgButton.addEventListener('click', activateOrgButton);
+                if (investorButton) investorButton.addEventListener('click', activateInvestorButton);
+
+                // Инициализация по умолчанию
+                activateOrgButton();
+            });
+
+        })();
+    </script>
+}
 
 

@@ -135,7 +135,7 @@ namespace Backend.Services
             await db.Users.AddAsync(company);
             await db.SaveChangesAsync();
 
-            //await _messageService.SendRegistrationEmail(company);
+            await _messageService.SendRegistrationEmail(company);
             _logger.LogInformation($"Компания зарегистрирована: {companyDto.Email}");
 
             ResetCompaniesCache();

@@ -37,7 +37,7 @@
                     <p class="about-text">
                         Проект социального воздействия — это комплекс мероприятий, направленных на достижение измеримого социального эффекта в жизни конкретных людей-участников проекта. Например, мероприятия по повышению успеваемости школьников на определенной территории или вовлечение людей в диспансеризацию, содействие в получении мер социальной поддержки.
                     </p>
-                    <button class="about-button">Подробнее</button>
+                    <button onclick="scrollToSection('faq-section')" class="about-button">Подробнее</button>
                 </div>
             </div>
         </div>
@@ -172,7 +172,7 @@
         </div>
     </section>
 
-    <section class="faq-section">
+    <section class="faq-section" id="faq-section">
                 <h2 class="faq-title">Часто задаваемые вопросы</h2>
                     <div class="faq-item">
                         <div class="faq-question">
@@ -223,7 +223,15 @@
 
 
     <script>
-
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }
                 document.addEventListener('DOMContentLoaded', function() {
             const faqItems = document.querySelectorAll('.faq-item');
 
