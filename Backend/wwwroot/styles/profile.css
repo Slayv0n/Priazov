@@ -1,0 +1,140 @@
+﻿.profile-header-container {
+    position: relative;
+}
+
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 200px;
+}
+
+.profile-change-button {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 130%;
+    letter-spacing: 4%;
+    width: 189px;
+    display: flex;
+    position: absolute;
+    right: 16px;
+    bottom: 144px;
+    padding: 4px 16px;
+    background-color: #FFFFFF;
+    border: 1px solid #7A989A;
+    border-radius: 15px;
+    transition: 0.3s;
+}
+
+    .profile-change-button img {
+        transition: 0.3s;
+    }
+
+    .profile-change-button:hover {
+        background-color: #0E6466;
+        color: #FFFFFF;
+    }
+
+        .profile-change-button:hover img {
+            filter: brightness(0) saturate(100%) invert(100%);
+        }
+
+.profile-img-avatar {
+    width: 256px;
+    height: 256px;
+    border-radius: 50%;
+    margin-top: -128px;
+    margin-left: 256px;
+    object-fit: cover;
+    position: relative;
+    z-index: 10;
+    display: block;
+}
+
+.profile-text-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.profile-title-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 817px;
+    padding: 20px;
+}
+
+.profile-title {
+    font-family: 'Natasha', sans-serif;
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 120%;
+    letter-spacing: 0%;
+}
+
+.profile-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 130%;
+    letter-spacing: 4%;
+}
+.profile-main {
+    display: flex;
+    gap: 32px;
+    padding: 20px 120px 240px 120px;
+}
+.contact-card {
+    max-width: 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px 15px;
+    border: 1px solid #7A989A;
+    border-radius: 20px;
+}
+.contact-leader {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 1px;
+}
+.contact-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 130%;
+    letter-spacing: 4%;
+}
+.contact-leader-name {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 130%;
+    letter-spacing: 4%;
+}
+.contact-item {
+    display: flex;
+    gap: 3px;
+}
+.contact-img {
+    width: 20px;
+    filter: brightness(0) saturate(100%);
+    margin-bottom: auto;
+}
+.contact-text {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 130%;
+    letter-spacing: 4%;
+}
+.profile-description {
+    max-width: 720px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 130%;
+    letter-spacing: 4%;
+}

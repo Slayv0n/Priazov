@@ -81,7 +81,7 @@ namespace Backend.Services
             if (files.Length == 0)
             {
                 _logger.LogError($"Аватар пользователя не найден {userId}");
-                throw new NotFoundException("Аватар пользователя не найден");
+                return _default;
             }
 
             var filePath = files[0];

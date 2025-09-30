@@ -1,0 +1,66 @@
+﻿@page "{userId}"
+@model Backend.Pages.AccountModel
+@{
+    ViewData["Title"] = Model.Company.Name;
+}
+@section Links
+{
+    <link rel="stylesheet" href="~/styles/profile.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/suggestions-jquery@21.12.0/dist/css/suggestions.min.css">
+}
+
+<main>
+    <div class="profile-header-container">
+        <div class="profile-header" style="
+    background-image: url('@Model.MainUrl');
+    background-size: cover; /* или contain в зависимости от нужного эффекта */
+    background-position: center;
+    background-repeat: no-repeat;">
+            <button class="profile-change-button">
+                <img src="~/static/img/profile/edit.svg" asp-append-version="true" />
+                редактировать профиль
+            </button>
+        </div>
+        <div class="profile-text-container">
+            <img class="profile-img-avatar" src="@Model.AvatarUrl" asp-append-version="true" />
+            <div class="profile-title-container">
+                <span class="profile-title">@Model.Company.Name</span>
+                <span class="profile-subtitle">@Model.Company.Industry</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="profile-main">
+        <div class="contact-card">
+            <div class="contact-leader">
+                <span class="contact-title">Руководитель: </span>
+                <span class="contact-leader-name">@Model.Company.LeaderName</span>
+            </div>
+            <div class="contact-item">
+                <img class="contact-img" src="~/static/img/profile/Phone.svg" asp-append-version="true" />
+                <span class="contact-text">@Model.Company.Phone</span>
+            </div>
+            <div class="contact-item">
+                <img class="contact-img" src="~/static/img/profile/mail.svg" asp-append-version="true" />
+                <span class="contact-text">@Model.Company.Email</span>
+            </div>
+            <div class="contact-item">
+                <img class="contact-img" src="~/static/img/profile/language.svg" asp-append-version="true" />
+                <span class="contact-text">taganrogdi.ru</span>
+            </div>
+            <div class="contact-item">
+                <img class="contact-img" src="~/static/img/profile/Map pin.svg" asp-append-version="true" />
+                <span class="contact-text">@Model.Company.FullAddress</span>
+            </div>
+        </div>
+        <span class="profile-description">@Model.Company.Description</span>
+    </div>
+    <div class="profile-projects">
+    </div>
+</main>
+
+@section Scripts {
+}
+
+

@@ -133,7 +133,7 @@
 
                     @for (int i = 0; i < Model.Query.Count; i++)
                     {
-                        <div class="organization-card">
+                        <div class="organization-card" onclick="location.href='/account/@Model.Query[i].Id'">
                             <img class="org-image" src="@Model.Images[i]" asp-append-version="true">
                             <div class="org-text">
                                 <h3 class="org-title">@Model.Query[i].Name</h3> <!--Problem zone-->
