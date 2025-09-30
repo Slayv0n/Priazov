@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var currentPath = Context.Request.Path.ToString().ToLower();
+    var isRegistrationOrAuthPage = currentPath == "/registration" || currentPath == "/auth";
+    var isAboutPage = currentPath.Contains("/about");
+}
+
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -32,11 +38,18 @@
 
                 <!-- Кнопки для широких экранов -->
                 <div class="right-section">
-                    <div class="catalog-button" onclick="location.href='search.html'">Каталог организаций</div>
-                    <div class="auth-block-header">
-                        <div class="login-button" data-bs-toggle="modal" data-bs-target="#loginModal">Вход</div>
-                        <div class="register-button" onclick="location.href='registration.html'">Регистрация</div>
-                    </div>
+                    @if (!isRegistrationOrAuthPage)
+                    {
+                        <div class="catalog-button" onclick="location.href='search.html'">Каталог организаций</div>
+                    }
+                    
+                    @if(!isRegistrationOrAuthPage)
+                    {
+                        <div class="auth-block-header">
+                            <div class="login-button" data-bs-toggle="modal" data-bs-target="#loginModal">Вход</div>
+                            <div class="register-button" onclick="location.href='/registration'">Регистрация</div>
+                        </div>
+                    }
                 </div>
 
                 

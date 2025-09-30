@@ -335,27 +335,12 @@ namespace Backend.Services
                 return Results.Conflict("Повтор уникальных данных");
             }
 
-            var api = new CleanClientAsync(_dadata.ApiKey, _dadata.SecretKey);
-            var cleanedAddress = await api.Clean<Dadata.Model.Address>(companyDto.FullAddress);
-
-            if (cleanedAddress.result == null)
-            {
-                _logger.LogWarning($"Адрес не найден: {companyDto.FullAddress}");
-                return Results.NotFound("Адрес не найден");
-            }
-
             company.Name = companyDto.Name;
             company.Email = companyDto.Email;
             company.Phone = companyDto.Phone;
             company.Industry = companyDto.Industry;
             company.AvatarId = companyDto.AvatarId;
             company.MainId = companyDto.MainId;
-            company.Address = new ShortAddressDto()
-            {
-                FullAddress = cleanedAddress.result,
-                Latitude = decimal.Parse(cleanedAddress.geo_lat, CultureInfo.InvariantCulture),
-                Longitude = decimal.Parse(cleanedAddress.geo_lon, CultureInfo.InvariantCulture)
-            };
             company.Contacts.VirtualList = companyDto.Contacts.VirtualList.Select(i => i.Trim()).ToList();
             company.LeaderName = companyDto.LeaderName;
             company.Description = companyDto.Description;

@@ -317,41 +317,51 @@ body {
 
 .more-projects {
     display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 16px;
+}
+
+.more-text {
+    display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content:flex-end;
-    text-align: center;
+    font-family: "Fira Code", monospace;
+    font-weight: 400;
+    font-size: 36px;
+    line-height: 120%;
+    letter-spacing: 4%;
+    margin-top: auto;
 }
 
 .more-number {
-    font-family: 'Itim', cursive;
-    font-weight: 400;
-    font-size: 48px;
-    color: #012021;
-    margin-bottom: 10px;
+    font-size: 46px;
 }
 
 .more-label {
-    font-family: 'Itim', cursive;
-    font-weight: 400;
-    font-size: 24px;
-    color: #012021;
-    margin-bottom: 20px;
+
 }
 
 .view-all-button {
     background: #ffffff;
-    color: #000000;
     padding: 12px 24px;
     font-family: 'Inter', sans-serif;
-    font-weight: 500;
+    font-weight: 400;
     font-size: 16px;
+    line-height: 120%;
+    letter-spacing: 4%;
     cursor: pointer;
     width: 100%;
-    border-color: gray;
+    border: 1px solid #7A989A;
     border-radius: 8px;
-    border-width: 1px;
+    transition: 0.25s;
 }
+
+    .view-all-button:hover {
+        background-color: #0E6466;
+        color: white;
+    }
+
 
 
 /* Секция с часто задаваемыми вопросами */

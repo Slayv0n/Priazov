@@ -151,12 +151,18 @@
                             </div>
                         </div>
                     }
-                    @if (Model.Count > 5)
+                    @if (Model.Count > 0)
                     {
                         <div class="organization-card more-projects">
-                            <div class="more-number">ЕЩЕ @Model.Count</div>
-                            <div class="more-label">
-                                @ViewData["Organization"]
+                            <div class="more-text">
+                                <span class="more-number">
+                                    ЕЩЕ <span style="font-family: 'Natasha', sans-serif;
+                                        font-weight: 400;
+                                        font-size: 52px;
+                                        line-height: 120%;
+                                        letter-spacing: 0%;">@Model.Count</span>
+                                </span>
+                                <span class="more-label">@ViewData["Organization"]</span>
                             </div>
                             <button class="view-all-button">Смотреть все</button>
                         </div>
