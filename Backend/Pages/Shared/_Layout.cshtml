@@ -1,7 +1,7 @@
 ﻿@{
     var currentPath = Context.Request.Path.ToString().ToLower();
     var isRegistrationOrAuthPage = currentPath == "/registration" || currentPath == "/auth";
-    var isAboutPage = currentPath.Contains("/about");
+    var isCatalogPage = currentPath.Contains("/catalog");
 }
 
 <!DOCTYPE html>
@@ -38,9 +38,9 @@
 
                 <!-- Кнопки для широких экранов -->
                 <div class="right-section">
-                    @if (!isRegistrationOrAuthPage)
+                    @if (!isRegistrationOrAuthPage && !isCatalogPage)
                     {
-                        <div class="catalog-button" onclick="location.href='search.html'">Каталог организаций</div>
+                        <div class="catalog-button" onclick="location.href='/catalog'">Каталог организаций</div>
                     }
                     
                     @if(!isRegistrationOrAuthPage)

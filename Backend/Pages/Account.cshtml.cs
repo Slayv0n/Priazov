@@ -16,7 +16,7 @@ namespace Backend.Pages
             _companyService = companyService;
             _imageService = imageService;
         }
-        public async Task<IActionResult> OnGet(Guid userId)
+        public async Task<IActionResult> OnGetAsync(Guid userId)
         {
             try
             {

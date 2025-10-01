@@ -1,0 +1,72 @@
+﻿@page
+@model Backend.Pages.CatalogModel
+@{
+    ViewData["Title"] = "Каталог организаций";
+}
+@section Links
+{
+    <link rel="stylesheet" href="~/styles/catalog.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/suggestions-jquery@21.12.0/dist/css/suggestions.min.css">
+}
+
+<main>
+    <span class="catalog-title">каталог организаций</span>
+    <form class="catalog-buttons" method="post">
+        <div class="search-buttons">
+            <input asp-for="@Model.CatalogRequest.SearchTerm" class="input-field" type="search" placeholder="Название"/>
+            <select asp-for="@Model.CatalogRequest.Industry" class="input-field filter" id="industry">
+                <option value="">Направление</option>
+                <option value="Образовательное учреждение">Образовательное учреждение</option>
+                <option value="Научно-исследовательский институт">Научно-исследовательский институт</option>
+                <option value="Научно-образовательный проект">Научно-образовательный проект</option>
+                <option value="Государственное учреждение">Государственное учреждение</option>
+                <option value="Коммерческая деятельность">Коммерческая деятельность</option>
+                <option value="Некоммерческая организация">Некоммерческая организация</option>
+                <option value="Финансы">Финансы</option>
+                <option value="Акселератор / инкубатор / технопарк">Акселератор / инкубатор / технопарк</option>
+                <option value="Ассоциация / объединение">Ассоциация / объединение</option>
+                <option value="Инициатива">Инициатива</option>
+                <option value="Отраслевое событие / научная конференция">Отраслевое событие / научная конференция</option>
+                <option value="Другое">Другое</option>
+            </select>
+            <select asp-for="@Model.CatalogRequest.Region" class="input-field filter">
+                <option value="">Регион</option>
+                <option>Ростовская область</option>
+                <option>Краснодарский край</option>
+                <option>Донецкая область</option>
+                <option>ЛНР</option>
+                <option>ДНР</option>
+                <option>республика Крым</option>
+                <option>Херсонская область</option>
+                <option>Запорожская область</option>
+            </select>
+        </div>
+        <button class="submit-button" type="submit">Применить</button>
+    </form>
+    <div class="organizations-grid">
+
+        @for (int i = 0; i < Model.Query.Count; i++)
+        {
+            <div class="organization-card" onclick="location.href='/account/@Model.Query[i].Id'">
+                <img class="org-image" src="@Model.Images[i]" asp-append-version="true">
+                <div class="org-text">
+                    <h3 class="org-title">@Model.Query[i].Name</h3> <!--Problem zone-->
+                    <p class="org-description">@Model.Query[i].Description</p>
+                </div>
+                <div class="org-details">
+                    <div class="detail">
+                        <span class="detail-icon"><img src="~/static/img/location_on.svg" asp-append-version="true" /></span>
+                        <span class="detail-text">@Model.Query[i].FullAddress</span>
+                    </div>
+                    <div class="detail">
+                        <span class="detail-icon"><img src="~/static/img/gmail_groups.svg" asp-append-version="true" /></span>
+                        <span class="detail-text">@Model.Query[i].Industry</span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</main>
+
+@section Scripts {
+}

@@ -25,7 +25,7 @@ namespace Backend.Services
         Task<CompanyResponseDto> AccountCompanyAsync(Guid? id);
         Task<List<CompanyResponseDto>> ReviewCompanyAsync();
         Task<int> CountCompaniesAsync();
-        Task<List<CompanyResponseDto>> SearchCompanyAsync(string? industry, string? region, string? searchTerm);
+        Task<List<CompanyResponseDto>> SearchCompanyAsync(string? searchTerm, string? industry, string? region);
         Task<List<AddressDto>> FilterMapCompanyAsync(List<Filter> industries);
         Task<IResult> UpdateCompanyAsync(Guid? id, CompanyChangeDto companyDto);
     }
@@ -210,7 +210,7 @@ namespace Backend.Services
             return await db.Users.OfType<Company>().CountAsync();
         }
 
-        public async Task<List<CompanyResponseDto>> SearchCompanyAsync(string? industry, string? region, string? searchTerm)
+        public async Task<List<CompanyResponseDto>> SearchCompanyAsync(string? searchTerm, string? industry, string? region)
         {
             var cacheKey = $"companies_search_{industry ?? "all"}_{region ?? "all"}_{searchTerm ?? "all"}";
 
@@ -224,7 +224,7 @@ namespace Backend.Services
                 _logger.LogInformation($"Кэш промах. Запрос к БД: {cacheKey}");
             }
 
-            if (region != null && !_allowedRegions.Contains(region))
+            if (!string.IsNullOrEmpty(region) && !_allowedRegions.Contains(region))
             {
                 _logger.LogError($"Недопустимое значение региона: {region}");
                 throw new Exception("Недопустимые значения региона");
@@ -232,7 +232,7 @@ namespace Backend.Services
 
             using var db = await _factory.CreateDbContextAsync();
 
-            var query = db.Users.OfType<Company>().AsQueryable().Include(c => c.Address).Where(c => c.Industry == industry);
+            var query = db.Users.OfType<Company>().AsQueryable().Include(c => c.Address).Where(c => c.Industry.Contains(industry ?? ""));
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
                 query = query.Where(c => EF.Functions.ILike(c.Name, $"%{searchTerm}%"));

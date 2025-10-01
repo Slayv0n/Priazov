@@ -13,10 +13,10 @@ namespace Backend.Mapping
             group.MapPost("/upload", Upload).Accepts<ImageUploadDto>("multipart/form-data")
                 .Produces<ImageResponseDto>(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status400BadRequest);
-            group.MapGet("/avatar/{userId}", Avatar)
+            group.MapGet("/avatar/{userId}", AvatarImage)
                 .Produces<ImageResponseDto>(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status400BadRequest);
-            group.MapGet("/main/{userId}", Main)
+            group.MapGet("/main/{userId}", MainImage)
                 .Produces<ImageResponseDto>(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status400BadRequest);
         }
@@ -62,7 +62,7 @@ namespace Backend.Mapping
 
             return Results.Ok(response);
         }
-        private static async Task<IResult> Avatar(
+        private static async Task<IResult> AvatarImage(
             Guid userId,
             HttpContext context,
             [FromServices] IImageService service)
@@ -85,7 +85,7 @@ namespace Backend.Mapping
 
             return Results.Ok(response);
         }
-        private static async Task<IResult> Main(
+        private static async Task<IResult> MainImage(
            HttpContext context,
            Guid userId,
            [FromServices] IImageService service)
