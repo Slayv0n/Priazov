@@ -93,7 +93,7 @@ namespace Backend.Services
             await db.Users.AddAsync(manager);
             await db.SaveChangesAsync();
 
-            //await _message.SendRegistrationEmail(manager);
+            await _message.SendRegistrationEmail(manager);
             _logger.LogInformation($"Инвестор зарегистрирована: {managerDto.Email}");
 
             ResetManagersCache();

@@ -135,7 +135,7 @@ namespace Backend.Services
             await db.Users.AddAsync(company);
             await db.SaveChangesAsync();
 
-            //await _messageService.SendRegistrationEmail(company);
+            await _messageService.SendRegistrationEmail(company);
             _logger.LogInformation($"Компания зарегистрирована: {companyDto.Email}");
 
             ResetCompaniesCache();
@@ -224,7 +224,7 @@ namespace Backend.Services
                 _logger.LogInformation($"Кэш промах. Запрос к БД: {cacheKey}");
             }
 
-            if (region != null && !_allowedRegions.Contains(region))
+            if (!string.IsNullOrEmpty(region) && !_allowedRegions.Contains(region))
             {
                 _logger.LogError($"Недопустимое значение региона: {region}");
                 throw new Exception("Недопустимые значения региона");
@@ -232,7 +232,7 @@ namespace Backend.Services
 
             using var db = await _factory.CreateDbContextAsync();
 
-            var query = db.Users.OfType<Company>().AsQueryable().Include(c => c.Address).Where(c => c.Industry == industry);
+            var query = db.Users.OfType<Company>().AsQueryable().Include(c => c.Address).Where(c => c.Industry.Contains(industry ?? ""));
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
                 query = query.Where(c => EF.Functions.ILike(c.Name, $"%{searchTerm}%"));
