@@ -42,41 +42,27 @@ namespace Backend.Services
             "Херсонская область",
             "Запорожская область"
         };
-        private CancellationTokenSource _cacheResetToken = new();
-
-        private MemoryCacheEntryOptions CreateCacheOptions(TimeSpan? expiration = null)
-        {
-            return new MemoryCacheEntryOptions()
-            {
-                AbsoluteExpirationRelativeToNow = expiration ?? TimeSpan.FromMinutes(5)
-            }
-            .AddExpirationToken(new CancellationChangeToken(_cacheResetToken.Token));
-        }
-
-        public void ResetCompaniesCache()
-        {
-            _cacheResetToken.Cancel();
-            _cacheResetToken = new CancellationTokenSource();
-        }
 
         private readonly IDbContextFactory<PriazovContext> _factory;
         private readonly DadataSettings _dadata;
         private readonly IMessageService _messageService;
         private readonly ILogger<CompanyService> _logger;
-        private readonly IMemoryCache _cache;
+        private readonly ICacheService _cacheService;
+        private readonly string _cacheName = "companies_";
+
 
         public CompanyService(
             IDbContextFactory<PriazovContext> factory,
             IOptions<DadataSettings> dadata,
             IMessageService messageService,
             ILogger<CompanyService> logger,
-            IMemoryCache cache)
+            ICacheService cacheService)
         {
             _factory = factory;
             _dadata = dadata.Value;
             _messageService = messageService;
             _logger = logger;
-            _cache = cache;
+            _cacheService = cacheService;
         }
 
         public async Task<CompanyResponseDto> CreateCompanyAsync(CompanyCreateDto companyDto)
@@ -138,15 +124,15 @@ namespace Backend.Services
             await _messageService.SendRegistrationEmail(company);
             _logger.LogInformation($"Компания зарегистрирована: {companyDto.Email}");
 
-            ResetCompaniesCache();
+            _cacheService.ResetCache(_cacheName);
 
             return new CompanyResponseDto(company, company.Address.FullAddress);
         }
 
         public async Task<CompanyResponseDto> AccountCompanyAsync(Guid? id)
         {
-            var cacheKey = $"companies_{id}";
-            if (_cache.TryGetValue(cacheKey, out CompanyResponseDto? cachedCompany))
+            var cacheKey = $"{_cacheName}_{id}";
+            if (_cacheService.GetCache().TryGetValue(cacheKey, out CompanyResponseDto? cachedCompany))
             {
                 _logger.LogInformation($"Ответ взят из кэша: {cacheKey}");
                 return cachedCompany!;
@@ -168,7 +154,9 @@ namespace Backend.Services
 
             var companyResponse = new CompanyResponseDto(company, company.Address.FullAddress);
 
-            _cache.Set(cacheKey, companyResponse, CreateCacheOptions(TimeSpan.FromMinutes(30)));
+            _cacheService.GetCache().Set(cacheKey, companyResponse, _cacheService.CreateCacheOptions(TimeSpan.FromMinutes(30)));
+            _cacheService.SetCacheKeys(cacheKey);
+
             _logger.LogInformation($"Компания успешно найдена Id: {id}");
 
             return companyResponse;
@@ -176,9 +164,9 @@ namespace Backend.Services
 
         public async Task<List<CompanyResponseDto>> ReviewCompanyAsync()
         {
-            var cacheKey = $"companies_review";
+            var cacheKey = $"{_cacheName}_review";
 
-            if (_cache.TryGetValue(cacheKey, out List<CompanyResponseDto>? cachedCompanies))
+            if (_cacheService.GetCache().TryGetValue(cacheKey, out List<CompanyResponseDto>? cachedCompanies))
             {
                 _logger.LogInformation($"Ответ взят из кэша: {cacheKey}");
                 return cachedCompanies!; 
@@ -198,7 +186,7 @@ namespace Backend.Services
                 .Select(c => new CompanyResponseDto(c, c.Address.FullAddress))
                 .ToListAsync();
 
-            _cache.Set(cacheKey, query, CreateCacheOptions(TimeSpan.FromMinutes(15)));
+            _cacheService.GetCache().Set(cacheKey, query, _cacheService.CreateCacheOptions(TimeSpan.FromMinutes(15)));
             _logger.LogInformation("Краткий просмотр компаний выполнен");
 
             return query;
@@ -212,9 +200,9 @@ namespace Backend.Services
 
         public async Task<List<CompanyResponseDto>> SearchCompanyAsync(string? searchTerm, string? industry, string? region)
         {
-            var cacheKey = $"companies_search_{industry ?? "all"}_{region ?? "all"}_{searchTerm ?? "all"}";
+            var cacheKey = $"{_cacheName}_search_{industry ?? "all"}_{region ?? "all"}_{searchTerm ?? "all"}";
 
-            if (_cache.TryGetValue(cacheKey, out List<CompanyResponseDto>? cachedCompanies))
+            if (_cacheService.GetCache().TryGetValue(cacheKey, out List<CompanyResponseDto>? cachedCompanies))
             {
                 _logger.LogInformation($"Ответ взят из кэша: {cacheKey}");
                 return cachedCompanies!;
@@ -239,7 +227,8 @@ namespace Backend.Services
 
             var companies = await query.OrderBy(c => c.Name).Select(c => new CompanyResponseDto(c, c.Address.FullAddress)).ToListAsync();
 
-            _cache.Set(cacheKey, companies, CreateCacheOptions());
+            _cacheService.GetCache().Set(cacheKey, companies, _cacheService.CreateCacheOptions());
+            _cacheService.SetCacheKeys(cacheKey);
             _logger.LogInformation("Поиск и фильтрация компаний завершились успешно");
 
             return companies;
@@ -260,9 +249,9 @@ namespace Backend.Services
                 }
             }
             
-            var cacheKey = $"companies_filterMap_{key.ToString() ?? "all"}";
+            var cacheKey = $"{_cacheName}_filterMap_{key.ToString() ?? "all"}";
 
-            if (_cache.TryGetValue(cacheKey, out List<AddressDto>? cachedAddress))
+            if (_cacheService.GetCache().TryGetValue(cacheKey, out List<AddressDto>? cachedAddress))
             {
                 _logger.LogInformation($"Ответ взят из кэша: {cacheKey}");
                 return cachedAddress!;
@@ -296,7 +285,8 @@ namespace Backend.Services
                 })
                 .ToList();
 
-            _cache.Set(cacheKey, addresses, CreateCacheOptions(TimeSpan.FromMinutes(15)));
+            _cacheService.GetCache().Set(cacheKey, addresses, _cacheService.CreateCacheOptions(TimeSpan.FromMinutes(15)));
+            _cacheService.SetCacheKeys(cacheKey);
             _logger.LogInformation("Фильтрация адресов завершилась успешно");
 
             return addresses;
@@ -339,8 +329,6 @@ namespace Backend.Services
             company.Email = companyDto.Email;
             company.Phone = companyDto.Phone;
             company.Industry = companyDto.Industry;
-            company.AvatarId = companyDto.AvatarId;
-            company.MainId = companyDto.MainId;
             company.Contacts.VirtualList = companyDto.Contacts.VirtualList.Select(i => i.Trim()).ToList();
             company.LeaderName = companyDto.LeaderName;
             company.Description = companyDto.Description;
@@ -348,7 +336,7 @@ namespace Backend.Services
             await db.SaveChangesAsync();
             _logger.LogInformation($"Компания успешно изменена: {id}");
 
-            ResetCompaniesCache();
+            _cacheService.ResetCache(_cacheName);
 
             return Results.Ok(new CompanyResponseDto(company, company.Address.FullAddress));
         }

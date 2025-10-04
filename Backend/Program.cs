@@ -68,6 +68,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddScoped<IPasswordService, PasswordService>();    
 
+builder.Services.AddSingleton<ICacheService, CacheService>();
+
 builder.Services.AddDbContextFactory<PriazovContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Singleton);
 
@@ -170,6 +172,7 @@ app.MapRazorPages();
 app.MapCompanyEndpoints();
 app.MapManagerEndpoints();
 app.MapImageEnpoints();
+app.MapAuthEndpoints();
 
 app.Run();
 

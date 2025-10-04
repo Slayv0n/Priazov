@@ -66,7 +66,5 @@ namespace Backend.Models.Dto
         [JsonListValidation]
         public JsonList<string> Contacts { get; set; } = new JsonList<string>();
         public string? Description { get; set; }
-        public Guid AvatarId { get; set; }
-        public Guid MainId { get; set; }
     }
 }

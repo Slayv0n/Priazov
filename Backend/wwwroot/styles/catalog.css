@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 48px 72px 240px 72px;
+    padding: 48px 120px 240px 120px;
 }
 .catalog-title {
     font-family: 'Natasha', sans-serif;
@@ -25,7 +25,11 @@
     border-radius: 8px;
     background-color: #FFFFFF;
     color: #5C5B5B;
+    outline: none;
 }
+    .input-field:focus {
+        border: 2px solid #0E6466;
+    }
 .filter {
     cursor: pointer;
     max-width: 240px;
@@ -62,7 +66,7 @@
     transition: box-shadow 0.3s;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 18px;
     border: 1px solid #7A989A;
     border-radius: 24px;
 }
@@ -79,6 +83,8 @@
 }
 
 .org-text {
+    display: flex;
+    flex-direction: column;
     gap: 8px;
 }
 
@@ -116,4 +122,16 @@
     font-size: 14px;
     line-height: 120%;
     letter-spacing: 10%;
+}
+.empty-search {
+    font-family: 'Natasha', sans-serif;
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    color: #7A989A;
+    padding: 120px 0 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

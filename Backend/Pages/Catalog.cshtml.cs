@@ -41,6 +41,11 @@ namespace Backend.Pages
         }
         public async Task<IActionResult> OnPostAsync()
         {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
             Query = await _companyService.SearchCompanyAsync(
             CatalogRequest.SearchTerm,
             CatalogRequest.Industry,

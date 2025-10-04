@@ -12,17 +12,20 @@
 <main>
     <div class="profile-header-container">
         <div class="profile-header" style="
-    background-image: url('@Model.MainUrl');
-    background-size: cover; /* или contain в зависимости от нужного эффекта */
-    background-position: center;
-    background-repeat: no-repeat;">
+            background-image: url('@Model.MainUrl');
+            background-size: cover; /* или contain в зависимости от нужного эффекта */
+            background-position: center;
+            background-repeat: no-repeat;">
             <button class="profile-change-button">
                 <img src="~/static/img/profile/edit.svg" asp-append-version="true" />
-                редактировать профиль
+                <span></span>
             </button>
         </div>
         <div class="profile-text-container">
-            <img class="profile-img-avatar" src="@Model.AvatarUrl" asp-append-version="true" />
+            <div class="avatar-wrapper">
+                <img class="profile-img-avatar" src="@Model.AvatarUrl" asp-append-version="true" />
+            </div>
+            
             <div class="profile-title-container">
                 <span class="profile-title">@Model.Company.Name</span>
                 <span class="profile-subtitle">@Model.Company.Industry</span>
@@ -37,19 +40,27 @@
                 <span class="contact-title">Руководитель: </span>
                 <span class="contact-leader-name">@Model.Company.LeaderName</span>
             </div>
-            <div class="contact-item">
+            <div class="contact-item" id="phone">
                 <img class="contact-img" src="~/static/img/profile/Phone.svg" asp-append-version="true" />
                 <span class="contact-text">@Model.Company.Phone</span>
             </div>
-            <div class="contact-item">
+            <div class="contact-item" id="email">
                 <img class="contact-img" src="~/static/img/profile/mail.svg" asp-append-version="true" />
                 <span class="contact-text">@Model.Company.Email</span>
             </div>
-            <div class="contact-item">
-                <img class="contact-img" src="~/static/img/profile/language.svg" asp-append-version="true" />
-                <span class="contact-text">taganrogdi.ru</span>
+            @for (int i = 0; i < Model.Company.Contacts.VirtualList.Count; i++)
+            {
+                <div class="contact-item" id=`contact-${@i}`>
+                    <img class="contact-img" src="~/static/img/profile/info.svg" asp-append-version="true" />
+                    <span class="contact-text">@Model.Company.Contacts.VirtualList[i]</span>
+                    <button class="remove-contact-btn" onclick="removeContact(this)"><img class="contact-img" src="/static/img/profile/plus.svg" asp-append-version="true" /></button>
+                </div>
+            }
+            <div class="contact-item" id="add-contact">
+                <img class="contact-img" src="~/static/img/profile/info.svg" asp-append-version="true" />
+                <span id="add-contact-btn" onclick="addContact()"><img class="contact-img" src="~/static/img/profile/plus.svg" asp-append-version="true" /></span>
             </div>
-            <div class="contact-item">
+            <div class="contact-item" id="address">
                 <img class="contact-img" src="~/static/img/profile/Map pin.svg" asp-append-version="true" />
                 <span class="contact-text">@Model.Company.FullAddress</span>
             </div>
@@ -61,6 +72,355 @@
 </main>
 
 @section Scripts {
-}
+    <script>
+        // Функция для получения ID из URL
+        function getUserIdFromUrl() {
+            const path = window.location.pathname;
+            const match = path.match(/\/account\/([^\/]+)/);
+            return match ? match[1] : null;
+        }
 
+        // Функция для проверки совпадения ID
+        function isCurrentUserProfile() {
+            const urlUserId = getUserIdFromUrl();
+            const localUser = JSON.parse(localStorage.getItem('user'));
+
+            return localUser && localUser.id && urlUserId && localUser.id === urlUserId;
+        }
+
+        // Функция для показа/скрытия кнопки редактирования
+        function updateEditButtonVisibility() {
+            const editButton = document.querySelector('.profile-change-button');
+
+            if (editButton) {
+                if (isCurrentUserProfile()) {
+                    editButton.style.display = 'flex';
+                    editButton.onclick = toggleEditMode;
+                } else {
+                    editButton.style.display = 'none';
+                }
+            }
+        }
+
+        function toggleEditMode() {
+            const isEditMode = document.body.classList.toggle('edit-mode');
+            const editButton = document.querySelector('.profile-change-button');
+
+            if (isEditMode) {
+                // Включаем режим редактирования
+                editButton.classList.add('save-mode');
+                enableEditing();
+            } else {
+                // Выключаем режим редактирования
+                editButton.classList.remove('save-mode');
+                disableEditing();
+                saveChanges();
+            }
+        }
+
+        // Включение редактирования полей
+        function enableEditing() {
+            // Заголовок и подзаголовок
+            const title = document.querySelector('.profile-title');
+            const subtitle = document.querySelector('.profile-subtitle');
+            const description = document.querySelector('.profile-description');
+
+            [title, subtitle, description].forEach(element => {
+                if (element) {
+                        element.setAttribute('contenteditable', 'true');
+                        element.style.border = '1px solid #7A989A';
+                        element.style.borderRadius = '8px';
+                        element.style.background = '#F6F6F6';
+                        element.style.padding = '10px 16px 6px 16px';
+                }
+            });
+
+        const elementsToEdit = [];
+
+        // Основные поля
+        elementsToEdit.push(document.querySelector('.contact-leader-name'));
+        elementsToEdit.push(document.querySelector('#phone .contact-text'));
+        elementsToEdit.push(document.querySelector('#email .contact-text'));
+        elementsToEdit.push(document.querySelector('#address .contact-text'));
+
+        // Дополнительные контакты
+        document.querySelectorAll('.contact-item').forEach(item => {
+            const id = item.id;
+            if (id !== 'phone' && id !== 'email' && id !== 'address') {
+                const textElement = item.querySelector('.contact-text');
+                if (textElement) {
+                    elementsToEdit.push(textElement);
+                }
+            }
+        });
+
+        // Применяем стили
+        elementsToEdit.forEach(element => {
+            if (element) {
+                element.contentEditable = true;
+                element.style.border = '1px solid #7A989A';
+                element.style.padding = '4px 8px';
+                element.style.borderRadius = '8px';
+                element.style.background = '#F6F6F6';
+            }
+        });
+
+                // Показываем кнопки удаления и добавления
+        document.querySelectorAll('.remove-contact-btn').forEach(btn => {
+            btn.style.display = 'flex';
+        });
+        document.getElementById('add-contact').style.display = 'flex';
+
+            // Добавляем кнопку изменения аватара
+                const avatarWrapper = document.querySelector('.avatar-wrapper');
+        if (avatarWrapper) {
+            const changeAvatarOverlay = document.createElement('div');
+            changeAvatarOverlay.className = 'change-avatar-overlay';
+            changeAvatarOverlay.onclick = changeAvatar;
+            changeAvatarOverlay.innerHTML = `
+                <img src="/static/img/profile/camera.svg"/>
+            `;
+
+            changeAvatarOverlay.style.position = 'absolute';
+            changeAvatarOverlay.style.top = '0';
+            changeAvatarOverlay.style.left = '0';
+            changeAvatarOverlay.style.width = '100%';
+            changeAvatarOverlay.style.height = '100%';
+            changeAvatarOverlay.style.background = 'rgba(70,70,70,0.2)';
+            changeAvatarOverlay.style.borderRadius = '50%';
+            changeAvatarOverlay.style.display = 'flex';
+            changeAvatarOverlay.style.alignItems = 'center';
+            changeAvatarOverlay.style.justifyContent = 'center';
+            changeAvatarOverlay.style.color = 'white';
+            changeAvatarOverlay.style.cursor = 'pointer';
+            changeAvatarOverlay.style.opacity = '1';
+            changeAvatarOverlay.style.transition = 'opacity 0.3s ease';
+            changeAvatarOverlay.style.zIndex = '20';
+
+            avatarWrapper.appendChild(changeAvatarOverlay);
+        }
+
+        // Добавляем overlay для фона
+        const header = document.querySelector('.profile-header');
+        if (header) {
+            const changeBgOverlay = document.createElement('div');
+            changeBgOverlay.className = 'change-bg-overlay';
+            changeBgOverlay.onclick = changeBackground;
+            changeBgOverlay.innerHTML = `
+                <img src="/static/img/profile/camera.svg"/>
+            `;
+
+            changeBgOverlay.style.position = 'absolute';
+            changeBgOverlay.style.top = '0';
+            changeBgOverlay.style.left = '0';
+            changeBgOverlay.style.width = '100%';
+            changeBgOverlay.style.height = '100%';
+            changeBgOverlay.style.background = 'rgba(70,70,70,0.2)';
+            changeBgOverlay.style.display = 'flex';
+            changeBgOverlay.style.flexDirection = 'column';
+            changeBgOverlay.style.alignItems = 'center';
+            changeBgOverlay.style.justifyContent = 'center';
+            changeBgOverlay.style.color = 'white';
+            changeBgOverlay.style.cursor = 'pointer';
+            changeBgOverlay.style.opacity = '1';
+            changeBgOverlay.style.transition = 'opacity 0.3s ease';
+
+            // Стили для иконки внутри overlay
+            changeBgOverlay.querySelector('img').style.width = '92px';
+            changeBgOverlay.querySelector('img').style.height = '92px';
+
+            header.style.position = 'relative';
+            header.appendChild(changeBgOverlay);
+        }
+        }
+
+        let contactCounter = @Model.Company.Contacts.VirtualList.Count;
+
+        function addContact() {
+            const contactsContainer = document.querySelector('.contact-list'); // или контейнер где лежат контакты
+
+            const newContact = document.createElement('div');
+            newContact.className = 'contact-item';
+            newContact.id = `contact-${contactCounter++}`;
+
+            newContact.innerHTML = `
+                <img class="contact-img" src="/static/img/profile/info.svg" />
+                <span class="contact-text" contenteditable="true" style="border: 1px solid #7A989A; padding: 4px 8px; border-radius: 8px; background: #F6F6F6;">Новый контакт</span>
+                <button class="remove-contact-btn" onclick="removeContact(this)" style="display: flex;"><img class="contact-img" src="/static/img/profile/plus.svg" asp-append-version="true" /></button>
+            `;
+
+            // Вставляем перед кнопкой "Добавить контакт"
+            const addButton = document.getElementById('add-contact');
+            addButton.parentNode.insertBefore(newContact, addButton);
+        }
+
+        // Удаление контакта
+        function removeContact(button) {
+            const contactItem = button.closest('.contact-item');
+            contactItem.remove();
+        }
+
+        // Отключение редактирования
+        function disableEditing() {
+            const editableElements = document.querySelectorAll('[contenteditable="true"]');
+            editableElements.forEach(element => {
+                element.setAttribute('contenteditable', 'false');
+                element.style.border = 'none';
+                element.style.padding = '0';
+                element.style.background = '#FFFFFF';
+            });
+                    // Удаляем overlay'и
+        const changeAvatarOverlay = document.querySelector('.change-avatar-overlay');
+        const changeBgOverlay = document.querySelector('.change-bg-overlay');
+
+        if (changeAvatarOverlay) changeAvatarOverlay.remove();
+        if (changeBgOverlay) changeBgOverlay.remove();
+
+        // Убираем position: relative если больше не нужен
+        const avatarContainer = document.querySelector('.profile-img-avatar');
+        const header = document.querySelector('.profile-header');
+
+        if (avatarContainer) avatarContainer.style.position = '';
+        if (header) header.style.position = '';
+
+        document.querySelectorAll('.remove-contact-btn').forEach(btn => {
+            btn.style.display = 'none';
+        });
+        document.getElementById('add-contact').style.display = 'none';
+
+        }
+
+        // Сохранение изменений
+        function saveChanges() {
+                const changes = {
+            name: document.querySelector('.profile-title')?.innerText || '',
+            email: document.querySelector('#email .contact-text')?.innerText || '',
+            phone: document.querySelector('#phone .contact-text')?.innerText || '',
+            fullAddress: document.querySelector('#address .contact-text')?.innerText || '',
+            industry: document.querySelector('.profile-subtitle')?.innerText || '',
+            leaderName: document.querySelector('.contact-leader-name')?.innerText || '',
+            description: document.querySelector('.profile-description')?.innerText || '',
+            contacts: {
+                virtualList: [] // Создаем структуру для JsonList
+            }
+        };
+
+        // Собираем контакты в правильную структуру
+        document.querySelectorAll('.contact-item').forEach(item => {
+            const id = item.id;
+            if (id !== 'phone' && id !== 'email' && id !== 'address') {
+                const contactText = item.querySelector('.contact-text')?.innerText || '';
+                if (contactText.trim() && contactText.trim() !== 'Новый контакт') {
+                    changes.contacts.virtualList.push(contactText.trim());
+                }
+            }
+        });
+
+            console.log('Сохранение изменений:', changes);
+
+            const user = JSON.parse(localStorage.getItem('user'));
+
+            // Отправка на сервер
+            fetch(`/companies/update/${user.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(changes)
+            })
+            .then(response => {
+                console.log('Status:', response.status);
+                console.log('Headers:', response.headers);
+
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    // Читаем что сервер нам вернул
+                    return response.text().then(errorText => {
+                        console.log('Server error response:', errorText);
+                        throw new Error(`Server returned ${response.status}: ${errorText}`);
+                    });
+                }
+            })
+            .then(data => {
+                console.log('Успешно сохранено:', data);
+            })
+            .catch(error => {
+                console.error('Полная ошибка:', error);
+                alert('Ошибка при сохранении: ' + error.message);
+            });
+        }
+
+        // Смена аватара
+        function changeAvatar() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    // Здесь можно добавить предпросмотр
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.querySelector('.profile-img-avatar').src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+
+                    // И отправить на сервер
+                    uploadImage(file, JSON.parse(localStorage.getItem('user')), true);
+                }
+            };
+            input.click();
+        }
+
+        // Смена фона
+        function changeBackground() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.querySelector('.profile-header').style.backgroundImage = `url('${e.target.result}')`;
+                    };
+                    reader.readAsDataURL(file);
+
+                    // И отправить на сервер
+                    uploadImage(file, JSON.parse(localStorage.getItem('user')), false);
+                }
+            };
+            input.click();
+        }
+
+        // Загрузка изображения на сервер
+        function uploadImage(file, user, isAvatar) {
+            const formData = new FormData();
+            formData.append('File', file);
+            formData.append('UserId', user.id);
+            formData.append('IsAvatar', isAvatar);
+
+            fetch('/images/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Изображение загружено:', data);
+            })
+            .catch(error => {
+                console.error('Ошибка загрузки:', error);
+            });
+        }
+
+
+
+        // Вызываем при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            updateEditButtonVisibility();
+        });
+    </script>
+
+}
 

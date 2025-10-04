@@ -33,7 +33,6 @@
                 <option value="">Регион</option>
                 <option>Ростовская область</option>
                 <option>Краснодарский край</option>
-                <option>Донецкая область</option>
                 <option>ЛНР</option>
                 <option>ДНР</option>
                 <option>республика Крым</option>
@@ -66,7 +65,47 @@
             </div>
         }
     </div>
+    @if (Model.Query.Count == 0)
+    {
+        <div class="empty-search">
+            <span>Ничего не найдено :(</span>
+        </div>
+    }
 </main>
 
 @section Scripts {
+    <script>
+        function debugForm(e) {
+            e.preventDefault();
+            console.log('=== ДЕБАГ ФОРМЫ ===');
+
+            const formData = new FormData(e.target);
+            for (let [key, value] of formData.entries()) {
+                console.log(key + ':', value);
+            }
+
+            // Пробуем отправить
+            fetch(e.target.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                }
+            })
+            .then(response => {
+                console.log('Статус ответа:', response.status);
+                console.log('URL ответа:', response.url);
+                return response.text();
+            })
+            .then(html => {
+                console.log('HTML ответа (первые 500 символов):', html.substring(0, 500));
+                // Если получили HTML - просто перезагружаем страницу с новыми данными
+                document.documentElement.innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Хуёвая ошибка:', error);
+                alert('Еблан, смотри в консоль!');
+            });
+        }
+    </script>
 }

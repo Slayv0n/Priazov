@@ -28,7 +28,7 @@ namespace Backend.Mapping
             group.MapGet("/search", Search)
                 .Produces<List<CompanyResponseDto>>(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status400BadRequest);
-            group.MapPut("/update", Update)
+            group.MapPut("/update/{id}", Update)
                 .Produces<CompanyResponseDto>(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status400BadRequest);
         }
@@ -76,8 +76,7 @@ namespace Backend.Mapping
             return Results.Ok(response);
         }
 
-        [Authorize]
-        public static async Task<IResult> Account([FromQuery] Guid? id,
+        public static async Task<IResult> Account(Guid? id,
             [FromServices] ICompanyService service,
             [FromServices] ILogger<CompanyService> logger)
         {
@@ -90,7 +89,6 @@ namespace Backend.Mapping
             return Results.Ok(company);
         }
 
-        [Authorize]
         private static async Task<IResult> Search(
             [FromQuery] string? industry,
             [FromQuery] string? region,
@@ -109,8 +107,8 @@ namespace Backend.Mapping
 
             return Results.Ok();
         }
-        [Authorize]
-        public static async Task<IResult> Update([FromQuery] Guid? id,
+
+        public static async Task<IResult> Update(Guid id,
             [FromBody] CompanyChangeDto companyDto,
             [FromServices] ICompanyService service,
             [FromServices] ILogger<CompanyService> logger)
@@ -135,11 +133,6 @@ namespace Backend.Mapping
                 return Results.ValidationProblem(errors);
             }
 
-            if (id == null)
-            {
-                logger.LogWarning("Id компании отсутствует");
-                return Results.BadRequest("Id пуст");
-            }
             var company = await service.UpdateCompanyAsync(id, companyDto);
 
             return Results.Ok(company);

@@ -443,7 +443,7 @@
                     if (response.ok) {
                                 // Успешная регистрация
                                 showFormError(''); // Очищаем ошибки
-                                window.location.href = '/auth';
+                                window.location.href = `/account/"${response.body.id}"`;
                     } else {
                                 // Обработка ошибок валидации с сервера
                         if (result.errors) {
