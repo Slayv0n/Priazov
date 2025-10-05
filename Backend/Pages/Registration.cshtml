@@ -2,6 +2,7 @@
 @model Backend.Pages.RegistrationModel
 @{
     ViewData["Title"] = "Регистрация";
+    
 }
 @section Links
 {
@@ -176,27 +177,37 @@
                 });
             }
 
-            function showFormError(message) {
-                // Создаем контейнер для общей ошибки формы
-                let errorContainer = document.querySelector('.form-error');
-                if (!errorContainer) {
-                    errorContainer = document.createElement('div');
-                    errorContainer.className = 'form-error';
-                    errorContainer.style.color = '#ff4444';
-                    errorContainer.style.textAlign = 'center';
-                    errorContainer.style.marginBottom = '20px';
-                    errorContainer.style.padding = '10px';
-                    errorContainer.style.backgroundColor = '#fff5f5';
-                    errorContainer.style.borderRadius = '5px';
-                    errorContainer.style.border = '1px solid #ff4444';
+        function showFormError(message) {
+            // Создаем контейнер для общей ошибки формы
+            let errorContainer = document.querySelector('.form-error');
+            if (!errorContainer) {
+                errorContainer = document.createElement('div');
+                errorContainer.className = 'form-error';
+                errorContainer.style.color = '#ff4444';
+                errorContainer.style.textAlign = 'center';
+                errorContainer.style.marginBottom = '20px';
+                errorContainer.style.padding = '10px';
+                errorContainer.style.backgroundColor = '#fff5f5';
+                errorContainer.style.borderRadius = '5px';
+                errorContainer.style.border = '1px solid #ff4444';
 
+                // Находим кнопку в форме
+                const submitButton = document.querySelector('.form-container button[type="submit"]');
+                // Или если у кнопки есть конкретный класс:
+                // const submitButton = document.querySelector('.submit-button');
+
+                if (submitButton) {
+                    // Вставляем перед кнопкой
+                    submitButton.parentNode.insertBefore(errorContainer, submitButton);
+                } else {
+                    // Fallback: вставляем в начало формы
                     const form = document.querySelector('.form-container');
                     form.insertBefore(errorContainer, form.firstChild);
                 }
-
-                errorContainer.textContent = message;
             }
 
+            errorContainer.textContent = message;
+        }
             function clearFormError() {
                 const errorContainer = document.querySelector('.form-error');
                 if (errorContainer) {
@@ -275,8 +286,6 @@
                         // Обновляем hidden поле
                         const userTypeEl = document.getElementById('userType');
                         if (userTypeEl) userTypeEl.value = 'organization';
-
-                        setupPhoneFormatting();
                         setupFormSubmit();
                         initDadataSuggestions();
 
@@ -302,7 +311,6 @@
                         const userTypeEl = document.getElementById('userType');
                         if (userTypeEl) userTypeEl.value = 'investor';
 
-                        setupPhoneFormatting();
                         setupFormSubmit();
                         initDadataSuggestions();
 
@@ -312,30 +320,7 @@
                     }, 300);
                 }
 
-                function setupPhoneFormatting() {
-                    const phoneInput = document.getElementById('phone');
-                    if (phoneInput) {
-                        phoneInput.oninput = function (e) {
-                            let digits = e.target.value.replace(/\D/g, "");
-
-                            if (digits.startsWith("8")) {
-                                digits = "7" + digits.substring(1);
-                            }
-                            if (!digits.startsWith("7")) {
-                                digits = "7" + digits;
-                            }
-                            digits = digits.substring(0, 11);
-
-                            let formatted = "+7";
-                            if (digits.length > 1) formatted += " (" + digits.substring(1, 4);
-                            if (digits.length >= 4) formatted += ") " + digits.substring(4, 7);
-                            if (digits.length >= 7) formatted += "-" + digits.substring(7, 9);
-                            if (digits.length >= 9) formatted += "-" + digits.substring(9, 11);
-
-                            e.target.value = formatted;
-                        };
-                    }
-                }
+              
 
                 function setupFormSubmit() {
                     const formElement = document.querySelector('.form-container');
@@ -438,15 +423,32 @@
                         body: JSON.stringify(formData)
                     });
 
-                    const result = await response.json();
+                    const data = await response.json();
 
                     if (response.ok) {
-                                // Успешная регистрация
-                                showFormError(''); // Очищаем ошибки
-                                window.location.href = `/account/"${response.body.id}"`;
+                                const responseAuth = await fetch('/auth/login', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    Email: formData.Email,
+                                    Password: password
+                                })
+                            });
+
+                            const dataAuth = await responseAuth.json();
+
+                                localStorage.setItem('accessToken', dataAuth.accessToken);
+                                localStorage.setItem('refreshToken', dataAuth.refreshToken);
+                                localStorage.setItem('user', JSON.stringify({
+                                    id: dataAuth.id,
+                                    role: dataAuth.role
+                            }));
+                                window.location.href = userType === 'organization' ? `/account/${data.id}` : '/';
                     } else {
                                 // Обработка ошибок валидации с сервера
-                        if (result.errors) {
+                        if (data.errors) {
                             // Преобразуем имена полей из C# в HTML id
                             const fieldMapping = {
                                 'Name': 'organizationName',
@@ -460,18 +462,18 @@
                             };
 
                             // Показываем ошибки для каждого поля
-                            Object.keys(result.errors).forEach(fieldKey => {
+                            Object.keys(data.errors).forEach(fieldKey => {
                                 const htmlFieldId = fieldMapping[fieldKey] || fieldKey;
-                                const errorMessages = result.errors[fieldKey];
+                                const errorMessages = data.errors[fieldKey];
 
                                 if (Array.isArray(errorMessages) && errorMessages.length > 0) {
                                     // Берем первую ошибку для поля (обычно их одна)
                                     showFieldError(htmlFieldId, errorMessages[0]);
                                 }
                             });
-                        } else if (result.title === 'One or more validation errors occurred.') {
+                        } else if (data.title === 'One or more validation errors occurred.') {
                             // Стандартный формат ошибок валидации ASP.NET
-                            if (result.errors) {
+                            if (data.errors) {
                                 const fieldMapping = {
                                     'Name': 'organizationName',
                                     'LeaderName': 'FIO',
@@ -483,9 +485,9 @@
                                     'Industry': 'industry'
                                 };
 
-                                Object.keys(result.errors).forEach(fieldKey => {
+                                Object.keys(data.errors).forEach(fieldKey => {
                                     const htmlFieldId = fieldMapping[fieldKey] || fieldKey;
-                                    const errorMessages = result.errors[fieldKey];
+                                    const errorMessages = data.errors[fieldKey];
 
                                     if (Array.isArray(errorMessages) && errorMessages.length > 0) {
                                         showFieldError(htmlFieldId, errorMessages[0]);
@@ -494,7 +496,7 @@
                             }
                         } else {
                             // Общая ошибка
-                            showFormError(result.detail || 'Ошибка регистрации');
+                            showFormError(data.detail || 'Ошибка регистрации');
                         }
                     }
                 } catch (error) {

@@ -1,0 +1,23 @@
+﻿@page "{errorCode?}"
+@model Backend.Pages.ErrorModel
+@{
+    ViewData["Title"] = "Каталог организаций";
+}
+@section Links {
+    <link rel="stylesheet" href="~/styles/error.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/suggestions-jquery@21.12.0/dist/css/suggestions.min.css">
+} 
+
+<main>
+    <div class="error-bg">
+        <div class="error-header">
+            <span class="error-title">@(RouteData.Values["errorCode"]?.ToString() ?? "Неизвестная ошибка")</span>
+            <span class="error-subtitle">Что-то сломалось...</span>
+        </div>
+        <div class="button-container">
+            <button onclick="location.href='/'">На главную</button>
+        </div>
+    </div>
+
+</main>
+

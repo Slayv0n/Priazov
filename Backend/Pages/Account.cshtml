@@ -52,7 +52,7 @@
             {
                 <div class="contact-item" id=`contact-${@i}`>
                     <img class="contact-img" src="~/static/img/profile/info.svg" asp-append-version="true" />
-                    <span class="contact-text">@Model.Company.Contacts.VirtualList[i]</span>
+                    <a style="color: #000000;" href="https://@Model.Company.Contacts.VirtualList[i]" class="contact-text">@Model.Company.Contacts.VirtualList[i]</a>
                     <button class="remove-contact-btn" onclick="removeContact(this)"><img class="contact-img" src="/static/img/profile/plus.svg" asp-append-version="true" /></button>
                 </div>
             }
@@ -122,10 +122,9 @@
         function enableEditing() {
             // Заголовок и подзаголовок
             const title = document.querySelector('.profile-title');
-            const subtitle = document.querySelector('.profile-subtitle');
             const description = document.querySelector('.profile-description');
 
-            [title, subtitle, description].forEach(element => {
+            [title, description].forEach(element => {
                 if (element) {
                         element.setAttribute('contenteditable', 'true');
                         element.style.border = '1px solid #7A989A';
@@ -141,7 +140,6 @@
         elementsToEdit.push(document.querySelector('.contact-leader-name'));
         elementsToEdit.push(document.querySelector('#phone .contact-text'));
         elementsToEdit.push(document.querySelector('#email .contact-text'));
-        elementsToEdit.push(document.querySelector('#address .contact-text'));
 
         // Дополнительные контакты
         document.querySelectorAll('.contact-item').forEach(item => {
@@ -163,6 +161,15 @@
                 element.style.borderRadius = '8px';
                 element.style.background = '#F6F6F6';
             }
+        });
+                document.querySelectorAll('.edit-mode [contenteditable="true"]').forEach(element => {
+            element.addEventListener('focus', function() {
+                this.classList.add('focused');
+            });
+
+            element.addEventListener('blur', function() {
+                this.classList.remove('focused');
+            });
         });
 
                 // Показываем кнопки удаления и добавления
@@ -237,7 +244,6 @@
         let contactCounter = @Model.Company.Contacts.VirtualList.Count;
 
         function addContact() {
-            const contactsContainer = document.querySelector('.contact-list'); // или контейнер где лежат контакты
 
             const newContact = document.createElement('div');
             newContact.className = 'contact-item';
@@ -245,8 +251,11 @@
 
             newContact.innerHTML = `
                 <img class="contact-img" src="/static/img/profile/info.svg" />
-                <span class="contact-text" contenteditable="true" style="border: 1px solid #7A989A; padding: 4px 8px; border-radius: 8px; background: #F6F6F6;">Новый контакт</span>
-                <button class="remove-contact-btn" onclick="removeContact(this)" style="display: flex;"><img class="contact-img" src="/static/img/profile/plus.svg" asp-append-version="true" /></button>
+                <a class="contact-text"
+                   contenteditable="true"
+                   style="color: #000000; border: 1px solid #7A989A; padding: 4px 8px; border-radius: 8px; background: #F6F6F6; display: inline-block; min-width: 120px;">
+                </a>
+            <button class="remove-contact-btn" onclick="removeContact(this)" style="display: flex;"><img class="contact-img" src="/static/img/profile/plus.svg" asp-append-version="true" /></button>
             `;
 
             // Вставляем перед кнопкой "Добавить контакт"
@@ -259,6 +268,7 @@
             const contactItem = button.closest('.contact-item');
             contactItem.remove();
         }
+
 
         // Отключение редактирования
         function disableEditing() {
@@ -344,6 +354,7 @@
             })
             .then(data => {
                 console.log('Успешно сохранено:', data);
+                // contactsToUrl();
             })
             .catch(error => {
                 console.error('Полная ошибка:', error);
@@ -414,7 +425,18 @@
             });
         }
 
+        // function contactsToUrl() {
+        //     document.querySelectorAll('.contact-item').forEach(item => {
+        //     const id = item.id;
+        //     if (id !== 'phone' && id !== 'email' && id !== 'address') {
+        //         const contactText = item.querySelector('.contact-text')?.innerText || '';
+        //         if (contactText.trim() && contactText.trim() !== 'Новый контакт') {
+        //             item.
+        //         }
+        //     }
+        //     });
 
+        // }
 
         // Вызываем при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {

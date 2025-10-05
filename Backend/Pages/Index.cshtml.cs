@@ -18,26 +18,34 @@ namespace Backend
             _companyService = companyService;
             _imageService = imageService;
         }
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            Query = await _companyService.ReviewCompanyAsync();
-            Count = await _companyService.CountCompaniesAsync();
-            Count -= Count > 5 ? 5 : Count;
-            foreach (var company in Query)
+            try
             {
-                bool isAvatar = false;
-                var image = await _imageService.Image(company.Id, isAvatar);
-                string url;
-                if (image.Id == default)
+                Query = await _companyService.ReviewCompanyAsync();
+                Count = await _companyService.CountCompaniesAsync();
+                Count -= Count > 5 ? 5 : Count;
+                foreach (var company in Query)
                 {
-                    url = $"{Request.Scheme}://{Request.Host}/static/img/default/{isAvatar.ToString()}/default.png";
-                }
-                else
-                {
-                    url = $"{Request.Scheme}://{Request.Host}/uploads/users/{company.Id}/{image.FileName}";
-                }
+                    bool isAvatar = false;
+                    var image = await _imageService.Image(company.Id, isAvatar);
+                    string url;
+                    if (image.Id == default)
+                    {
+                        url = $"{Request.Scheme}://{Request.Host}/static/img/default/{isAvatar.ToString()}/default.png";
+                    }
+                    else
+                    {
+                        url = $"{Request.Scheme}://{Request.Host}/uploads/users/{company.Id}/{image.FileName}";
+                    }
 
-                Images.Add(url);
+                    Images.Add(url);
+                }
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                return RedirectToPage($"Error/{ex.Message}");
             }
         }
 
@@ -47,10 +55,16 @@ namespace Backend
             {
                 return new JsonResult(null);
             }
+            try
+            {
+                Addresses = await _companyService.FilterMapCompanyAsync(filters);
 
-            Addresses = await _companyService.FilterMapCompanyAsync(filters);
-            
-            return new JsonResult(Addresses);
+                return new JsonResult(Addresses);
+            }
+            catch (Exception ex)
+            {
+                return RedirectToPage($"/Error/{ex.Message}");
+            }
         }
         public int Count { get; set; }
         public List<CompanyResponseDto> Query { get; set; } = new List<CompanyResponseDto>();

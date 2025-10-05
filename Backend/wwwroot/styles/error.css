@@ -1,0 +1,62 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
+
+main {
+    padding: 48px 120px 120px 120px;
+}
+.error-bg {
+    display: flex;
+    flex-direction: column;
+    gap: 380px;
+    background-image: url('/static/img/Error.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    height: 700px;
+}
+.error-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 64px;
+}
+.error-title {
+    font-family: 'Natasha', sans-serif;
+    font-weight: 600;
+    font-size: 94px;
+    line-height: 120%;
+    letter-spacing: 0%;
+}
+.error-subtitle {
+    font-family: "Fira Code", monospace;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 120%;
+    letter-spacing: 4%;
+}
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+    .button-container button {
+        font-family: 'Inter', sans-serif;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 130%;
+        letter-spacing: 4%;
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        padding: 8px 56px;
+        border: none;
+        border-radius: 15px;
+        background-color: #0E6466;
+        color: #FFFFFF;
+        transition: 0.3s;
+    }
+
+.button-container button:hover {
+    transform: scale(1.05);
+}

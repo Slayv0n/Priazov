@@ -26,7 +26,7 @@ namespace Backend.Services
         Task<List<CompanyResponseDto>> ReviewCompanyAsync();
         Task<int> CountCompaniesAsync();
         Task<List<CompanyResponseDto>> SearchCompanyAsync(string? searchTerm, string? industry, string? region);
-        Task<List<AddressDto>> FilterMapCompanyAsync(List<Filter> industries);
+        Task<List<AddressDto>> FilterMapCompanyAsync(List<Filter>? industries);
         Task<IResult> UpdateCompanyAsync(Guid? id, CompanyChangeDto companyDto);
     }
 
@@ -83,8 +83,7 @@ namespace Backend.Services
 
             using var db = await _factory.CreateDbContextAsync();
 
-            if (db.Users.Any(u => u.Email == companyDto.Email &&
-            u.Address.FullAddress == companyDto.FullAddress))
+            if (db.Users.Any(u => u.Email == companyDto.Email))
             {
                 _logger.LogError($"Пользователь с таким email и адресом уже существует: {companyDto.Email}, {companyDto.FullAddress}");
                 throw new ConflictException("Повтор уникальных данных");
@@ -217,10 +216,18 @@ namespace Backend.Services
                 _logger.LogError($"Недопустимое значение региона: {region}");
                 throw new Exception("Недопустимые значения региона");
             }
+            Dadata.Model.Address cleanedRegion = new();
+            if (!string.IsNullOrEmpty(region))
+            {
+                var api = new CleanClientAsync(_dadata.ApiKey, _dadata.SecretKey);
+                cleanedRegion = await api.Clean<Dadata.Model.Address>(region);
+            }
 
             using var db = await _factory.CreateDbContextAsync();
 
-            var query = db.Users.OfType<Company>().AsQueryable().Include(c => c.Address).Where(c => c.Industry.Contains(industry ?? ""));
+            var query = db.Users.OfType<Company>().AsQueryable()
+                .Include(c => c.Address)
+                .Where(c => c.Industry.Contains(industry ?? "") && c.Address.FullAddress.Contains(cleanedRegion.region ?? ""));
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
                 query = query.Where(c => EF.Functions.ILike(c.Name, $"%{searchTerm}%"));

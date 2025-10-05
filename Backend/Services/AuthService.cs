@@ -1,5 +1,6 @@
 ﻿using Backend.Models;
 using Backend.Models.Dto;
+using Backend.Validation;
 using DataBase;
 using DataBase.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -79,7 +80,8 @@ namespace Backend.Services
             {
                 Id = person.Id,
                 AccessToken = newAccessToken,
-                RefreshToken = newRefreshToken
+                RefreshToken = newRefreshToken,
+                Role = person.Role
             };
         }
 
@@ -139,13 +141,22 @@ namespace Backend.Services
                 .SetProperty(s => s.RefreshToken, newUser.RefreshToken)
                 .SetProperty(s => s.ExpiresAt, newUser.ExpiresAt));
 
+            var user = await db.Users.FirstOrDefaultAsync(u => u.Id == newUser.UserId);
+
+            if (user == null)
+            {
+                _logger.LogWarning("Пользователь не найден");
+                throw new NotFoundException("Пользователь не найден");
+            }
+
             _logger.LogInformation($"Сессия продлена {session.Id}");
 
             return new AuthDto
             {
                 AccessToken = newAccessToken,
                 RefreshToken = newRefreshToken,
-                Id = newUser.UserId
+                Id = user.Id,
+                Role= user.Role
             };
         }
 

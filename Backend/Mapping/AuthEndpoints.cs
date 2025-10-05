@@ -17,6 +17,7 @@ namespace Backend.Mapping
             var group = app.MapGroup("/auth");
 
             group.MapPost("/login", Login);
+            group.MapPost("/logout", Logout);
         }
 
         private static async Task<IResult> Login(HttpContext context,
@@ -75,6 +76,18 @@ namespace Backend.Mapping
             });
 
             return Results.Ok(User);
+        }
+        private static async Task<IResult> Logout(HttpContext context,
+            RefreshDto refreshDto,
+            IAuthService service,
+            ILogger<AuthService> logger,
+            IOptions<JwtSettings> settings)
+        {
+            await service.Logout(refreshDto);
+            await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            context.Response.Cookies.Delete("refresh_token");
+            context.Response.Cookies.Delete("access_token");
+            return Results.Ok();
         }
     }
 }

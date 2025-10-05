@@ -13,30 +13,38 @@ namespace Backend.Pages
         private readonly ICompanyService _companyService;
         private readonly IImageService _imageService;
         [BindProperty]
-        public RequestModel CatalogRequest { get; set; }
+        public RequestModel CatalogRequest { get; set; } = null!;
         public CatalogModel(ICompanyService companyService, IImageService imageService)
         {
             _companyService = companyService;
             _imageService = imageService;
         }
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            Query = await _companyService.SearchCompanyAsync(null, null, null);
-            foreach (var company in Query)
+            try
             {
-                bool isAvatar = false;
-                var image = await _imageService.Image(company.Id, isAvatar);
-                string url;
-                if (image.Id == default)
+                Query = await _companyService.SearchCompanyAsync(null, null, null);
+                foreach (var company in Query)
                 {
-                    url = $"{Request.Scheme}://{Request.Host}/static/img/default/{isAvatar.ToString()}/default.png";
-                }
-                else
-                {
-                    url = $"{Request.Scheme}://{Request.Host}/uploads/users/{company.Id}/{image.FileName}";
-                }
+                    bool isAvatar = false;
+                    var image = await _imageService.Image(company.Id, isAvatar);
+                    string url;
+                    if (image.Id == default)
+                    {
+                        url = $"{Request.Scheme}://{Request.Host}/static/img/default/{isAvatar.ToString()}/default.png";
+                    }
+                    else
+                    {
+                        url = $"{Request.Scheme}://{Request.Host}/uploads/users/{company.Id}/{image.FileName}";
+                    }
 
-                Images.Add(url);
+                    Images.Add(url);
+                }
+                return Page();
+            }
+            catch(Exception ex)
+            {
+                return RedirectToPage($"/Error/{ex.Message}");
             }
         }
         public async Task<IActionResult> OnPostAsync()
@@ -45,31 +53,38 @@ namespace Backend.Pages
             {
                 return Page();
             }
-
-            Query = await _companyService.SearchCompanyAsync(
-            CatalogRequest.SearchTerm,
-            CatalogRequest.Industry,
-            CatalogRequest.Region
-            );
-
-            Images.Clear();
-            foreach (var company in Query)
+            try
             {
-                bool isAvatar = false;
-                var image = await _imageService.Image(company.Id, isAvatar);
-                string url;
-                if (image.Id == default)
+                Query = await _companyService.SearchCompanyAsync(
+                    CatalogRequest.SearchTerm,
+                    CatalogRequest.Industry,
+                    CatalogRequest.Region
+                    );
+
+                Images.Clear();
+                foreach (var company in Query)
                 {
-                    url = $"{Request.Scheme}://{Request.Host}/static/img/default/{isAvatar.ToString()}/default.png";
+                    bool isAvatar = false;
+                    var image = await _imageService.Image(company.Id, isAvatar);
+                    string url;
+                    if (image.Id == default)
+                    {
+                        url = $"{Request.Scheme}://{Request.Host}/static/img/default/{isAvatar.ToString()}/default.png";
+                    }
+                    else
+                    {
+                        url = $"{Request.Scheme}://{Request.Host}/uploads/users/{company.Id}/{image.FileName}";
+                    }
+                    Images.Add(url);
                 }
-                else
-                {
-                    url = $"{Request.Scheme}://{Request.Host}/uploads/users/{company.Id}/{image.FileName}";
-                }
-                Images.Add(url);
+
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                return RedirectToPage($"Error/{ex.Message}");
             }
 
-            return Page();
         }
         public class RequestModel 
         {

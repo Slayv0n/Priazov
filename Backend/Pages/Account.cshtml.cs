@@ -16,7 +16,7 @@ namespace Backend.Pages
             _companyService = companyService;
             _imageService = imageService;
         }
-        public async Task<IActionResult> OnGetAsync(Guid userId)
+        public async Task<IActionResult> OnGetAsync([FromRoute] Guid userId)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace Backend.Pages
             }
             catch (Exception ex)
             {
-                return RedirectToPage("Error");
+                return RedirectToPage($"/Error/{ex.Message}");
             }
             
         }
