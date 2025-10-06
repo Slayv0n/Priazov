@@ -34,6 +34,29 @@
     cursor: pointer;
     max-width: 240px;
 }
+.select-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    cursor: pointer;
+}
+
+    .select-wrapper .input-field {
+        width: 100%;
+        appearance: none; /* Убираем стандартную стрелку */
+        background-color: #FFFFFF;
+    }
+
+.select-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none; /* Чтобы клик проходил через иконку к select */
+    width: 16px;
+    height: 16px;
+}
+
 .submit-button {
     font-family: 'Inter', sans-serif;
     font-weight: 400;

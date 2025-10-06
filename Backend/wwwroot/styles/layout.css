@@ -427,6 +427,45 @@ footer {
         border: 1.5px solid #0E6466;
     }
 
+.password-field {
+    position: relative;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.auth-field {
+    width: 100%;
+    padding-right: 45px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+
+.eye-icon {
+    width: 20px;
+    height: 20px;
+    transition: opacity 0.2s ease;
+}
+
+.password-toggle:hover .eye-icon {
+    opacity: 0.7;
+}
+
 .forgot-link {
     display: flex;
     justify-content: center;

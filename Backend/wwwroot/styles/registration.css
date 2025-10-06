@@ -92,6 +92,12 @@
     border-radius: 8px;
     display: flex;
     gap: 8px;
+    width: 100%;
+    padding-right: 45px; /* Место для иконки */
+}
+
+select {
+    cursor: pointer;
 }
 
 .select-wrapper {

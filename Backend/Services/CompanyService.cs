@@ -88,10 +88,19 @@ namespace Backend.Services
                 _logger.LogError($"Пользователь с таким email и адресом уже существует: {companyDto.Email}, {companyDto.FullAddress}");
                 throw new ConflictException("Повтор уникальных данных");
             }
-
             var api = new CleanClientAsync(_dadata.ApiKey, _dadata.SecretKey);
             var cleanedAddress = await api.Clean<Dadata.Model.Address>(companyDto.FullAddress);
 
+            if (!string.IsNullOrEmpty(cleanedAddress.city) && string.IsNullOrEmpty(cleanedAddress.region))
+            {
+                var cityAddress = await api.Clean<Dadata.Model.Address>(cleanedAddress.city);
+
+                if (!string.IsNullOrEmpty(cityAddress.region))
+                {
+                    cleanedAddress.region = cityAddress.region;
+                    cleanedAddress.region_with_type = cityAddress.region_with_type;
+                }
+            }
             if (cleanedAddress.result == null || cleanedAddress.geo_lat == null || cleanedAddress.geo_lon == null)
             {
                 _logger.LogWarning($"Адрес не найден: {companyDto.FullAddress}");
@@ -110,6 +119,7 @@ namespace Backend.Services
                 Phone = companyDto.Phone,
                 Address = new ShortAddressDto()
                 {
+                    Region = cleanedAddress.region_with_type,
                     FullAddress = cleanedAddress.result,
                     Latitude = decimal.Parse(cleanedAddress.geo_lat, CultureInfo.InvariantCulture),
                     Longitude = decimal.Parse(cleanedAddress.geo_lon, CultureInfo.InvariantCulture)
@@ -227,7 +237,7 @@ namespace Backend.Services
 
             var query = db.Users.OfType<Company>().AsQueryable()
                 .Include(c => c.Address)
-                .Where(c => c.Industry.Contains(industry ?? "") && c.Address.FullAddress.Contains(cleanedRegion.region ?? ""));
+                .Where(c => c.Industry.Contains(industry ?? "") && c.Address.Region.Contains(cleanedRegion.region_with_type ?? ""));
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
                 query = query.Where(c => EF.Functions.ILike(c.Name, $"%{searchTerm}%"));

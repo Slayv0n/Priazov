@@ -70,13 +70,24 @@
                     <input type="email" placeholder="Почта" class="input-field" id="mail" name="mail">
                 </div>
 
-                <div class="field">
+                <div class="field password-field">
                     <label class="form-label">Пароль</label>
-                    <input type="password" placeholder="Пароль" class="input-field" id="password" name="password">
+                    <div class="input-wrapper">
+                        <input type="password" placeholder="Пароль" class="input-field" id="password" name="password">
+                        <button type="button" class="password-toggle" data-target="password">
+                            <img src="~/static/img/mdi_eye-outline.svg" asp-append-version="true" class="eye-icon" />
+                        </button>
+                    </div>
                 </div>
-                <div class="field">
+
+                <div class="field password-field">
                     <label class="form-label">Повторите пароль</label>
-                    <input type="password" placeholder="Пароль" class="input-field" id="password2" name="password2">
+                    <div class="input-wrapper">
+                        <input type="password" placeholder="Пароль" class="input-field" id="password2" name="password2">
+                        <button type="button" class="password-toggle" data-target="password2">
+                            <img src="~/static/img/mdi_eye-outline.svg" asp-append-version="true" class="eye-icon" />
+                        </button>
+                    </div>
                 </div>
             </div>
             
@@ -91,6 +102,40 @@
             'use strict';
 
             const DADATA_TOKEN = "6f0a740c5107e8a21febe0725d566d25de7c4c1a";
+
+            function initPasswordToggles() {
+                const toggleButtons = document.querySelectorAll('.password-toggle');
+
+                toggleButtons.forEach(button => {
+                    // Удаляем старые обработчики чтобы избежать дублирования
+                    button.replaceWith(button.cloneNode(true));
+                });
+
+                // Назначаем новые обработчики
+                document.querySelectorAll('.password-toggle').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const targetId = this.getAttribute('data-target');
+                        const passwordInput = document.getElementById(targetId);
+                        const eyeIcon = this.querySelector('.eye-icon');
+
+                        if (!passwordInput || !eyeIcon) return;
+
+                        if (passwordInput.type === 'password') {
+                            passwordInput.type = 'text';
+                            eyeIcon.src = '/static/img/mdi_eye-off-outline.svg';
+                            eyeIcon.alt = 'Скрыть пароль';
+                        } else {
+                            passwordInput.type = 'password';
+                            eyeIcon.src = '/static/img/mdi_eye-outline.svg';
+                            eyeIcon.alt = 'Показать пароль';
+                        }
+
+                        // Обновляем версию для кэширования
+                        const version = new Date().getTime();
+                        eyeIcon.src = eyeIcon.src.split('?')[0] + '?v=' + version;
+                    });
+                });
+            }
 
             // -------------------
             // Инициализация DaData
@@ -254,14 +299,25 @@
                     <input type="email" placeholder="Почта" class="input-field" id="mail" name="mail">
                 </div>
 
-                <div class="field">
-                    <label class="form-label">Пароль</label>
-                    <input type="password" placeholder="Пароль" class="input-field" id="password" name="password">
-                </div>
-                <div class="field">
-                    <label class="form-label">Повторите пароль</label>
-                    <input type="password" placeholder="Пароль" class="input-field" id="password2" name="password2">
-                </div>
+                        <div class="field password-field">
+                            <label class="form-label">Пароль</label>
+                            <div class="input-wrapper">
+                                <input type="password" placeholder="Пароль" class="input-field" id="password" name="password">
+                                <button type="button" class="password-toggle" data-target="password">
+                                    <img src="/static/img/mdi_eye-outline.svg" asp-append-version="true" class="eye-icon" />
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="field password-field">
+                            <label class="form-label">Повторите пароль</label>
+                            <div class="input-wrapper">
+                                <input type="password" placeholder="Пароль" class="input-field" id="password2" name="password2">
+                                <button type="button" class="password-toggle" data-target="password2">
+                                    <img src="/static/img/mdi_eye-outline.svg" asp-append-version="true" class="eye-icon" />
+                                </button>
+                            </div>
+                        </div>
 
 
             </div>
@@ -287,7 +343,9 @@
                         const userTypeEl = document.getElementById('userType');
                         if (userTypeEl) userTypeEl.value = 'organization';
                         setupFormSubmit();
+                        setupPhoneFormatting()
                         initDadataSuggestions();
+                        initPasswordToggles();
 
                         form.classList.remove('fade-out');
                         form.classList.add('fade-in');
@@ -312,7 +370,9 @@
                         if (userTypeEl) userTypeEl.value = 'investor';
 
                         setupFormSubmit();
+                        setupPhoneFormatting()
                         initDadataSuggestions();
+                        initPasswordToggles();
 
                         form.classList.remove('fade-out');
                         form.classList.add('fade-in');
@@ -320,7 +380,25 @@
                     }, 300);
                 }
 
-              
+                function setupPhoneFormatting() {
+                    const phoneInput = document.getElementById('phone');
+                    if (phoneInput) {
+                        phoneInput.oninput = function (e) {
+                            // Оставляем только цифры
+                            let digits = e.target.value.replace(/\D/g, "");
+
+                            // Ограничиваем длину 11 цифрами
+                            digits = digits.substring(0, 11);
+
+                            // Начинаем с 8
+                            if (!digits.startsWith("8")) {
+                                digits = "8" + digits;
+                            }
+
+                            e.target.value = digits;
+                        };
+                    }
+                }
 
                 function setupFormSubmit() {
                     const formElement = document.querySelector('.form-container');
@@ -527,6 +605,7 @@
 
                 // Инициализация по умолчанию
                 activateOrgButton();
+                initPasswordToggles();
             });
 
         })();

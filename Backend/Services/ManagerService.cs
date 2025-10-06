@@ -84,6 +84,7 @@ namespace Backend.Services
                 Phone = managerDto.Phone,
                 Address = new ShortAddressDto()
                 {
+                    Region = cleanedAddress.region_with_type,
                     FullAddress = cleanedAddress.result,
                     Latitude = decimal.Parse(cleanedAddress.geo_lat, CultureInfo.InvariantCulture),
                     Longitude = decimal.Parse(cleanedAddress.geo_lon, CultureInfo.InvariantCulture),

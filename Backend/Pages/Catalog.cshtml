@@ -14,31 +14,37 @@
     <form class="catalog-buttons" method="post">
         <div class="search-buttons">
             <input asp-for="@Model.CatalogRequest.SearchTerm" class="input-field" type="search" placeholder="Название"/>
-            <select asp-for="@Model.CatalogRequest.Industry" class="input-field filter" id="industry">
-                <option value="">Направление</option>
-                <option value="Образовательное учреждение">Образовательное учреждение</option>
-                <option value="Научно-исследовательский институт">Научно-исследовательский институт</option>
-                <option value="Научно-образовательный проект">Научно-образовательный проект</option>
-                <option value="Государственное учреждение">Государственное учреждение</option>
-                <option value="Коммерческая деятельность">Коммерческая деятельность</option>
-                <option value="Некоммерческая организация">Некоммерческая организация</option>
-                <option value="Финансы">Финансы</option>
-                <option value="Акселератор / инкубатор / технопарк">Акселератор / инкубатор / технопарк</option>
-                <option value="Ассоциация / объединение">Ассоциация / объединение</option>
-                <option value="Инициатива">Инициатива</option>
-                <option value="Отраслевое событие / научная конференция">Отраслевое событие / научная конференция</option>
-                <option value="Другое">Другое</option>
-            </select>
-            <select asp-for="@Model.CatalogRequest.Region" class="input-field filter">
-                <option value="">Регион</option>
-                <option>Ростовская область</option>
-                <option>Краснодарский край</option>
-                <option>ЛНР</option>
-                <option>ДНР</option>
-                <option>республика Крым</option>
-                <option>Херсонская область</option>
-                <option>Запорожская область</option>
-            </select>
+            <div class="select-wrapper">
+                <select asp-for="@Model.CatalogRequest.Industry" class="input-field filter" id="industry">
+                    <option value="">Направление</option>
+                    <option value="Образовательное учреждение">Образовательное учреждение</option>
+                    <option value="Научно-исследовательский институт">Научно-исследовательский институт</option>
+                    <option value="Научно-образовательный проект">Научно-образовательный проект</option>
+                    <option value="Государственное учреждение">Государственное учреждение</option>
+                    <option value="Коммерческая деятельность">Коммерческая деятельность</option>
+                    <option value="Некоммерческая организация">Некоммерческая организация</option>
+                    <option value="Финансы">Финансы</option>
+                    <option value="Акселератор / инкубатор / технопарк">Акселератор / инкубатор / технопарк</option>
+                    <option value="Ассоциация / объединение">Ассоциация / объединение</option>
+                    <option value="Инициатива">Инициатива</option>
+                    <option value="Отраслевое событие / научная конференция">Отраслевое событие / научная конференция</option>
+                    <option value="Другое">Другое</option>
+                </select>
+                <img src="~/static/img/Chevron down.svg" class="select-arrow" asp-append-version="true" />
+            </div>
+            <div class="select-wrapper">
+                <select asp-for="@Model.CatalogRequest.Region" class="input-field filter">
+                    <option value="">Регион</option>
+                    <option>Ростовская область</option>
+                    <option>Краснодарский край</option>
+                    <option>ЛНР</option>
+                    <option>ДНР</option>
+                    <option>республика Крым</option>
+                    <option>Херсонская область</option>
+                    <option>Запорожская область</option>
+                </select>
+                <img src="~/static/img/Chevron down.svg" class="select-arrow" asp-append-version="true" />
+            </div>
         </div>
         <button class="submit-button" type="submit">Применить</button>
     </form>
@@ -99,13 +105,14 @@
             })
             .then(html => {
                 console.log('HTML ответа (первые 500 символов):', html.substring(0, 500));
-                // Если получили HTML - просто перезагружаем страницу с новыми данными
                 document.documentElement.innerHTML = html;
             })
             .catch(error => {
-                console.error('Хуёвая ошибка:', error);
-                alert('Еблан, смотри в консоль!');
+                console.error('Ошибка:', error);
             });
+        }
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
         }
     </script>
 }

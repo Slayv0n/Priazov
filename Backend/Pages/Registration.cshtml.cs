@@ -11,9 +11,6 @@ namespace Backend.Pages
     {
         private readonly ICompanyService _companyService;
         private readonly IConfiguration _configuration;
-        [BindProperty]
-        public CompanyCreateDto Company { get; set; } = null!;
-        public string ValidationResult { get; set; } = "";
         public RegistrationModel(ICompanyService companyService, IConfiguration configuration)
         {
             _companyService = companyService;

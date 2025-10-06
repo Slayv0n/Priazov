@@ -42,6 +42,7 @@ namespace DataBase.Models
         [JsonIgnore]
         public User User { get; set; } = null!;
         [MaxLength(255)]
+        public string Region { get; set; } = null!;
         public string FullAddress { get; set; } = null!;
         [Column(TypeName = "decimal(10, 7)")]
         public decimal Latitude { get; set; } // Широта
