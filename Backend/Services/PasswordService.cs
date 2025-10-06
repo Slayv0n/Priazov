@@ -13,6 +13,7 @@ namespace Backend.Services
     {
         Task<Guid> ForgotPassword(string addressMessage);
         Task<bool> IsValidToken(string token);
+        Task<bool> IsValidPassword(Guid userId, string password);
         Task ResetPassword(Guid userId, string newPassword);
     }
 
@@ -83,6 +84,27 @@ namespace Backend.Services
             db.PasswordResetTokens.Remove(valid);
 
             await db.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> IsValidPassword(Guid userId, string password)
+        {
+            await using var db = await _factory.CreateDbContextAsync();
+
+            var user = await db.Users.Include(u => u.Password).FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+            {
+                _logger.LogWarning($"Пользователь не зарегистрирован: {userId}");
+                return false;
+            }
+
+            if (!PasswordHasher.VerifyPassword(password, user.Password.PasswordHash))
+            {
+                _logger.LogWarning($"Пользователь не прошёл авторизацию: {userId}");
+                return false;
+            }
 
             return true;
         }

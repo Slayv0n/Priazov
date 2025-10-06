@@ -50,7 +50,7 @@
                                 <img src="~/static/main/arrow.svg" asp-append-version="true" class="arrow-icon" />
                                 <div class="arrow-menu">
                                     <p onclick="logout()">Выход</p>
-                                    <p>Сменить пароль</p>
+                                    <p class="change-button" data-bs-toggle="modal" data-bs-target="#changeModal">Сменить пароль</p>
                                 </div>
                             </div>
                                 
@@ -85,6 +85,8 @@
     </header>
     <div>
         @RenderBody()
+
+        <!-- Модальное окно авторизации -->
         <div class="modal fade auth-window" id="loginModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -92,7 +94,7 @@
                         <span class="modal-title auth-title">Авторизация</span>
                     </div>
                     <div class="modal-body">
-                        <form  class="auth-form" id="loginForm" class="space-y-3">
+                        <form class="auth-form" id="loginForm">
                             <div class="auth-fields">
                                 <input id="email-auth" name="email" type="email" class="auth-field" placeholder="электронная почта" required>
                                 <div class="password-field">
@@ -102,11 +104,52 @@
                                             <img src="~/static/img/mdi_eye-outline.svg" asp-append-version="true" class="eye-icon" />
                                         </button>
                                     </div>
-                                </div>                            
+                                </div>
                                 <a href="#" class="forgot-link">Забыли пароль?</a>
                             </div>
-
                             <button type="submit" class="button-submit">Войти</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно смены пароля-->
+        <div class="modal fade change-window" id="changeModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header border-0 auth-header">
+                        <span class="modal-title auth-title">Смена пароля</span>
+                    </div>
+                    <div class="modal-body">
+                        <form class="auth-form" id="changePasswordForm">
+                            <div class="auth-fields">
+                                <div class="password-field">
+                                    <div class="input-wrapper">
+                                        <input type="password" class="auth-field" id="currentPassword" placeholder="Текущий пароль" required>
+                                        <button type="button" class="password-toggle" data-target="currentPassword">
+                                            <img src="~/static/img/mdi_eye-outline.svg" asp-append-version="true" class="eye-icon" />
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="password-field">
+                                    <div class="input-wrapper">
+                                        <input type="password" class="auth-field" id="newPassword" placeholder="Новый пароль" required>
+                                        <button type="button" class="password-toggle" data-target="newPassword">
+                                            <img src="~/static/img/mdi_eye-outline.svg" asp-append-version="true" class="eye-icon" />
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="password-field">
+                                    <div class="input-wrapper">
+                                        <input type="password" class="auth-field" id="confirmNewPassword" placeholder="Повторите новый пароль" required>
+                                        <button type="button" class="password-toggle" data-target="confirmNewPassword">
+                                            <img src="~/static/img/mdi_eye-outline.svg" asp-append-version="true" class="eye-icon" />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="button-submit">Далее</button>
                         </form>
                     </div>
                 </div>
@@ -136,6 +179,51 @@
     @await RenderSectionAsync("Scripts", required: false)
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // -------------------
+            // Функции для работы с ошибками
+            // -------------------
+            function showFieldError(fieldId, message) {
+                const field = document.getElementById(fieldId);
+                if (!field) return;
+
+                // Удаляем старую ошибку
+                clearFieldError(fieldId);
+
+                // Создаем элемент ошибки
+                const errorElement = document.createElement('div');
+                errorElement.className = 'field-error';
+                errorElement.textContent = message;
+                errorElement.style.color = '#ff4444';
+                errorElement.style.fontSize = '14px';
+                errorElement.style.marginTop = '5px';
+
+                // Добавляем красную обводку полю
+                field.style.borderColor = '#ff4444';
+
+                // Вставляем ошибку после поля
+                field.parentNode.appendChild(errorElement);
+            }
+
+            function clearFieldError(fieldId) {
+                const field = document.getElementById(fieldId);
+                if (!field) return;
+
+                // Убираем красную обводку
+                field.style.borderColor = '';
+
+                // Удаляем элемент ошибки
+                const existingError = field.parentNode.querySelector('.field-error');
+                if (existingError) {
+                    existingError.remove();
+                }
+            }
+
+            function clearAllErrors() {
+                const fields = document.querySelectorAll('.input-field, select.input-field');
+                fields.forEach(field => {
+                    clearFieldError(field.id);
+                });
+            }
         function initPasswordToggles() {
                 const toggleButtons = document.querySelectorAll('.password-toggle');
 
@@ -176,6 +264,25 @@
             const password = document.getElementById('password-auth').value;
 
             loginUser(email, password);
+        });
+        document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const password = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const newPassword2 = document.getElementById('confirmNewPassword').value;
+
+             if (newPassword.length < 8 || newPassword.length > 20) {
+                showFieldError('newPassword', 'Пароль должен содержать от 8 до 20 символов!');
+                hasErrors = true;
+             }
+
+             if (newPassword !== newPassword2) {
+                 showFieldError('confirmNewPassword', 'Пароли не совпадают!');
+                 hasErrors = true;
+             }
+
+            resetPassword(password, newPassword, newPassword2);
         });
 
         async function loginUser(email, password) {
@@ -238,7 +345,64 @@
         }
         }
 
-        // Добавляем функцию показа ошибок
+        async function resetPassword(password, newPassword, newPassword2) {
+            const submitButton = document.querySelector('.button-submit');
+            const originalText = submitButton.textContent;
+
+            try {
+
+                const userId = JSON.parse(localStorage.getItem('user')).id;
+                // Показываем индикатор загрузки
+                submitButton.textContent = 'Сброс пароля...';
+                submitButton.disabled = true;
+
+                    console.log('Отправка запроса на /password/change...');
+
+            const response = await fetch('/password/change', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    UserId: userId,
+                    Password: password,
+                    NewPassword: newPassword,
+                    NewPassword2: newPassword2
+                })
+            });
+
+            localStorage.removeItem('user');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('accessToken');
+
+            if (response.ok) {
+                console.log('Успешная смена пароля, пользователь:', userId);
+
+                // Закрываем модальное окно
+                const modal = bootstrap.Modal.getInstance(document.getElementById('changeModal'));
+                if (modal) {
+                    modal.hide();
+                }
+
+                // Обновляем страницу (куки уже установлены сервером)
+                window.location.href = `/`;
+
+            } else {
+                // Ошибка от сервера - используем данные из data
+                const errorMessage = response.json().message || response.json().title || 'Ошибка входа';
+                console.error('Ошибка сервера:', errorMessage);
+                showError(errorMessage);
+            }
+
+        } catch (error) {
+            console.error('Ошибка при выполнении запроса:', error);
+            showError('Ошибка сети или сервера: ' + error.message);
+        } finally {
+            submitButton.textContent = originalText;
+            submitButton.disabled = false;
+        }
+        }
+
         function showError(message) {
             // Удаляем старую ошибку если есть
             const existingError = document.querySelector('.error-message');

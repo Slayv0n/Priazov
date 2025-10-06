@@ -50,7 +50,7 @@ namespace Backend.Middleware
         }
         private async Task RefreshToken(HttpContext context, string refreshToken, IAuthService authService, IOptions<JwtSettings> jwtSettings)
         {
-            var newTokens = await authService.Refresh(new RefreshDto(refreshToken));
+            var newTokens = await authService.Refresh(new RefreshDto() { RefreshToken = refreshToken});
 
             if (newTokens != null)
             {

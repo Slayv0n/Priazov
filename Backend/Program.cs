@@ -169,8 +169,11 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 app.UseAuthentication();
-app.UseMiddleware<TokenRefreshMiddleware>();
 app.UseAuthorization();
+
+app.UseAntiforgery();
+
+app.UseMiddleware<TokenRefreshMiddleware>();
 
 app.MapScalarApiReference(opt =>
 {
@@ -185,6 +188,7 @@ app.MapCompanyEndpoints();
 app.MapManagerEndpoints();
 app.MapImageEnpoints();
 app.MapAuthEndpoints();
+app.MapPasswordEndpoints();
 
 app.Run();
 

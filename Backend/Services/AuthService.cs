@@ -17,9 +17,10 @@ namespace Backend.Services
     {
         Task<AuthDto> Login(LoginDto loginDto);
         Task<AuthDto> Refresh(RefreshDto refreshDto);
+        Task<RefreshDto> GetRefresh(Guid userId);
         Task<AuthDto?> Logout(RefreshDto refreshDto);
         Task<ClaimsPrincipal> SignInForContext(LoginDto loginDto);
-        public ClaimsPrincipal CreateClaimsPrincipalFromToken(string accessToken);
+        ClaimsPrincipal CreateClaimsPrincipalFromToken(string accessToken);
     }
     public class AuthService : IAuthService
     {
@@ -158,6 +159,23 @@ namespace Backend.Services
                 Id = user.Id,
                 Role= user.Role
             };
+        }
+
+        public async Task<RefreshDto> GetRefresh(Guid userId)
+        {
+            using var db = await _factory.CreateDbContextAsync();
+
+            var user = await db.Users.Include(u => u.Session).FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null || user.Session == null)
+            {
+                _logger.LogWarning($"Пользователь не найден: {userId}");
+                throw new NotFoundException("Пользователь не найден");
+            }
+
+            var refresh = new RefreshDto { RefreshToken = user.Session.RefreshToken };
+
+            return refresh;
         }
 
         public async Task<ClaimsPrincipal> SignInForContext(LoginDto loginDto)

@@ -12,9 +12,11 @@ namespace Backend.Models.Dto
         [Display(Name = "Пароль")]
         public string Password { get; set; } = null!;
     }
-    public record RefreshDto(
-        [Required] string RefreshToken
-    );
+    public class RefreshDto
+    {
+        public required string RefreshToken { get; set; }
+    }
+
     public class AuthDto
     {
         public Guid Id { get; set; }

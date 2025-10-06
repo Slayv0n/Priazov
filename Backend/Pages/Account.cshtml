@@ -73,6 +73,14 @@
 
 @section Scripts {
     <script>
+        function getAntiForgeryToken() {
+            // Ищем токен в скрытом поле
+            const tokenField = document.querySelector('input[name="__RequestVerificationToken"]');
+            if (tokenField) {
+                return tokenField.value;
+            }
+            return null;
+        }
         // Функция для получения ID из URL
         function getUserIdFromUrl() {
             const path = window.location.pathname;
@@ -412,9 +420,14 @@
             formData.append('UserId', user.id);
             formData.append('IsAvatar', isAvatar);
 
+            const token = getAntiForgeryToken();
+
             fetch('/images/upload', {
                 method: 'POST',
-                body: formData
+                body: formData,
+                headers: {
+                    'RequestVerificationToken': token
+                }
             })
             .then(response => response.json())
             .then(data => {

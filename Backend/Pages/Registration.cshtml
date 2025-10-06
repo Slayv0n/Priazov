@@ -176,51 +176,7 @@
                 }
             }
 
-            // -------------------
-            // Функции для работы с ошибками
-            // -------------------
-            function showFieldError(fieldId, message) {
-                const field = document.getElementById(fieldId);
-                if (!field) return;
-
-                // Удаляем старую ошибку
-                clearFieldError(fieldId);
-
-                // Создаем элемент ошибки
-                const errorElement = document.createElement('div');
-                errorElement.className = 'field-error';
-                errorElement.textContent = message;
-                errorElement.style.color = '#ff4444';
-                errorElement.style.fontSize = '14px';
-                errorElement.style.marginTop = '5px';
-
-                // Добавляем красную обводку полю
-                field.style.borderColor = '#ff4444';
-
-                // Вставляем ошибку после поля
-                field.parentNode.appendChild(errorElement);
-            }
-
-            function clearFieldError(fieldId) {
-                const field = document.getElementById(fieldId);
-                if (!field) return;
-
-                // Убираем красную обводку
-                field.style.borderColor = '';
-
-                // Удаляем элемент ошибки
-                const existingError = field.parentNode.querySelector('.field-error');
-                if (existingError) {
-                    existingError.remove();
-                }
-            }
-
-            function clearAllErrors() {
-                const fields = document.querySelectorAll('.input-field, select.input-field');
-                fields.forEach(field => {
-                    clearFieldError(field.id);
-                });
-            }
+            
 
         function showFormError(message) {
             // Создаем контейнер для общей ошибки формы
