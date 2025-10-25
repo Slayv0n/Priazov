@@ -22,7 +22,7 @@
 }
 
 .buttons {
-    display: flex;
+    display: none;
     justify-content: space-between;
     gap: 150px;
 }

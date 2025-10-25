@@ -9,11 +9,9 @@ namespace Backend.Pages
 {
     public class RegistrationModel : PageModel
     {
-        private readonly ICompanyService _companyService;
         private readonly IConfiguration _configuration;
-        public RegistrationModel(ICompanyService companyService, IConfiguration configuration)
+        public RegistrationModel(IConfiguration configuration)
         {
-            _companyService = companyService;
             _configuration = configuration;
         }
         public void OnGet()

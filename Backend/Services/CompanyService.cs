@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
+using Microsoft.IdentityModel.Tokens;
 using NLog.Config;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -25,7 +26,7 @@ namespace Backend.Services
         Task<CompanyResponseDto> AccountCompanyAsync(Guid? id);
         Task<List<CompanyResponseDto>> ReviewCompanyAsync();
         Task<int> CountCompaniesAsync();
-        Task<List<CompanyResponseDto>> SearchCompanyAsync(string? searchTerm, string? industry, string? region);
+        Task<List<CompanyResponseDto>> SearchCompanyAsync(string? searchTerm, string? industry, string? region, int pageId, CountDto countDto);
         Task<List<AddressDto>> FilterMapCompanyAsync(List<Filter>? industries);
         Task<IResult> UpdateCompanyAsync(Guid? id, CompanyChangeDto companyDto);
     }
@@ -48,7 +49,7 @@ namespace Backend.Services
         private readonly IMessageService _messageService;
         private readonly ILogger<CompanyService> _logger;
         private readonly ICacheService _cacheService;
-        private readonly string _cacheName = "companies_";
+        private readonly string _cacheName = "companies";
 
 
         public CompanyService(
@@ -196,6 +197,7 @@ namespace Backend.Services
                 .ToListAsync();
 
             _cacheService.GetCache().Set(cacheKey, query, _cacheService.CreateCacheOptions(TimeSpan.FromMinutes(15)));
+            _cacheService.SetCacheKeys(cacheKey);
             _logger.LogInformation("Краткий просмотр компаний выполнен");
 
             return query;
@@ -207,9 +209,17 @@ namespace Backend.Services
             return await db.Users.OfType<Company>().CountAsync();
         }
 
-        public async Task<List<CompanyResponseDto>> SearchCompanyAsync(string? searchTerm, string? industry, string? region)
+        public async Task<List<CompanyResponseDto>> SearchCompanyAsync(string? searchTerm, string? industry, string? region, int pageId, CountDto countDto)
         {
-            var cacheKey = $"{_cacheName}_search_{industry ?? "all"}_{region ?? "all"}_{searchTerm ?? "all"}";
+            var cacheKey = $"{_cacheName}_search_{industry ?? "all"}_{region ?? "all"}_{searchTerm ?? "all"}_{pageId}";
+            var cacheCountKey = $"{_cacheName}_count";
+
+            searchTerm = searchTerm ?? "";
+
+            if (_cacheService.GetCache().TryGetValue(cacheCountKey, out int count))
+            {
+                countDto.Count = count;
+            }
 
             if (_cacheService.GetCache().TryGetValue(cacheKey, out List<CompanyResponseDto>? cachedCompanies))
             {
@@ -237,15 +247,26 @@ namespace Backend.Services
 
             var query = db.Users.OfType<Company>().AsQueryable()
                 .Include(c => c.Address)
-                .Where(c => c.Industry.Contains(industry ?? "") && c.Address.Region.Contains(cleanedRegion.region_with_type ?? ""));
+                .Where(c => c.Industry.Contains(industry ?? "")
+                && c.Address.Region.Contains(cleanedRegion.region_with_type ?? ""));
 
-            if (!string.IsNullOrWhiteSpace(searchTerm))
-                query = query.Where(c => EF.Functions.ILike(c.Name, $"%{searchTerm}%"));
+            if (!searchTerm.IsNullOrEmpty())
+            { 
+                string searchTermNew = searchTerm.Length > 4 ? searchTerm.Substring(0, searchTerm.Length - 2) : searchTerm;
+                query = query.Where(c => EF.Functions.ILike(c.Name, $"%{searchTermNew}%")
+                   || EF.Functions.ILike(c.Description, $"%{searchTermNew}%"));
+            }
+
+            countDto.Count = query.Count() / 15 + 1;
+
+            //query = query.Skip((pageId - 1) * 15).Take(15);
 
             var companies = await query.OrderBy(c => c.Name).Select(c => new CompanyResponseDto(c, c.Address.FullAddress)).ToListAsync();
 
             _cacheService.GetCache().Set(cacheKey, companies, _cacheService.CreateCacheOptions());
             _cacheService.SetCacheKeys(cacheKey);
+            _cacheService.GetCache().Set(cacheCountKey, countDto.Count, _cacheService.CreateCacheOptions());
+            _cacheService.SetCacheKeys(cacheCountKey);
             _logger.LogInformation("Поиск и фильтрация компаний завершились успешно");
 
             return companies;

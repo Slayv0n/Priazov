@@ -178,7 +178,7 @@ body {
     display: flex;
     flex-direction: column;
     max-width: 384px;
-    gap: 22px;
+    gap: 34px;
 }
 
 .filter-item {

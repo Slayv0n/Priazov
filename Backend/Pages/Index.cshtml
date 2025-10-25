@@ -109,18 +109,6 @@
                         </label>
 
                         <label class="filter-item">
-                            <input type="checkbox" id="filter10" class="filter-checkbox">
-                            <span class="checkmark"></span>
-                            <span class="filter-text">Инициатива</span>
-                        </label>
-
-                        <label class="filter-item">
-                            <input type="checkbox" id="filter11" class="filter-checkbox">
-                            <span class="checkmark"></span>
-                            <span class="filter-text">Отраслевое событие / научная конференция</span>
-                        </label>
-
-                        <label class="filter-item">
                             <input type="checkbox" id="filter12" class="filter-checkbox">
                             <span class="checkmark"></span>
                             <span class="filter-text">Другое</span>
@@ -136,8 +124,58 @@
                         <div class="organization-card" onclick="location.href='/account/@Model.Query[i].Id'">
                             <img class="org-image" src="@Model.Images[i]" asp-append-version="true">
                             <div class="org-text">
-                                <h3 class="org-title">@Model.Query[i].Name</h3> <!--Problem zone-->
-                                <p class="org-description">@Model.Query[i].Description</p>
+                                <h3 class="org-title">
+                                    @{
+                                        var title = Model.Query[i].Name ?? "";
+                                        string displayText;
+
+                                        if (title.Length > 100)
+                                        {
+                                            var truncated = title.Substring(0, 100);
+                                            var spaceIndex = title.IndexOf(' ', 100);
+
+                                            if (spaceIndex != -1)
+                                            {
+                                                displayText = title.Substring(0, spaceIndex) + "...";
+                                            }
+                                            else
+                                            {
+                                                displayText = truncated + "...";
+                                            }
+                                        }
+                                        else
+                                        {
+                                            displayText = title;
+                                        }
+                                        @displayText
+                                    }
+
+                                </h3> <!--Problem zone-->
+                                <p class="org-description">
+                                    @{
+                                        var description = Model.Query[i].Description ?? "";
+
+                                        if (description.Length > 100)
+                                        {
+                                            var truncated = description.Substring(0, 100);
+                                            var spaceIndex = description.IndexOf(' ', 100);
+
+                                            if (spaceIndex != -1)
+                                            {
+                                                displayText = description.Substring(0, spaceIndex) + "...";
+                                            }
+                                            else
+                                            {
+                                                displayText = truncated + "...";
+                                            }
+                                        }
+                                        else
+                                        {
+                                            displayText = description;
+                                        }
+                                    }
+                                    @displayText
+                                </p>
                             </div>
                             <div class="org-details">
                                 <div class="detail">
@@ -153,22 +191,25 @@
                     }
                     @if (Model.Count > 0)
                     {
-                        <div class="organization-card more-projects" onclick="location.href='/catalog'">
+                        <div class="organization-card more-projects" onclick="location.href='/catalog/1'">
                             <div class="more-text">
                                 <span class="more-number">
                                     ЕЩЕ <span style="font-family: 'Natasha', sans-serif;
-                                        font-weight: 400;
-                                        font-size: 52px;
-                                        line-height: 120%;
-                                        letter-spacing: 0%;">@Model.Count</span>
+                                            font-weight: 400;
+                                            font-size: 52px;
+                                            line-height: 120%;
+                                            letter-spacing: 0%;">@Model.Count</span>
                                 </span>
                                 <span class="more-label">@ViewData["Organization"]</span>
                             </div>
-                            <button class="view-all-button" onclick="location.href='/catalog'">Смотреть все</button>
+                            <button class="view-all-button" onclick="location.href='/catalog/1'">Смотреть все</button>
                         </div>
                     }
                 </div>
-            </div>
+                    
+                </div>
+                </div>
+            <div>
         </div>
     </section>
 
@@ -180,7 +221,8 @@
                             <span class="farrow"></span>
                         </div>
                         <div class="faq-answer">
-                Проект социального воздействия — это комплекс мероприятий, направленных на достижение измеримого социального эффекта в жизни конкретных людей-участников проекта. Например, мероприятия по повышению успеваемости школьников на определенной территории или вовлечение людей в диспансеризацию, содействие в получении мер социальной поддержки.
+                <p>Проект социального воздействия — это комплекс мероприятий, направленных на достижение измеримого социального эффекта в жизни конкретных людей-участников проекта. Например, мероприятия по повышению успеваемости школьников на определенной территории или вовлечение людей в диспансеризацию, содействие в получении мер социальной поддержки.</p>
+                <a href="https://вэб.рф/">ВЭБ.РФ</a>
             </div>
                     </div>
                     <div class="faq-item">
@@ -246,7 +288,6 @@
             });
         });
 
-        // Выносим переменные карты в глобальную область видимости
         let myMap;
         let clusterer;
 
@@ -283,18 +324,16 @@
 
             // Инициализируем кластеризатор
             clusterer = new ymaps.Clusterer({
-            preset: 'islands#greenClusterIcons', // Базовый зеленый
-            clusterIconColor: '#0E6466' // Ваш цвет
+            preset: 'islands#greenClusterIcons',
+            clusterIconColor: '#0E6466',
             });
             myMap.geoObjects.add(clusterer);
 
-            // Первоначальная загрузка меток
             updateServerSelection();
         }
 
         // Функция для обновления меток на карте
         function updateMapMarkers(addresses) {
-            // Очищаем текущие метки
             myMap.geoObjects.removeAll();
             clusterer.removeAll();
             
@@ -343,12 +382,10 @@
                 );
             });
 
-            // Добавляем новые метки на карту
             clusterer.add(geoObjects);
 
             myMap.geoObjects.add(clusterer);
 
-            // Автоматически подбираем масштаб
             if (geoObjects.length > 0) {
                 myMap.setBounds(clusterer.getBounds(), {
                     checkZoomRange: true,
@@ -356,6 +393,20 @@
                 });
             };
         }
+
+        const checkboxes = document.querySelectorAll('.filter-checkbox');
+
+        checkboxes.forEach(checkbox => {
+          checkbox.addEventListener('change', function() {
+            if (this.checked) {
+              checkboxes.forEach(otherCheckbox => {
+                if (otherCheckbox !== this) {
+                  otherCheckbox.checked = false;
+                }
+              });
+            }
+          });
+        });
 
         document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
             checkbox.addEventListener('change', function() {

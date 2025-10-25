@@ -389,7 +389,7 @@ footer {
     padding: 16px 0;
 }
 
-.auth-title {
+.auth-title, .forgot-title {
     font-family: "Fira Code", monospace;
     font-weight: 500;
     font-size: 20px;
@@ -400,7 +400,7 @@ footer {
     justify-content: center;
 }
 
-.auth-form {
+.auth-form, .forgot-form {
     display: flex;
     flex-direction: column;
 }
@@ -420,6 +420,7 @@ footer {
     border: 1px solid #7A989A;
     width: 100%;
     font-size: 16px;
+    padding-right: 45px;
 }
 
     .auth-field:focus {
@@ -435,11 +436,6 @@ footer {
     position: relative;
     display: flex;
     align-items: center;
-}
-
-.auth-field {
-    width: 100%;
-    padding-right: 45px;
 }
 
 .password-toggle {
@@ -475,6 +471,8 @@ footer {
     text-decoration: underline;
     transition: 0.3s;
     font-size: 14px;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
     .forgot-link:hover {

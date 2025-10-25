@@ -294,7 +294,6 @@
         if (changeAvatarOverlay) changeAvatarOverlay.remove();
         if (changeBgOverlay) changeBgOverlay.remove();
 
-        // Убираем position: relative если больше не нужен
         const avatarContainer = document.querySelector('.profile-img-avatar');
         const header = document.querySelector('.profile-header');
 
@@ -319,11 +318,10 @@
             leaderName: document.querySelector('.contact-leader-name')?.innerText || '',
             description: document.querySelector('.profile-description')?.innerText || '',
             contacts: {
-                virtualList: [] // Создаем структуру для JsonList
+                virtualList: []
             }
         };
 
-        // Собираем контакты в правильную структуру
         document.querySelectorAll('.contact-item').forEach(item => {
             const id = item.id;
             if (id !== 'phone' && id !== 'email' && id !== 'address') {
@@ -338,7 +336,6 @@
 
             const user = JSON.parse(localStorage.getItem('user'));
 
-            // Отправка на сервер
             fetch(`/companies/update/${user.id}`, {
                 method: 'PUT',
                 headers: {
@@ -353,7 +350,6 @@
                 if (response.ok) {
                     return response.json();
                 } else {
-                    // Читаем что сервер нам вернул
                     return response.text().then(errorText => {
                         console.log('Server error response:', errorText);
                         throw new Error(`Server returned ${response.status}: ${errorText}`);
@@ -378,14 +374,12 @@
             input.onchange = function(e) {
                 const file = e.target.files[0];
                 if (file) {
-                    // Здесь можно добавить предпросмотр
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         document.querySelector('.profile-img-avatar').src = e.target.result;
                     };
                     reader.readAsDataURL(file);
 
-                    // И отправить на сервер
                     uploadImage(file, JSON.parse(localStorage.getItem('user')), true);
                 }
             };
@@ -406,7 +400,6 @@
                     };
                     reader.readAsDataURL(file);
 
-                    // И отправить на сервер
                     uploadImage(file, JSON.parse(localStorage.getItem('user')), false);
                 }
             };
@@ -451,7 +444,6 @@
 
         // }
 
-        // Вызываем при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
             updateEditButtonVisibility();
         });

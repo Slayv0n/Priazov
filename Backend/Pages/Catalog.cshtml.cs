@@ -18,12 +18,14 @@ namespace Backend.Pages
         {
             _companyService = companyService;
             _imageService = imageService;
+            CountPages = new();
         }
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync([FromRoute] int pageId = 1)
         {
+            PageId = pageId;
             try
             {
-                Query = await _companyService.SearchCompanyAsync(null, null, null);
+                Query = await _companyService.SearchCompanyAsync(null, null, null, pageId, CountPages);
                 foreach (var company in Query)
                 {
                     bool isAvatar = false;
@@ -44,11 +46,12 @@ namespace Backend.Pages
             }
             catch(Exception ex)
             {
-                return RedirectToPage($"/Error/{ex.Message}");
+                return RedirectToPage("Error", new { errorCode = Response.StatusCode, errorMessage = ex.Message });
             }
         }
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync([FromRoute] int pageId = 1)
         {
+            PageId = pageId;
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -58,8 +61,9 @@ namespace Backend.Pages
                 Query = await _companyService.SearchCompanyAsync(
                     CatalogRequest.SearchTerm,
                     CatalogRequest.Industry,
-                    CatalogRequest.Region
-                    );
+                    CatalogRequest.Region,
+                    pageId,
+                    CountPages);
 
                 Images.Clear();
                 foreach (var company in Query)
@@ -80,9 +84,13 @@ namespace Backend.Pages
 
                 return Page();
             }
+            catch (NotFoundException ex)
+            {
+                return RedirectToPage("Error", new { errorCode = "404", errorMessage = ex.Message });
+            }
             catch (Exception ex)
             {
-                return RedirectToPage($"Error/{ex.Message}");
+                return RedirectToPage("Error", new {errorMessage = ex.Message });
             }
 
         }
@@ -95,5 +103,7 @@ namespace Backend.Pages
 
         public List<CompanyResponseDto> Query { get; set; } = new List<CompanyResponseDto>();
         public List<string> Images { get; set; } = new List<string>();
+        public CountDto CountPages;
+        public int PageId;
     }
 }

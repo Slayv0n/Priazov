@@ -1,7 +1,7 @@
-﻿@page "{errorCode?}"
+﻿@page "{errorCode?}/{errorMessage?}"
 @model Backend.Pages.ErrorModel
 @{
-    ViewData["Title"] = "Каталог организаций";
+    ViewData["Title"] = Model.ErrorMessage;
 }
 @section Links {
     <link rel="stylesheet" href="~/styles/error.css" asp-append-version="true" />
@@ -11,8 +11,8 @@
 <main>
     <div class="error-bg">
         <div class="error-header">
-            <span class="error-title">@(RouteData.Values["errorCode"]?.ToString() ?? "Неизвестная ошибка")</span>
-            <span class="error-subtitle">Что-то сломалось...</span>
+            <span class="error-title">@(Model.ErrorCode ?? "Неизвестная ошибка")</span>
+            <span class="error-subtitle">@(Model.ErrorMessage ?? "Что-то сломалось...")</span>
         </div>
         <div class="button-container">
             <button onclick="location.href='/'">На главную</button>

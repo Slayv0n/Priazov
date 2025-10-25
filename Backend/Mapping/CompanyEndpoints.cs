@@ -21,12 +21,6 @@ namespace Backend.Mapping
             group.MapGet("/review", Review)
                  .Produces<ReviewDto>(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status400BadRequest);
-            group.MapGet("/account", Account)
-                .Produces<CompanyResponseDto>(StatusCodes.Status200OK)
-                .Produces(StatusCodes.Status400BadRequest);
-            group.MapGet("/search", Search)
-                .Produces<List<CompanyResponseDto>>(StatusCodes.Status200OK)
-                .Produces(StatusCodes.Status400BadRequest);
             group.MapPut("/update/{id}", Update)
                 .Produces<CompanyResponseDto>(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status400BadRequest);
@@ -73,30 +67,6 @@ namespace Backend.Mapping
             var response = new ReviewDto { Count = count, Companies = companies };
 
             return Results.Ok(response);
-        }
-
-        public static async Task<IResult> Account(Guid? id,
-            [FromServices] ICompanyService service,
-            [FromServices] ILogger<CompanyService> logger)
-        {
-            if (id == null)
-            {
-                logger.LogError("Id компании отсутствует");
-                return Results.BadRequest("Id компании отсутствует");
-            }
-            var company = await service.AccountCompanyAsync(id);
-            return Results.Ok(company);
-        }
-
-        private static async Task<IResult> Search(
-            [FromQuery] string? industry,
-            [FromQuery] string? region,
-            [FromQuery] string? searchTerm,
-            [FromServices] ICompanyService service)
-        {
-            var companies = await service.SearchCompanyAsync(industry, region, searchTerm);
-
-            return Results.Ok(companies);
         }
 
         public static async Task<IResult> Update(Guid id,

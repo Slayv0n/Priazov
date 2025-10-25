@@ -8,28 +8,26 @@ namespace DataBase.Models
     {
         public Guid Id { get; set; }
         [StringLength(200)]
-        public string Street { get; set; } = null!; // Улица и дом (пример: "ул. Ленина, 10")
+        public string Street { get; set; } = null!;
         [StringLength(100)]
-        public string? Apartment { get; set; } // Квартира/офис (необязательно)
+        public string? Apartment { get; set; }
         [StringLength(50)]
-        public string City { get; set; } = null!; // Город
+        public string City { get; set; } = null!;
         [StringLength(50)]
-        public string Country { get; set; } = "Россия"; // Значение по умолчанию
+        public string Country { get; set; } = "Россия";
         [StringLength(20)]
-        public string? PostalCode { get; set; } // Почтовый индекс
+        public string? PostalCode { get; set; }
 
-        // Геокоординаты (обязательно для карт)
         [Column(TypeName = "decimal(10, 7)")]
-        public decimal Latitude { get; set; } // Широта
+        public decimal Latitude { get; set; }
         [Column(TypeName = "decimal(10, 7)")]
-        public decimal Longitude { get; set; } // Долгота
+        public decimal Longitude { get; set; }
 
         [JsonIgnore]
         public Guid UserId { get; set; }
         [JsonIgnore]
         public User User { get; set; } = null!;
 
-        // Вычисляемое поле для полного адреса (не сохраняется в БД)
         [NotMapped]
         public string FullAddress => $"{Street}, {City}, {Country}";
     }
@@ -45,8 +43,8 @@ namespace DataBase.Models
         public string Region { get; set; } = null!;
         public string FullAddress { get; set; } = null!;
         [Column(TypeName = "decimal(10, 7)")]
-        public decimal Latitude { get; set; } // Широта
+        public decimal Latitude { get; set; }
         [Column(TypeName = "decimal(10, 7)")]
-        public decimal Longitude { get; set; } // Долгота
+        public decimal Longitude { get; set; }
     }
 }

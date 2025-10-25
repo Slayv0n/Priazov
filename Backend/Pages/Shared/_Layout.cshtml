@@ -40,7 +40,7 @@
                 <div class="right-section">
                     @if (!isRegistrationOrAuthPage && !isCatalogPage)
                     {
-                        <div class="catalog-button" onclick="location.href='/catalog'">Каталог организаций</div>
+                        <div class="catalog-button" onclick="location.href='/catalog/1'">Каталог организаций</div>
                     }
                     @if (User!.Identity!.IsAuthenticated)
                     {
@@ -75,7 +75,7 @@
             </div>
             <div class="offcanvas-body">
                 <button class="menu-button" onclick="location.href='/'">Главная страница</button>
-                <button class="menu-button" onclick="location.href='/catalog'">Организации</button>
+                <button class="menu-button" onclick="location.href='/catalog/1'">Организации</button>
                 <button class="menu-button" onclick="scrollToSection('footer')">Помощь</button>
 
                 <!-- 🔽 этот блок будем обновлять -->
@@ -96,16 +96,16 @@
                     <div class="modal-body">
                         <form class="auth-form" id="loginForm">
                             <div class="auth-fields">
-                                <input id="email-auth" name="email" type="email" class="auth-field" placeholder="электронная почта" required>
+                                <input id="email-auth" name="email" type="email" class="auth-field" placeholder="Электронная почта" required>
                                 <div class="password-field">
                                     <div class="input-wrapper">
-                                        <input id="password-auth" name="password" type="password" class="auth-field" placeholder="пароль" required>
+                                        <input id="password-auth" name="password" type="password" class="auth-field" placeholder="Пароль" required>
                                         <button type="button" class="password-toggle" data-target="password-auth">
                                             <img src="~/static/img/mdi_eye-outline.svg" asp-append-version="true" class="eye-icon" />
                                         </button>
                                     </div>
                                 </div>
-                                <a href="#" class="forgot-link">Забыли пароль?</a>
+                                @* <span class="forgot-link" data-bs-target="#forgotModal" data-bs-toggle="modal" data-bs-dismiss="modal">Забыли пароль?</span> *@
                             </div>
                             <button type="submit" class="button-submit">Войти</button>
                         </form>
@@ -113,7 +113,26 @@
                 </div>
             </div>
         </div>
-
+        <!--Окно забыли пароль-->
+        <div class="modal fade auth-window" id="forgotModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header border-0 auth-header">
+                        <span class="modal-title forgot-title">Восстановление пароля</span>
+                    </div>
+                    <div class="modal-body">
+                        <form class="forgot-form" id="forgotForm">
+                            <div class="auth-fields">
+                                <input id="email-forgot" name="email" type="email" class="auth-field" placeholder="Электронная почта">
+                                <span class="forgot-link" onclick="sendToken()">Получить код для восстановления</span>
+                                <input id="token" name="token" class="auth-field" placeholder="Введите код"/>
+                            </div>
+                            <button type="submit" class="button-submit">Далее</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Модальное окно смены пароля-->
         <div class="modal fade change-window" id="changeModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -124,7 +143,7 @@
                     <div class="modal-body">
                         <form class="auth-form" id="changePasswordForm">
                             <div class="auth-fields">
-                                <div class="password-field">
+                                <div class="field password-field">
                                     <div class="input-wrapper">
                                         <input type="password" class="auth-field" id="currentPassword" placeholder="Текущий пароль" required>
                                         <button type="button" class="password-toggle" data-target="currentPassword">
@@ -132,7 +151,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="password-field">
+                                <div class="field password-field">
                                     <div class="input-wrapper">
                                         <input type="password" class="auth-field" id="newPassword" placeholder="Новый пароль" required>
                                         <button type="button" class="password-toggle" data-target="newPassword">
@@ -140,7 +159,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="password-field">
+                                <div class="field password-field">
                                     <div class="input-wrapper">
                                         <input type="password" class="auth-field" id="confirmNewPassword" placeholder="Повторите новый пароль" required>
                                         <button type="button" class="password-toggle" data-target="confirmNewPassword">
@@ -161,7 +180,7 @@
                 <span class="footer-title">Контакты</span>
             <div class="footer-item">
                     <img class="footer-icon" src="~/static/main/mail.svg" asp-append-version="true" />
-                    <a href="mailto:yugolets@priazovsocialimpact.ru">yugolets@priazovsocialimpact.ru</a>
+                    <a href="mailto:yugolets@priazovsocialimpact.ru">yugolets@tmavt.ru</a>
                 </div>
                 <div class="footer-item">
                     <img class ="footer-icon" src="~/static/main/Phone.svg" asp-append-version="true" />
@@ -182,48 +201,101 @@
         // -------------------
             // Функции для работы с ошибками
             // -------------------
-            function showFieldError(fieldId, message) {
-                const field = document.getElementById(fieldId);
-                if (!field) return;
-
-                // Удаляем старую ошибку
-                clearFieldError(fieldId);
-
-                // Создаем элемент ошибки
-                const errorElement = document.createElement('div');
-                errorElement.className = 'field-error';
-                errorElement.textContent = message;
-                errorElement.style.color = '#ff4444';
-                errorElement.style.fontSize = '14px';
-                errorElement.style.marginTop = '5px';
-
-                // Добавляем красную обводку полю
-                field.style.borderColor = '#ff4444';
-
-                // Вставляем ошибку после поля
-                field.parentNode.appendChild(errorElement);
+                    function showError(message) {
+            // Удаляем старую ошибку если есть
+            const existingError = document.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
             }
 
-            function clearFieldError(fieldId) {
-                const field = document.getElementById(fieldId);
-                if (!field) return;
+            // Создаем элемент ошибки
+            const errorElement = document.createElement('div');
+            errorElement.className = 'error-message alert alert-danger mt-2';
+            errorElement.textContent = message;
 
-                // Убираем красную обводку
-                field.style.borderColor = '';
 
-                // Удаляем элемент ошибки
+            const submitButton = document.querySelector('.auth-form button[type="submit"]');
+                if (submitButton) {
+                    // Вставляем перед кнопкой
+                    submitButton.parentNode.insertBefore(errorContainer, submitButton);
+                } else {
+                    // Fallback: вставляем в начало формы
+                    const form = document.getElementById('loginForm');
+                    form.insertBefore(errorContainer, form.firstChild);
+                }
+
+            // Автоматически скрываем через 5 секунд
+            setTimeout(() => {
+                errorElement.remove();
+            }, 5000);
+        }
+        function showFieldError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+            if (!field) return;
+
+            // Удаляем старую ошибку
+            clearFieldError(fieldId);
+
+            // Создаем элемент ошибки
+            const errorElement = document.createElement('div');
+            errorElement.className = 'field-error';
+            errorElement.textContent = message;
+            errorElement.style.color = '#ff4444';
+            errorElement.style.fontSize = '14px';
+            errorElement.style.marginTop = '5px';
+
+            // Добавляем красную обводку полю
+            field.style.borderColor = '#ff4444';
+
+            // Всегда вставляем в контейнер .field
+            const fieldContainer = field.closest('.field');
+            if (fieldContainer) {
+                fieldContainer.appendChild(errorElement);
+            } else {
+                // Fallback
+                field.parentNode.appendChild(errorElement);
+            }
+        }
+
+        function clearFieldError(fieldId) {
+            const field = document.getElementById(fieldId);
+            if (!field) return;
+
+            // Убираем красную обводку
+            field.style.borderColor = '';
+
+            // Ищем ошибку в правильном контейнере - .field
+            const fieldContainer = field.closest('.field');
+            if (fieldContainer) {
+                const existingError = fieldContainer.querySelector('.field-error');
+                if (existingError) {
+                    existingError.remove();
+                }
+            } else {
+                // Fallback - ищем в parentNode
                 const existingError = field.parentNode.querySelector('.field-error');
                 if (existingError) {
                     existingError.remove();
                 }
             }
+        }
 
-            function clearAllErrors() {
-                const fields = document.querySelectorAll('.input-field, select.input-field');
+        function clearAllErrors() {
+            // Находим все контейнеры полей и удаляем ошибки из них
+            const fieldContainers = document.querySelectorAll('.field');
+            fieldContainers.forEach(container => {
+                const existingError = container.querySelector('.field-error');
+                if (existingError) {
+                    existingError.remove();
+                }
+
+                // Также убираем красную обводку со всех полей внутри
+                const fields = container.querySelectorAll('.input-field');
                 fields.forEach(field => {
-                    clearFieldError(field.id);
+                    field.style.borderColor = '';
                 });
-            }
+            });
+        }
         function initPasswordToggles() {
                 const toggleButtons = document.querySelectorAll('.password-toggle');
 
@@ -265,25 +337,6 @@
 
             loginUser(email, password);
         });
-        document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const password = document.getElementById('currentPassword').value;
-            const newPassword = document.getElementById('newPassword').value;
-            const newPassword2 = document.getElementById('confirmNewPassword').value;
-
-             if (newPassword.length < 8 || newPassword.length > 20) {
-                showFieldError('newPassword', 'Пароль должен содержать от 8 до 20 символов!');
-                hasErrors = true;
-             }
-
-             if (newPassword !== newPassword2) {
-                 showFieldError('confirmNewPassword', 'Пароли не совпадают!');
-                 hasErrors = true;
-             }
-
-            resetPassword(password, newPassword, newPassword2);
-        });
 
         async function loginUser(email, password) {
             const submitButton = document.querySelector('.button-submit');
@@ -307,17 +360,17 @@
                 })
             });
 
-
-            const data = await response.json();
-
-            localStorage.setItem('accessToken', data.accessToken);
-            localStorage.setItem('refreshToken', data.refreshToken);
-            localStorage.setItem('user', JSON.stringify({
-                id: data.id,
-                role: data.role
-            }));
+            
 
             if (response.ok) {
+                const data = await response.json();
+
+                localStorage.setItem('accessToken', data.accessToken);
+                localStorage.setItem('refreshToken', data.refreshToken);
+                localStorage.setItem('user', JSON.stringify({
+                    id: data.id,
+                    role: data.role
+                }));
                 console.log('Успешный вход, пользователь:', data);
 
                 // Закрываем модальное окно
@@ -331,6 +384,7 @@
 
             } else {
                 // Ошибка от сервера - используем данные из data
+                const data = await response.json();
                 const errorMessage = data.message || data.title || 'Ошибка входа';
                 console.error('Ошибка сервера:', errorMessage);
                 showError(errorMessage);
@@ -345,85 +399,104 @@
         }
         }
 
+        document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const password = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const newPassword2 = document.getElementById('confirmNewPassword').value;
+
+            // Очищаем предыдущие ошибки
+            clearFieldError('newPassword');
+            clearFieldError('confirmNewPassword');
+
+            let hasErrors = false;
+
+            if (newPassword.length < 8 || newPassword.length > 20) {
+                showFieldError('newPassword', 'Пароль должен содержать от 8 до 20 символов!');
+                hasErrors = true;
+            }
+
+            if (newPassword !== newPassword2) {
+                showFieldError('confirmNewPassword', 'Пароли не совпадают!');
+                hasErrors = true;
+            }
+
+            if (hasErrors) {
+                return; // Не отправляем запрос если есть ошибки
+            }
+
+            resetPassword(password, newPassword, newPassword2);
+        });
+
         async function resetPassword(password, newPassword, newPassword2) {
-            const submitButton = document.querySelector('.button-submit');
+            const submitButton = document.querySelector('#changePasswordForm .button-submit');
             const originalText = submitButton.textContent;
 
             try {
+                const user = JSON.parse(localStorage.getItem('user'));
+                if (!user || !user.id) {
+                    showError('Пользователь не авторизован');
+                    return;
+                }
 
-                const userId = JSON.parse(localStorage.getItem('user')).id;
+                const userId = user.id;
+
                 // Показываем индикатор загрузки
                 submitButton.textContent = 'Сброс пароля...';
                 submitButton.disabled = true;
 
-                    console.log('Отправка запроса на /password/change...');
+                console.log('Отправка запроса на /password/change...');
 
-            const response = await fetch('/password/change', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    UserId: userId,
-                    Password: password,
-                    NewPassword: newPassword,
-                    NewPassword2: newPassword2
-                })
-            });
+                const response = await fetch('/password/change', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        UserId: userId,
+                        Password: password,
+                        NewPassword: newPassword,
+                        NewPassword2: newPassword2
+                    })
+                });
 
-            localStorage.removeItem('user');
-            localStorage.removeItem('refreshToken');
-            localStorage.removeItem('accessToken');
+                if (response.ok) {
+                    console.log('Успешная смена пароля');
 
-            if (response.ok) {
-                console.log('Успешная смена пароля, пользователь:', userId);
+                    // Очищаем localStorage
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('refreshToken');
+                    localStorage.removeItem('accessToken');
 
-                // Закрываем модальное окно
-                const modal = bootstrap.Modal.getInstance(document.getElementById('changeModal'));
-                if (modal) {
-                    modal.hide();
+                    // Закрываем модальное окно
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('changeModal'));
+                    if (modal) {
+                        modal.hide();
+                    }
+
+                    // Перенаправляем на главную
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 2000);
+
+                } else {
+                    // Обрабатываем ошибку
+                    const data = await response.json();
+                    const errorMessage = data.message || data.title || 'Ошибка при смене пароля';
+                    console.error('Ошибка сервера:', errorMessage);
+                    showError(errorMessage);
                 }
 
-                // Обновляем страницу (куки уже установлены сервером)
-                window.location.href = `/`;
-
-            } else {
-                // Ошибка от сервера - используем данные из data
-                const errorMessage = response.json().message || response.json().title || 'Ошибка входа';
-                console.error('Ошибка сервера:', errorMessage);
-                showError(errorMessage);
+            } catch (error) {
+                console.error('Ошибка при выполнении запроса:', error);
+                showError('Ошибка сети или сервера: ' + error.message);
+            } finally {
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
             }
-
-        } catch (error) {
-            console.error('Ошибка при выполнении запроса:', error);
-            showError('Ошибка сети или сервера: ' + error.message);
-        } finally {
-            submitButton.textContent = originalText;
-            submitButton.disabled = false;
-        }
         }
 
-        function showError(message) {
-            // Удаляем старую ошибку если есть
-            const existingError = document.querySelector('.error-message');
-            if (existingError) {
-                existingError.remove();
-            }
-
-            // Создаем элемент ошибки
-            const errorElement = document.createElement('div');
-            errorElement.className = 'error-message alert alert-danger mt-2';
-            errorElement.textContent = message;
-
-            // Вставляем после формы
-            const form = document.getElementById('loginForm');
-            form.appendChild(errorElement);
-
-            // Автоматически скрываем через 5 секунд
-            setTimeout(() => {
-                errorElement.remove();
-            }, 5000);
-        }
         function redirectToProfile() {
             try {
                 const user = JSON.parse(localStorage.getItem('user'));
@@ -487,6 +560,148 @@
                 offcanvas.hide();
             }
         }
+        // Функция для отправки кода восстановления
+async function sendToken() {
+
+    const email = document.getElementById('email-forgot').value;
+
+    // Валидация email
+    if (!email) {
+        showAlert('Пожалуйста, введите email');
+        return;
+    }
+
+    try {
+        // Показываем индикатор загрузки
+        showLoading(true);
+        
+        // Отправка запроса на бекенд
+        const response = await fetch('/password/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({Email: email })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            showAlert('Код отправлен на вашу почту', 'success');
+            // Активируем поле для ввода кода
+            document.getElementById('token').style.display = 'block';
+        } else {
+            showAlert(result.message || 'Ошибка при отправке кода');
+        }
+    } catch (error) {
+        console.error('Ошибка:', error);
+        showAlert('Произошла ошибка при отправке запроса');
+    } finally {
+        showLoading(false);
+    }
+}
+
+// Функция для обработки отправки формы
+async function handleForgotSubmit(event) {
+    event.preventDefault();
+    
+    const email = document.getElementById('email-auth').value.trim();
+    const token = document.getElementById('token').value.trim();
+
+    // Валидация
+    if (!email || !token) {
+        showAlert('Пожалуйста, заполните все поля');
+        return;
+    }
+
+    try {
+        showLoading(true);
+        
+        // Отправка токена на проверку
+        const response = await fetch('/api/auth/verify-reset-token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, token })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // Если токен верный, закрываем текущее окно и открываем окно смены пароля
+            closeForgotModal();
+            openResetPasswordModal(email, token);
+        } else {
+            showAlert(result.message || 'Неверный код');
+        }
+    } catch (error) {
+        console.error('Ошибка:', error);
+        showAlert('Произошла ошибка при проверке кода');
+    } finally {
+        showLoading(false);
+    }
+}
+
+// Функция для открытия модального окна смены пароля
+function openResetPasswordModal(email, token) {
+    // Закрываем текущее модальное окно
+    const forgotModal = bootstrap.Modal.getInstance(document.getElementById('forgotModal'));
+    forgotModal.hide();
+    
+    // Открываем окно смены пароля (должно быть в вашем HTML)
+    const resetModal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
+    resetModal.show();
+    
+    // Сохраняем данные для использования в следующем окне
+    document.getElementById('resetPasswordModal').dataset.email = email;
+    document.getElementById('resetPasswordModal').dataset.token = token;
+}
+
+// Функция закрытия модального окна восстановления
+function closeForgotModal() {
+    const modal = bootstrap.Modal.getInstance(document.getElementById('forgotModal'));
+    modal.hide();
+}
+
+function showAlert(message, type = 'error') {
+    if (type === 'error') {
+        alert('Ошибка: ' + message);
+    } else {
+        alert(message);
+    }
+}
+
+function showLoading(show) {
+    // Реализация показа/скрытия индикатора загрузки
+    const submitButton = document.querySelector('#forgotForm .button-submit');
+    const sendTokenLink = document.querySelector('.forgot-link');
+    
+    if (show) {
+        submitButton.disabled = true;
+        sendTokenLink.style.pointerEvents = 'none';
+        submitButton.textContent = 'Отправка...';
+    } else {
+        submitButton.disabled = false;
+        sendTokenLink.style.pointerEvents = 'auto';
+        submitButton.textContent = 'Далее';
+    }
+}
+
+// Инициализация событий после загрузки DOM
+document.addEventListener('DOMContentLoaded', function() {
+    // Обработчик отправки формы
+    const forgotForm = document.getElementById('forgotForm');
+    if (forgotForm) {
+        forgotForm.addEventListener('submit', handleForgotSubmit);
+    }
+    
+    // Изначально скрываем поле для токена
+    const tokenField = document.getElementById('token');
+    if (tokenField) {
+        tokenField.style.display = 'none';
+    }
+});
         initPasswordToggles()
     </script>
 </body>

@@ -49,8 +49,6 @@
                             <option value="Финансы">Финансы</option>
                             <option value="Акселератор / инкубатор / технопарк">Акселератор / инкубатор / технопарк</option>
                             <option value="Ассоциация / объединение">Ассоциация / объединение</option>
-                            <option value="Инициатива">Инициатива</option>
-                            <option value="Отраслевое событие / научная конференция">Отраслевое событие / научная конференция</option>
                             <option value="Другое">Другое</option>
                         </select>
                         <img src="~/static/img/Chevron down.svg" class="select-arrow" asp-append-version="true" />
@@ -101,17 +99,15 @@
         (function() {
             'use strict';
 
-            const DADATA_TOKEN = "6f0a740c5107e8a21febe0725d566d25de7c4c1a";
+            const DADATA_TOKEN = "980d1b366e592fde386f474ba822e49ffd2f3bd4";
 
             function initPasswordToggles() {
                 const toggleButtons = document.querySelectorAll('.password-toggle');
 
                 toggleButtons.forEach(button => {
-                    // Удаляем старые обработчики чтобы избежать дублирования
                     button.replaceWith(button.cloneNode(true));
                 });
 
-                // Назначаем новые обработчики
                 document.querySelectorAll('.password-toggle').forEach(button => {
                     button.addEventListener('click', function() {
                         const targetId = this.getAttribute('data-target');
@@ -130,7 +126,6 @@
                             eyeIcon.alt = 'Показать пароль';
                         }
 
-                        // Обновляем версию для кэширования
                         const version = new Date().getTime();
                         eyeIcon.src = eyeIcon.src.split('?')[0] + '?v=' + version;
                     });
@@ -179,7 +174,6 @@
             
 
         function showFormError(message) {
-            // Создаем контейнер для общей ошибки формы
             let errorContainer = document.querySelector('.form-error');
             if (!errorContainer) {
                 errorContainer = document.createElement('div');
@@ -192,16 +186,11 @@
                 errorContainer.style.borderRadius = '5px';
                 errorContainer.style.border = '1px solid #ff4444';
 
-                // Находим кнопку в форме
                 const submitButton = document.querySelector('.form-container button[type="submit"]');
-                // Или если у кнопки есть конкретный класс:
-                // const submitButton = document.querySelector('.submit-button');
 
                 if (submitButton) {
-                    // Вставляем перед кнопкой
                     submitButton.parentNode.insertBefore(errorContainer, submitButton);
                 } else {
-                    // Fallback: вставляем в начало формы
                     const form = document.querySelector('.form-container');
                     form.insertBefore(errorContainer, form.firstChild);
                 }
@@ -225,7 +214,6 @@
 
                 let currentUserType = 'organization';
 
-                // Сохраняем исходную разметку формы
                 const originalFormHTML = form.innerHTML;
 
                 function createInvestorFormHTML() {
@@ -292,10 +280,8 @@
                         investorButton.classList.add('button-white');
                         investorButton.classList.remove('button-green');
 
-                        // Восстанавливаем исходную разметку
                         form.innerHTML = originalFormHTML;
 
-                        // Обновляем hidden поле
                         const userTypeEl = document.getElementById('userType');
                         if (userTypeEl) userTypeEl.value = 'organization';
                         setupFormSubmit();
@@ -321,7 +307,6 @@
 
                         form.innerHTML = createInvestorFormHTML();
 
-                        // Обновляем hidden поле
                         const userTypeEl = document.getElementById('userType');
                         if (userTypeEl) userTypeEl.value = 'investor';
 
@@ -340,13 +325,10 @@
                     const phoneInput = document.getElementById('phone');
                     if (phoneInput) {
                         phoneInput.oninput = function (e) {
-                            // Оставляем только цифры
                             let digits = e.target.value.replace(/\D/g, "");
 
-                            // Ограничиваем длину 11 цифрами
                             digits = digits.substring(0, 11);
 
-                            // Начинаем с 8
                             if (!digits.startsWith("8")) {
                                 digits = "8" + digits;
                             }
@@ -481,9 +463,7 @@
                             }));
                                 window.location.href = userType === 'organization' ? `/account/${data.id}` : '/';
                     } else {
-                                // Обработка ошибок валидации с сервера
                         if (data.errors) {
-                            // Преобразуем имена полей из C# в HTML id
                             const fieldMapping = {
                                 'Name': 'organizationName',
                                 'LeaderName': 'FIO',
@@ -495,18 +475,15 @@
                                 'Industry': 'industry'
                             };
 
-                            // Показываем ошибки для каждого поля
                             Object.keys(data.errors).forEach(fieldKey => {
                                 const htmlFieldId = fieldMapping[fieldKey] || fieldKey;
                                 const errorMessages = data.errors[fieldKey];
 
                                 if (Array.isArray(errorMessages) && errorMessages.length > 0) {
-                                    // Берем первую ошибку для поля (обычно их одна)
                                     showFieldError(htmlFieldId, errorMessages[0]);
                                 }
                             });
                         } else if (data.title === 'One or more validation errors occurred.') {
-                            // Стандартный формат ошибок валидации ASP.NET
                             if (data.errors) {
                                 const fieldMapping = {
                                     'Name': 'organizationName',
@@ -529,7 +506,6 @@
                                 });
                             }
                         } else {
-                            // Общая ошибка
                             showFormError(data.detail || 'Ошибка регистрации');
                         }
                     }
@@ -555,11 +531,9 @@
                     });
                 }
 
-                // Подключаем обработчики
                 if (orgButton) orgButton.addEventListener('click', activateOrgButton);
                 if (investorButton) investorButton.addEventListener('click', activateInvestorButton);
 
-                // Инициализация по умолчанию
                 activateOrgButton();
                 initPasswordToggles();
             });

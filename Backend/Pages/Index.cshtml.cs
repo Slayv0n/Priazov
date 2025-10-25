@@ -1,5 +1,6 @@
 using Backend.Models.Dto;
 using Backend.Services;
+using Backend.Validation;
 using DataBase.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -43,9 +44,13 @@ namespace Backend
                 }
                 return Page();
             }
+            catch (NotFoundException ex)
+            {
+                return RedirectToPage("Error", new { errorCode = "404", errorMessage = ex.Message });
+            }
             catch (Exception ex)
             {
-                return RedirectToPage($"Error/{ex.Message}");
+                return RedirectToPage("Error", new { errorCode = Response.StatusCode, errorMessage = ex.Message });
             }
         }
 
@@ -61,9 +66,13 @@ namespace Backend
 
                 return new JsonResult(Addresses);
             }
+            catch (NotFoundException ex)
+            {
+                return RedirectToPage("Error", new { errorCode = "404", errorMessage = ex.Message });
+            }
             catch (Exception ex)
             {
-                return RedirectToPage($"/Error/{ex.Message}");
+                return RedirectToPage("Error", new { errorMessage = ex.Message });
             }
         }
         public int Count { get; set; }

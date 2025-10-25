@@ -23,8 +23,6 @@ namespace DataBase
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            //Настройки таблиц
-
             modelBuilder.Entity<User>()
                 .Property<Guid>("Id")
                 .ValueGeneratedOnAdd();
@@ -64,8 +62,8 @@ namespace DataBase
                 .HasKey(i => i.Id);
 
             modelBuilder.Entity<User>()
-                .HasOne(u => u.Session)       // У User есть одна Session
-                .WithOne(s => s.User)         // У Session есть один User
+                .HasOne(u => u.Session)
+                .WithOne(s => s.User)
                 .HasForeignKey<UserSession>(s => s.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 

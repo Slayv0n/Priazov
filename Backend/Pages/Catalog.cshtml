@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{pageId:int}"
 @model Backend.Pages.CatalogModel
 @{
     ViewData["Title"] = "Каталог организаций";
@@ -55,8 +55,58 @@
             <div class="organization-card" onclick="location.href='/account/@Model.Query[i].Id'">
                 <img class="org-image" src="@Model.Images[i]" asp-append-version="true">
                 <div class="org-text">
-                    <h3 class="org-title">@Model.Query[i].Name</h3> <!--Problem zone-->
-                    <p class="org-description">@Model.Query[i].Description</p>
+                    <h3 class="org-title">
+                        @{
+                            var title = Model.Query[i].Name ?? "";
+                            string displayText;
+
+                            if (title.Length > 100)
+                            {
+                            var truncated = title.Substring(0, 100);
+                            var spaceIndex = title.IndexOf(' ', 100);
+
+                            if (spaceIndex != -1)
+                            {
+                            displayText = title.Substring(0, spaceIndex) + "...";
+                            }
+                            else
+                            {
+                            displayText = truncated + "...";
+                            }
+                            }
+                            else
+                            {
+                            displayText = title;
+                            }
+                            @displayText
+                        }
+                        
+                    </h3> <!--Problem zone-->
+                    <p class="org-description">
+                        @{
+                            var description = Model.Query[i].Description ?? "";
+
+                            if (description.Length > 100)
+                            {
+                                var truncated = description.Substring(0, 100);
+                                var spaceIndex = description.IndexOf(' ', 100);
+
+                                if (spaceIndex != -1)
+                                {
+                                    displayText = description.Substring(0, spaceIndex) + "...";
+                                }
+                                else
+                                {
+                                    displayText = truncated + "...";
+                                }
+                            }
+                            else
+                            {
+                                displayText = description;
+                            }
+                        }
+                        @displayText
+                    </p>
                 </div>
                 <div class="org-details">
                     <div class="detail">
@@ -77,6 +127,18 @@
             <span>Ничего не найдено :(</span>
         </div>
     }
+    @* <div class="pagination">
+        @if (Model.PageId != 1)
+        {
+            <button class="arrow" onclick="location.href='/catalog/@(Model.PageId-1)'">&lt</button>
+        }
+        @Model.PageId
+        @if (Model.PageId < Model.CountPages.Count)
+        {
+            <button class="arrow" onclick="location.href='/catalog/@(Model.PageId + 1)'">&gt</button>
+        }
+    </div> *@
+
 </main>
 
 @section Scripts {
@@ -90,7 +152,6 @@
                 console.log(key + ':', value);
             }
 
-            // Пробуем отправить
             fetch(e.target.action, {
                 method: 'POST',
                 body: formData,

@@ -6,18 +6,13 @@ namespace DataBase.Models
     public class UserPassword
     {
         public Guid Id { get; set; }
-
-        // Внешний ключ для связи с пользователем (1:1)
         [JsonIgnore]
         public Guid UserId { get; set; }
         [JsonIgnore]
         public User User { get; set; } = null!;
-
         // Хэш пароля
         [MaxLength(256)]
         public string PasswordHash { get; set; } = null!;
-
-        // Дата последнего изменения пароля
         public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
     }
     public class PasswordResetToken

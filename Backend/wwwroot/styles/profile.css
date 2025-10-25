@@ -19,7 +19,7 @@
     display: none;
     position: absolute;
     right: 16px;
-    bottom: 144px;
+    top: 140px;
     padding: 4px 16px;
     background-color: #FFFFFF;
     border: 1px solid #7A989A;
@@ -35,7 +35,7 @@
         line-height: 130%;
         letter-spacing: 4%;
         right: 16px;
-        bottom: 16px;
+        top: 150px;
         display: flex;
         justify-content: center;
         padding: 8px 24px;

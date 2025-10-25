@@ -8,7 +8,7 @@ namespace Backend.Models.Dto
         [Required(ErrorMessage="Введите название организации.")]
         [StringLength(100, MinimumLength = 8,
             ErrorMessage = "Длина названия/имени 8-100 символов.")]
-        [RegularExpression(@"^\s*[\p{L}\d\s""'.,-]+\s*$",
+        [RegularExpression(@"^\s*[\p{L}\d\s""'№().,-]+\s*$",
             ErrorMessage = "Разрешены только буквы, пробелы и специальные знаки.")]
         [Display(Name = "Название организации")]
         public string Name { get; set; } = null!;

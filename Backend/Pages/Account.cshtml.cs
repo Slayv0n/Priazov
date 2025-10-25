@@ -1,5 +1,6 @@
 using Backend.Models.Dto;
 using Backend.Services;
+using Backend.Validation;
 using DataBase.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -41,9 +42,13 @@ namespace Backend.Pages
                 }
                 return Page();
             }
+            catch (NotFoundException ex)
+            {
+                return RedirectToPage("Error", new { errorCode = "404", errorMessage = ex.Message });
+            }
             catch (Exception ex)
             {
-                return RedirectToPage($"/Error/{ex.Message}");
+                return RedirectToPage("Error", new {errorMessage = ex.Message });
             }
             
         }

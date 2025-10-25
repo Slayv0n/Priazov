@@ -1,8 +1,8 @@
-﻿
-using Backend.Models.Dto;
+﻿using Backend.Models.Dto;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace Backend.Mapping
@@ -14,6 +14,7 @@ namespace Backend.Mapping
             var group = app.MapGroup("/password");
 
             group.MapPost("/change", Change);
+            group.MapPost("/token", Token);
         }
 
         private static async Task<IResult> Change(PasswordChangeDto passwordChangeDto,
@@ -55,6 +56,15 @@ namespace Backend.Mapping
             context.Response.Cookies.Delete("access_token");
 
             return Results.Ok();
+        }
+
+        private static async Task<IResult> Token(SendTokenDto sendTokenDto,
+            IPasswordService passwordService,
+            ILogger<PasswordService> logger)
+        {
+            var response = await passwordService.ForgotPassword(sendTokenDto.Email);
+
+            return Results.Ok(response);
         }
     }
 }

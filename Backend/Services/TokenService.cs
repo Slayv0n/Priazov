@@ -28,7 +28,6 @@ namespace Backend.Services
             _logger = logger;
         }
 
-        // Валидация токена (для Access и Refresh)
         public ClaimsPrincipal? ValidateToken(string token, bool isAccessToken)
         {
             var cacheKey = $"token_validation_{token}";

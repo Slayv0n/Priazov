@@ -19,4 +19,9 @@ namespace Backend.Models.Dto
         [Display(Name = "Повторите пароль")]
         public required string NewPassword2 { get; set; }
     }
+    class SendTokenDto
+    {
+        [Required(ErrorMessage = "Введите электронную почту.")]
+        public required string Email { get; set; }
+    }
 }

@@ -75,8 +75,7 @@ namespace Backend.Services
                     imageId = company.MainId;
             }
 
-                // Ищем файл по ID (имя файла = imageId + расширение)
-                var files = Directory.GetFiles(userImagesPath, $"{imageId}.*");
+            var files = Directory.GetFiles(userImagesPath, $"{imageId}.*");
 
             if (files.Length == 0)
             {
