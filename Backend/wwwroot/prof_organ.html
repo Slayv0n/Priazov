@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Itim&family=Natasha:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/natasha" rel="stylesheet">
+  <link rel="stylesheet" href="styles/prof_organ.css">
+  <title>Профиль организации</title>
+</head>
+<body>
+<div class="page-container">
+  <!-- 🔹 Шапка -->
+  <header class="header py-2 sticky-top bg-white mb-0 p-3">
+    <div class="container-fluid px-0">
+      <div class="d-flex align-items-center">
+        <!-- Меню -->
+        <button class="btn p-0 me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+          <svg width="30" height="30" viewBox="0 0 30 30">
+            <path d="M5,9 H25 M5,15 H25 M5,21 H25"
+                  stroke="#000"
+                  stroke-width="2"
+                  stroke-linecap="round" />
+          </svg>
+        </button>
+
+        <!-- Логотип -->
+        <div class="logo me-3">
+          <img src="static/Logo.jpg" onclick="location.href='index.html'" alt="Logo" width="65" height="42">
+        </div>
+
+        <!-- Кнопки для широких экранов -->
+        <div class="right-section">
+          <div class="catalog-button" onclick="location.href='search.html'">Каталог проектов</div>
+          <div class="auth-block-header"></div>
+        </div>
+
+        <!-- Кнопки для телефонов -->
+        <div class="mobile ms-auto d-lg-none w-50 h-50 d-flex justify-content-end">
+          <button class="btn catalog-btn me-4" onclick="location.href='search.html'">Каталог</button>
+          <div class="profile-dropdown">
+            <button class="mobile-profile p-0 btn border-0" id="profileDropdownButton">
+              <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="15" cy="10" r="5" fill="#012021"/>
+                <path d="M15 17C10 17 5 19 5 24V27H25V24C25 19 20 17 15 17Z" fill="#012021"/>
+              </svg>
+            </button>
+            <div class="dropdown-menu" id="profileDropdownMenu">
+              <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#loginModal">
+                Вход
+              </button>
+              <div class="dropdown-divider"></div>
+              <button class="dropdown-item" onclick="location.href='registration.html'">
+                Регистрация
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Выезжающее меню -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileMenu">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Меню</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+      </div>
+      <div class="offcanvas-body">
+        <button class="btn w-100 mb-2 catalog" onclick="location.href='index.html'">Главная страница</button>
+        <button class="btn w-100 mb-2 catalog" onclick="location.href='search.html'">Проекты</button>
+        <button class="btn w-100 mb-2 catalog" onclick="scrollToBottom()">О нас</button>
+        <button class="btn w-100 mb-2 catalog" onclick="scrollToBottom()">Помощь</button>
+
+        <div class="auth-block mt-3"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 🔹 Модалка логина -->
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 shadow">
+        <div class="modal-header border-0">
+          <h5 class="modal-title">Авторизация</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+        <div class="modal-body">
+          <form id="loginForm" class="space-y-3">
+            <input type="email" class="form-control mb-3" placeholder="электронная почта" required>
+            <input type="password" class="form-control mb-3" placeholder="пароль" required>
+            <div class="text-center mb-3">
+              <a href="#" class="small text-primary">Забыли пароль?</a>
+            </div>
+            <button type="submit" class="btn btn-success w-100">Войти</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔹 Контент профиля -->
+  <main class="main">
+    <div class="banner">
+      <img class="image" src="static/Rectangle 8.png">
+      <div class="edit-btn" style="display:none">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 10px;">
+          <path d="M14.06 9.02L14.98 9.94L5.92 19H5V18.08L14.06 9.02ZM17.66 3C17.41 3 17.15 3.1 16.96 3.29L15.13 5.12L18.88 8.87L20.71 7.04C21.1 6.65 21.1 6.02 20.71 5.63L18.37 3.29C18.17 3.09 17.92 3 17.66 3ZM14.06 6.19L3 17.25V21H6.75L17.81 9.94L14.06 6.19Z" fill="currentColor"/>
+        </svg>
+        <span>редактировать профиль</span>
+      </div>
+    </img>
+    <div class="photo-container"><img class="images" src="static/Eclipse.jpg"></div>
+    <div class="content container">
+      <div class="content-wrapper">
+        <div class="left-column">
+          <div class="contact-info">
+            <h3>Руководитель:</h3>
+            <p class="director-name">—</p>
+            <div class="contact-details">
+              <div class="phone">—</div>
+              <div class="email">—</div>
+              <div class="address">—</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="right-column">
+          <div class="info">
+            <h1 class="org-title">Загрузка...</h1>
+            <p class="org-description">Пожалуйста, подождите...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- 🔹 Футер -->
+<footer>
+  <div class="footer-content">
+    <div class="contacts">
+      <h3>Контакты</h3>
+      <div class="contact-item">
+        <span>✉</span>
+        <a href="mailto:yugolets@priazovsocialimpact.ru">yugolets@priazovsocialimpact.ru</a>
+      </div>
+      <div class="contact-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M20.487 17.14L18.387 15.79C17.447 15.15 16.217 15.41 15.587 16.34L14.517 17.95C12.997 17.35 9.66705 14.33 9.03705 12.81L10.647 11.75C11.587 11.12 11.847 9.89 11.207 8.95L9.85705 6.85C9.21705 5.91 7.98705 5.66 7.05705 6.29L4.50705 8.09C3.57705 8.72 3.32705 9.96 3.96705 10.89L5.72705 13.9C7.96705 18.22 11.647 21.43 16.187 22.71C16.967 22.93 17.787 22.71 18.337 22.11L20.337 19.91C21.107 19.03 20.997 17.67 20.487 17.14Z" fill="currentColor" />
+        </svg>
+        <a href="tel:+79185009038">+7 (918) 500-9039</a>
+      </div>
+    </div>
+    <div class="help-section">
+      <div class="help-title">Помощь?</div>
+      <a href="tel:+79185009038">+7 (918) 500-9039</a>
+    </div>
+  </div>
+</footer>
+
+<!-- 🔹 Скрипты -->
+<script src="scripts/auth.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const pageId = urlParams.get("id");
+
+  if (!pageId) {
+    document.querySelector(".main").innerHTML = "<h1>Профиль не найден</h1>";
+    return;
+  }
+
+  fetch("data/submitRegistration.json")
+    .then(res => res.json())
+    .then(data => {
+      const org = data.find(o => o.dataId == pageId);
+      if (!org) {
+        document.querySelector(".main").innerHTML = "<h1>Профиль не найден</h1>";
+        return;
+      }
+
+      // Подставляем данные
+      document.title = org.Name;
+      document.querySelector(".director-name").textContent = org.LeaderName || "—";
+      document.querySelector(".phone").textContent = org.Phone || "—";
+      document.querySelector(".email").textContent = org.Email || "—";
+      document.querySelector(".address").textContent = org.FullAddress || "—";
+      document.querySelector(".org-title").textContent = org.Name || "";
+      
+      // описание = отрасль или дата регистрации
+      document.querySelector(".org-description").textContent = 
+        org.Industry 
+          ? `Отрасль: ${org.Industry}` 
+          : `Дата регистрации: ${new Date(org.RegistrationDate).toLocaleDateString("ru-RU")}`;
+    })
+    .catch(err => {
+      console.error("Ошибка загрузки профиля:", err);
+      document.querySelector(".main").innerHTML = "<h1>Ошибка загрузки</h1>";
+    });
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
