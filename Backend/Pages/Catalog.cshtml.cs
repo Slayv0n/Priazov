@@ -22,6 +22,7 @@ namespace Backend.Pages
         }
         public async Task<IActionResult> OnGetAsync([FromRoute] int pageId = 1)
         {
+            ViewData["Title"] = "Каталог организаций";
             PageId = pageId;
             try
             {
