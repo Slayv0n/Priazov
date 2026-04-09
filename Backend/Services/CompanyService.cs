@@ -51,7 +51,6 @@ namespace Backend.Services
         private readonly ICacheService _cacheService;
         private readonly string _cacheName = "companies";
 
-
         public CompanyService(
             IDbContextFactory<PriazovContext> factory,
             IOptions<DadataSettings> dadata,
@@ -131,7 +130,7 @@ namespace Backend.Services
             await db.Users.AddAsync(company);
             await db.SaveChangesAsync();
 
-            await _messageService.SendRegistrationEmail(company);
+            //await _messageService.SendRegistrationEmail(company);
             _logger.LogInformation($"Компания зарегистрирована: {companyDto.Email}");
 
             _cacheService.ResetCache(_cacheName);
@@ -258,8 +257,6 @@ namespace Backend.Services
             }
 
             countDto.Count = query.Count() / 15 + 1;
-
-            //query = query.Skip((pageId - 1) * 15).Take(15);
 
             var companies = await query.OrderBy(c => c.Name).Select(c => new CompanyResponseDto(c, c.Address.FullAddress)).ToListAsync();
 
