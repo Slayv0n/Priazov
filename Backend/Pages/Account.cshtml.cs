@@ -34,7 +34,7 @@ namespace Backend.Pages
                 image = await _imageService.Image(userId, false);
                 if (image.Id == default)
                 {
-                    MainUrl = $"{Request.Scheme}://{Request.Host}/static/img/profile/дефолт фон профиля.png";
+                    MainUrl = $"{Request.Scheme}://{Request.Host}/static/img/profile/defaultMain.png";
                 }
                 else
                 {

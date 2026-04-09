@@ -13,7 +13,7 @@
     <div class="profile-header-container">
         <div class="profile-header" style="
             background-image: url('@Model.MainUrl');
-            background-size: cover; /* или contain в зависимости от нужного эффекта */
+            background-size: cover;
             background-position: center;
             background-repeat: no-repeat;">
             <button class="profile-change-button">
@@ -45,7 +45,7 @@
                 <span class="contact-text">@Model.Company.Phone</span>
             </div>
             <div class="contact-item" id="email">
-                <img class="contact-img" src="~/static/img/profile/mail.svg" asp-append-version="true" />
+                <img class="contact-img" src="~/static/img/profile/Mail.svg" asp-append-version="true" />
                 <span class="contact-text">@Model.Company.Email</span>
             </div>
             @for (int i = 0; i < Model.Company.Contacts.VirtualList.Count; i++)
