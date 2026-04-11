@@ -62,7 +62,7 @@ namespace Backend.Services
 
             var newAccessToken = _tokenService.GenerateAccessToken(Convert.ToString(person.Id)!,
                 person.Email, person.Role);
-            var newRefreshToken = _tokenService.GenerateRefreshToken(Convert.ToString(person.Id)!);
+            var newRefreshToken = _tokenService.GenerateRefreshToken();
 
             await db.Sessions.Where(s => s.UserId == person.Id).ExecuteDeleteAsync();
 
@@ -90,17 +90,8 @@ namespace Backend.Services
         {
             using var db = await _factory.CreateDbContextAsync();
 
-            var principal = _tokenService.ValidateToken(refreshDto.RefreshToken, isAccessToken: false);
-            if (principal == null)
-            {
-                _logger.LogWarning("Токен не валиден");
-                throw new UnauthorizedAccessException("Пользователь не авторизован.");
-            }
-
-            var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier)!;
-
-            await db.Sessions.Where(s => Convert.ToString(s.UserId) == userId).ExecuteDeleteAsync();
-            _logger.LogInformation($"Пользователь успешно вышел {userId} в {DateTime.UtcNow}");
+            await db.Sessions.Where(s => s.RefreshToken == refreshDto.RefreshToken).ExecuteDeleteAsync();
+            _logger.LogInformation($"Пользователь успешно вышел в {DateTime.UtcNow}");
 
             return null;
         }
@@ -109,25 +100,10 @@ namespace Backend.Services
         {
             await using var db = await _factory.CreateDbContextAsync();
 
-            var principal = _tokenService.ValidateToken(refreshDto.RefreshToken, isAccessToken: false);
-            if (principal == null)
-            {
-                _logger.LogWarning("Токен не валиден");
-                throw new UnauthorizedAccessException("Пользователь не авторизован.");
-            }
-
-            var userId = Guid.Parse(principal.FindFirstValue(ClaimTypes.NameIdentifier)!);
-
-            if (userId == Guid.Empty)
-            {
-                _logger.LogWarning("Пустой или отсутствующий id пользователя");
-                throw new UnauthorizedAccessException("Пользователь не авторизован");
-            }
-
             var session = await db.Sessions
                 .AsNoTracking()
                 .Include(s => s.User)
-                .FirstOrDefaultAsync(s => s.UserId == userId);
+                .FirstOrDefaultAsync(s => s.RefreshToken == refreshDto.RefreshToken);
 
             if (session == null)
             {
@@ -147,17 +123,17 @@ namespace Backend.Services
                 throw new UnauthorizedAccessException("Пользователь не авторизован");
             }
 
-            var newAccessToken = _tokenService.GenerateAccessToken(userId.ToString(), session.User.Email, session.User.Role);
-            var newRefreshToken = _tokenService.GenerateRefreshToken(userId.ToString());
+            var newAccessToken = _tokenService.GenerateAccessToken(session.User.Id.ToString(), session.User.Email, session.User.Role);
+            var newRefreshToken = _tokenService.GenerateRefreshToken();
 
             var newUser = new UserSession
             {
                 RefreshToken = newRefreshToken,
-                UserId = userId,
+                UserId = session.User.Id,
                 ExpiresAt = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpiryDays)
             };
 
-            await db.Sessions.Where(s => s.UserId == userId)
+            await db.Sessions.Where(s => s.UserId == session.User.Id)
                 .ExecuteUpdateAsync(setters => setters
                 .SetProperty(s => s.RefreshToken, newUser.RefreshToken)
                 .SetProperty(s => s.ExpiresAt, newUser.ExpiresAt));

@@ -33,7 +33,7 @@ namespace Backend.Pages
                     success = false,
                     errors = ModelState.ToDictionary(
                     k => k.Key,
-                    v => v.Value.Errors.Select(e => e.ErrorMessage).ToArray())
+                    v => v.Value!.Errors.Select(e => e.ErrorMessage).ToArray())
                 });
             }
             try

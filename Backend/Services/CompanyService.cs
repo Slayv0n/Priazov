@@ -253,7 +253,7 @@ namespace Backend.Services
             { 
                 string searchTermNew = searchTerm.Length > 4 ? searchTerm.Substring(0, searchTerm.Length - 2) : searchTerm;
                 query = query.Where(c => EF.Functions.ILike(c.Name, $"%{searchTermNew}%")
-                   || EF.Functions.ILike(c.Description, $"%{searchTermNew}%"));
+                   || EF.Functions.ILike(c.Description!, $"%{searchTermNew}%"));
             }
 
             countDto.Count = query.Count() / 15 + 1;
