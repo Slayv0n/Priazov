@@ -117,13 +117,33 @@ namespace Backend.Services
             }
 
             var userId = Guid.Parse(principal.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            if (userId == Guid.Empty)
+            {
+                _logger.LogWarning("Пустой или отсутствующий id пользователя");
+                throw new UnauthorizedAccessException("Пользователь не авторизован");
+            }
+
             var session = await db.Sessions
+                .AsNoTracking()
                 .Include(s => s.User)
                 .FirstOrDefaultAsync(s => s.UserId == userId);
 
-            if (session == null || session.ExpiresAt < DateTime.UtcNow || session.RefreshToken != refreshDto.RefreshToken)
+            if (session == null)
             {
-                _logger.LogWarning("Сессия истекла или не существует");
+                _logger.LogWarning("Сессия не существует");
+                throw new UnauthorizedAccessException("Пользователь не авторизован");
+            }
+
+            if (session.ExpiresAt < DateTime.UtcNow)
+            {
+                _logger.LogWarning("Сессия истекла");
+                throw new UnauthorizedAccessException("Пользователь не авторизован");
+            }
+
+            if (session.RefreshToken != refreshDto.RefreshToken)
+            {
+                _logger.LogWarning("Токены не совпадают");
                 throw new UnauthorizedAccessException("Пользователь не авторизован");
             }
 
