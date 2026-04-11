@@ -10,9 +10,9 @@ namespace Backend.Services
 {
     public interface ITokenService
     {
-        public ClaimsPrincipal? ValidateToken(string token, bool isAccessToken);
+        public ClaimsPrincipal? ValidateToken(string token);
         public string GenerateAccessToken(string userId, string email, string role);
-        public string GenerateRefreshToken(string userId);
+        public string GenerateRefreshToken();
     }
 
     public class TokenService : ITokenService
@@ -28,7 +28,7 @@ namespace Backend.Services
             _logger = logger;
         }
 
-        public ClaimsPrincipal? ValidateToken(string token, bool isAccessToken)
+        public ClaimsPrincipal? ValidateToken(string token)
         {
             var cacheKey = $"token_validation_{token}";
 
@@ -37,8 +37,7 @@ namespace Backend.Services
                 return cachedPrincipal;
             }
 
-            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(
-                isAccessToken ? _jwtSettings.AccessTokenSecret : _jwtSettings.RefreshTokenSecret));
+            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSettings.AccessTokenSecret));
 
             var validator = new JwtSecurityTokenHandler();
             try
@@ -92,9 +91,9 @@ namespace Backend.Services
             return tokenHandler.WriteToken(token);
         }
 
-        public string GenerateRefreshToken(string userId)
+        public string GenerateRefreshToken()
         {
-            _logger.LogInformation($"Генерация токена для пользователя {userId}");
+            _logger.LogInformation($"Генерация токена для пользователя");
             return new Guid().ToString();
         }
     }

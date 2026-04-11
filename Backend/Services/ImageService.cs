@@ -116,7 +116,7 @@ namespace Backend.Services
             }
 
             var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".bmp", ".webp" };
-            var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            var extension = Path.GetExtension(file!.FileName).ToLowerInvariant();
 
             if (string.IsNullOrEmpty(extension) || !allowedExtensions.Contains(extension))
             {
