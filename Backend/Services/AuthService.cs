@@ -116,10 +116,10 @@ namespace Backend.Services
                 throw new UnauthorizedAccessException("Пользователь не авторизован.");
             }
 
-            var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            var userId = Guid.Parse(principal.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var session = await db.Sessions
                 .Include(s => s.User)
-                .FirstOrDefaultAsync(s => s.UserId == Guid.Parse(userId));
+                .FirstOrDefaultAsync(s => s.UserId == userId);
 
             if (session == null || session.ExpiresAt < DateTime.UtcNow || session.RefreshToken != refreshDto.RefreshToken)
             {
@@ -127,17 +127,17 @@ namespace Backend.Services
                 throw new UnauthorizedAccessException("Пользователь не авторизован");
             }
 
-            var newAccessToken = _tokenService.GenerateAccessToken(userId, session.User.Email, session.User.Role);
-            var newRefreshToken = _tokenService.GenerateRefreshToken(userId);
+            var newAccessToken = _tokenService.GenerateAccessToken(userId.ToString(), session.User.Email, session.User.Role);
+            var newRefreshToken = _tokenService.GenerateRefreshToken(userId.ToString());
 
             var newUser = new UserSession
             {
                 RefreshToken = newRefreshToken,
-                UserId = Guid.Parse(userId),
+                UserId = userId,
                 ExpiresAt = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpiryDays)
             };
 
-            await db.Sessions.Where(s => s.UserId == Guid.Parse(userId))
+            await db.Sessions.Where(s => s.UserId == userId)
                 .ExecuteUpdateAsync(setters => setters
                 .SetProperty(s => s.RefreshToken, newUser.RefreshToken)
                 .SetProperty(s => s.ExpiresAt, newUser.ExpiresAt));
