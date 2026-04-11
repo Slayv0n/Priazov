@@ -95,22 +95,7 @@ namespace Backend.Services
         public string GenerateRefreshToken(string userId)
         {
             _logger.LogInformation($"Генерация токена для пользователя {userId}");
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_jwtSettings.RefreshTokenSecret);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.NameIdentifier, userId) }),
-                Issuer = _jwtSettings.Issuer,
-                Audience = _jwtSettings.Audience,
-                Expires = DateTime.UtcNow.AddDays(Convert.ToDouble(_jwtSettings.RefreshTokenExpiryDays)),
-                SigningCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            return new Guid().ToString();
         }
     }
 }
