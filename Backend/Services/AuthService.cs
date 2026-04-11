@@ -143,7 +143,7 @@ namespace Backend.Services
 
             if (session.RefreshToken != refreshDto.RefreshToken)
             {
-                _logger.LogWarning("Токены не совпадают");
+                _logger.LogWarning($"Токены не совпадают {session.RefreshToken} и {refreshDto.RefreshToken}");
                 throw new UnauthorizedAccessException("Пользователь не авторизован");
             }
 
