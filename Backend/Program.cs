@@ -44,8 +44,6 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSet
 
 builder.Services.Configure<DadataSettings>(builder.Configuration.GetSection("Dadata"));
 
-builder.Services.Configure<TurnstileSettings>(builder.Configuration.GetSection("Turnstile"));
-
 builder.Services.AddHttpClient();
 
 builder.Services.AddMemoryCache();
@@ -57,11 +55,7 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddScoped<IMessageService, EmailService>();
 
-builder.Services.AddScoped<IManagerService, ManagerService>();
-
 builder.Services.AddScoped<ICompanyService, CompanyService>();
-
-builder.Services.AddScoped<ICommentService, CommentService>();
 
 builder.Services.AddScoped<IImageService, ImageService>();
 
@@ -195,7 +189,6 @@ app.MapScalarApiReference(opt =>
 app.MapRazorPages();
 
 app.MapCompanyEndpoints();
-app.MapManagerEndpoints();
 app.MapImageEnpoints();
 app.MapAuthEndpoints();
 app.MapPasswordEndpoints();

@@ -1,11 +1,7 @@
 ﻿using Backend.Models;
-using Backend.Models.Dto;
 using DataBase;
 using DataBase.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NLog.Config;
-using System.Linq;
 
 namespace Backend.Services
 {
@@ -36,7 +32,7 @@ namespace Backend.Services
         {
             using var db = await _factory.CreateDbContextAsync();
 
-            var user = await db.Users.FirstOrDefaultAsync(u => u.Email == addressMessage);
+            var user = await db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == addressMessage);
             if (user == null)
             {
                 _logger.LogWarning("Попытка сброса пароля для несуществующего пользователя");
@@ -92,7 +88,7 @@ namespace Backend.Services
         {
             await using var db = await _factory.CreateDbContextAsync();
 
-            var user = await db.Users.Include(u => u.Password).FirstOrDefaultAsync(u => u.Id == userId);
+            var user = await db.Users.AsNoTracking().Include(u => u.Password).FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
             {

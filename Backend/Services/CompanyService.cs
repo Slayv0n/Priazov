@@ -153,7 +153,8 @@ namespace Backend.Services
 
             using var db = await _factory.CreateDbContextAsync();
 
-            var company = await db.Users.OfType<Company>().Include(c => c.Address).FirstOrDefaultAsync(c => c.Id == id);
+            var company = await db.Users.AsNoTracking()
+                .OfType<Company>().Include(c => c.Address).FirstOrDefaultAsync(c => c.Id == id);
 
             if (company == null)
             {
@@ -187,7 +188,8 @@ namespace Backend.Services
 
             using var db = await _factory.CreateDbContextAsync();
 
-            var query = await db.Users.OfType<Company>()
+            var query = await db.Users.AsNoTracking()
+                .OfType<Company>()
                 .AsQueryable()
                 .OrderBy(c => c.Name)
                 .Take(5)
@@ -205,7 +207,7 @@ namespace Backend.Services
         public async Task<int> CountCompaniesAsync()
         {
             using var db = await _factory.CreateDbContextAsync();
-            return await db.Users.OfType<Company>().CountAsync();
+            return await db.Users.AsNoTracking().OfType<Company>().CountAsync();
         }
 
         public async Task<List<CompanyResponseDto>> SearchCompanyAsync(string? searchTerm, string? industry, string? region, int pageId, CountDto countDto)
@@ -244,7 +246,7 @@ namespace Backend.Services
 
             using var db = await _factory.CreateDbContextAsync();
 
-            var query = db.Users.OfType<Company>().AsQueryable()
+            var query = db.Users.AsNoTracking().OfType<Company>()
                 .Include(c => c.Address)
                 .Where(c => c.Industry.Contains(industry ?? "")
                 && c.Address.Region.Contains(cleanedRegion.region_with_type ?? ""));
@@ -298,7 +300,7 @@ namespace Backend.Services
 
             using var db = await _factory.CreateDbContextAsync();
 
-            var companies = db.Users.OfType<Company>();
+            var companies = db.Users.AsNoTracking().OfType<Company>();
 
             if (industries != null && industries.Any(i => i.IsChecked))
             {
