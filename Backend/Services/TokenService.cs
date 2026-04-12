@@ -54,8 +54,6 @@ namespace Backend.Services
                     ClockSkew = TimeSpan.Zero
                 }, out _);
 
-                //_cache.Set(cacheKey, principal, TimeSpan.FromMinutes(1));
-
                 return principal;
             }
             catch(Exception ex)

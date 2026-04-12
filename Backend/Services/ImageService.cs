@@ -1,12 +1,8 @@
 ﻿using Backend.Models.Dto;
 using Backend.Validation;
-using Dadata.Model;
 using DataBase;
 using DataBase.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Backend.Services
 {
