@@ -127,10 +127,19 @@ namespace Backend.Services
                 Industry = companyDto.Industry,
                 LeaderName = companyDto.LeaderName
             };
+            try
+            {
+                await _messageService.SendRegistrationEmail(company);
+            }
+            catch (Exception)
+            {
+                _logger.LogError($"Проблемы с Email: {companyDto.Email}");
+                throw new ConflictException("Проблемы с Email");
+            }
+
             await db.Users.AddAsync(company);
             await db.SaveChangesAsync();
 
-            //await _messageService.SendRegistrationEmail(company);
             _logger.LogInformation($"Компания зарегистрирована: {companyDto.Email}");
 
             _cacheService.ResetCache(_cacheName);
