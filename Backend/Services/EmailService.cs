@@ -41,7 +41,6 @@ namespace Backend.Services
                 .Replace("[USER_EMAIL]", user.Email)
                 .Replace("[USER_PHONE]", user.Phone);
 
-
             message.Body = new TextPart("html")
             {
                 Text = htmlBody

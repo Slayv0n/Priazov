@@ -1,4 +1,6 @@
 ﻿using Backend.Models;
+using Backend.Models.Dto;
+using Backend.Validation;
 using DataBase;
 using DataBase.Models;
 using Microsoft.EntityFrameworkCore;
@@ -58,7 +60,15 @@ namespace Backend.Services
                 await db.SaveChangesAsync();
             }
 
-            await _messageService.SendPasswordResetEmail(user.Email, token.Token);
+            try
+            {
+                await _messageService.SendPasswordResetEmail(user.Email, token.Token);
+            }
+            catch (Exception)
+            {
+                _logger.LogError($"Проблемы с Email: {user.Email}");
+                throw new ConflictException("Проблемы с Email");
+            }    
 
             return user.Id;
         }
@@ -138,7 +148,15 @@ namespace Backend.Services
             }
             await db.SaveChangesAsync();
 
-            await _messageService.SendPasswordOkayEmail(user.Email);
+            try
+            {
+                await _messageService.SendPasswordOkayEmail(user.Email);
+            }
+            catch (Exception)
+            {
+                _logger.LogError($"Проблемы с Email: {user.Email}");
+            }
+            
             _logger.LogInformation($"Пароль успешно изменён для пользователя {user.Id}");
         }
     }
