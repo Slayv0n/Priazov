@@ -201,101 +201,44 @@
         // -------------------
             // Функции для работы с ошибками
             // -------------------
-                    function showError(message) {
-            // Удаляем старую ошибку если есть
-            const existingError = document.querySelector('.error-message');
-            if (existingError) {
-                existingError.remove();
-            }
+                function showError(message, formId = 'loginForm') {
+                const form = document.getElementById(formId);
+                if (!form) return;
 
-            // Создаем элемент ошибки
-            const errorElement = document.createElement('div');
-            errorElement.className = 'error-message alert alert-danger mt-2';
-            errorElement.textContent = message;
+                // Ищем или создаём контейнер ошибки
+                let errorContainer = form.querySelector('.form-error');
+    
+                if (!errorContainer) {
+                errorContainer = document.createElement('div');
+                errorContainer.className = 'form-error';
+                errorContainer.style.color = '#ff4444';
+                errorContainer.style.textAlign = 'center';
+                errorContainer.style.margin = '0 15px 20px';
+                errorContainer.style.padding = '10px';
+                errorContainer.style.backgroundColor = '#fff5f5';
+                errorContainer.style.borderRadius = '5px';
+                errorContainer.style.border = '1px solid #ff4444';
+                errorContainer.style.fontSize = '14px';
+                errorContainer.style.fontWeight = '500';
 
-
-            const submitButton = document.querySelector('.auth-form button[type="submit"]');
+                // Вставляем перед кнопкой submit или в начало формы
+                const submitButton = form.querySelector('button[type="submit"]');
                 if (submitButton) {
-                    // Вставляем перед кнопкой
-                    submitButton.parentNode.insertBefore(errorContainer, submitButton);
+                submitButton.parentNode.insertBefore(errorContainer, submitButton);
                 } else {
-                    // Fallback: вставляем в начало формы
-                    const form = document.getElementById('loginForm');
-                    form.insertBefore(errorContainer, form.firstChild);
+                form.insertBefore(errorContainer, form.firstChild);
+                }
                 }
 
-            // Автоматически скрываем через 5 секунд
-            setTimeout(() => {
-                errorElement.remove();
-            }, 5000);
-        }
-        function showFieldError(fieldId, message) {
-            const field = document.getElementById(fieldId);
-            if (!field) return;
-
-            // Удаляем старую ошибку
-            clearFieldError(fieldId);
-
-            // Создаем элемент ошибки
-            const errorElement = document.createElement('div');
-            errorElement.className = 'field-error';
-            errorElement.textContent = message;
-            errorElement.style.color = '#ff4444';
-            errorElement.style.fontSize = '14px';
-            errorElement.style.marginTop = '5px';
-
-            // Добавляем красную обводку полю
-            field.style.borderColor = '#ff4444';
-
-            // Всегда вставляем в контейнер .field
-            const fieldContainer = field.closest('.field');
-            if (fieldContainer) {
-                fieldContainer.appendChild(errorElement);
-            } else {
-                // Fallback
-                field.parentNode.appendChild(errorElement);
-            }
-        }
-
-        function clearFieldError(fieldId) {
-            const field = document.getElementById(fieldId);
-            if (!field) return;
-
-            // Убираем красную обводку
-            field.style.borderColor = '';
-
-            // Ищем ошибку в правильном контейнере - .field
-            const fieldContainer = field.closest('.field');
-            if (fieldContainer) {
-                const existingError = fieldContainer.querySelector('.field-error');
-                if (existingError) {
-                    existingError.remove();
+                errorContainer.textContent = message;
+    
+                // Автоматически скрываем через 5 секунд (опционально)
+                setTimeout(() => {
+                if (errorContainer?.parentNode) {
+                errorContainer.remove();
                 }
-            } else {
-                // Fallback - ищем в parentNode
-                const existingError = field.parentNode.querySelector('.field-error');
-                if (existingError) {
-                    existingError.remove();
+                }, 5000);
                 }
-            }
-        }
-
-        function clearAllErrors() {
-            // Находим все контейнеры полей и удаляем ошибки из них
-            const fieldContainers = document.querySelectorAll('.field');
-            fieldContainers.forEach(container => {
-                const existingError = container.querySelector('.field-error');
-                if (existingError) {
-                    existingError.remove();
-                }
-
-                // Также убираем красную обводку со всех полей внутри
-                const fields = container.querySelectorAll('.input-field');
-                fields.forEach(field => {
-                    field.style.borderColor = '';
-                });
-            });
-        }
         function initPasswordToggles() {
                 const toggleButtons = document.querySelectorAll('.password-toggle');
 
@@ -360,8 +303,6 @@
                 })
             });
 
-            
-
             if (response.ok) {
                 const data = await response.json();
 
@@ -390,13 +331,13 @@
                 showError(errorMessage);
             }
 
-        } catch (error) {
-            console.error('Ошибка при выполнении запроса:', error);
-            showError('Ошибка сети или сервера: ' + error.message);
-        } finally {
-            submitButton.textContent = originalText;
-            submitButton.disabled = false;
-        }
+            } catch (error) {
+                console.error('Ошибка при выполнении запроса:', error);
+                showError('Ошибка сети или сервера: ' + error.message);
+            } finally {
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
+                }
         }
 
         document.getElementById('changePasswordForm').addEventListener('submit', function(e) {

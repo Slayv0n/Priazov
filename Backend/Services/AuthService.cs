@@ -50,14 +50,14 @@ namespace Backend.Services
             if (person == null)
             {
                 _logger.LogWarning($"Пользователь не зарегистрирован: {loginDto.Email}");
-                throw new UnauthorizedAccessException("Неверный формат учётной записи.");
+                throw new UnauthorizedAccessException("Неверный формат учётной записи");
             }
 
 
             if (!PasswordHasher.VerifyPassword(loginDto.Password, person.Password.PasswordHash))
             {
                 _logger.LogWarning($"Пользователь не прошёл авторизацию: {loginDto.Email}");
-                throw new UnauthorizedAccessException("Неверный формат учётной записи.");
+                throw new UnauthorizedAccessException("Неверный формат учётной записи");
             }
 
             var newAccessToken = _tokenService.GenerateAccessToken(Convert.ToString(person.Id)!,
@@ -184,13 +184,13 @@ namespace Backend.Services
             if (person == null)
             {
                 _logger.LogWarning($"Пользователь не зарегистрирован: {loginDto.Email}");
-                throw new UnauthorizedAccessException("Неверный формат учётной записи.");
+                throw new UnauthorizedAccessException("Неверный формат учётной записи");
             }
 
             if (!PasswordHasher.VerifyPassword(loginDto.Password, person.Password.PasswordHash))
             {
                 _logger.LogWarning($"Пользователь не прошёл авторизацию: {loginDto.Email}");
-                throw new UnauthorizedAccessException("Неверный формат учётной записи.");
+                throw new UnauthorizedAccessException("Неверный формат учётной записи");
             }
 
             var claims = new List<Claim>
