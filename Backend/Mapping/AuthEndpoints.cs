@@ -47,34 +47,42 @@ namespace Backend.Mapping
                 return Results.ValidationProblem(errors);
             }
 
-            User = await service.Login(loginDto);
-            ClaimsPrincipal = await service.SignInForContext(loginDto);
+            try
+            {
+                User = await service.Login(loginDto);
+                ClaimsPrincipal = await service.SignInForContext(loginDto);
 
-            await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                ClaimsPrincipal,
-                new AuthenticationProperties
+                await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                    ClaimsPrincipal,
+                    new AuthenticationProperties
+                    {
+                        ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(settings.Value.AccessTokenExpiryMinutes),
+                        IsPersistent = true,
+                        AllowRefresh = true
+                    });
+
+                context.Response.Cookies.Append("refresh_token", User.RefreshToken, new CookieOptions
                 {
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(settings.Value.AccessTokenExpiryMinutes),
-                    IsPersistent = true,
-                    AllowRefresh = true
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTimeOffset.UtcNow.AddDays(settings.Value.RefreshTokenExpiryDays)
+                });
+                context.Response.Cookies.Append("access_token", User.AccessToken, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(settings.Value.AccessTokenExpiryMinutes)
                 });
 
-            context.Response.Cookies.Append("refresh_token", User.RefreshToken, new CookieOptions
+                return Results.Ok(User);
+            }
+            catch(Exception ex)
             {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTimeOffset.UtcNow.AddDays(settings.Value.RefreshTokenExpiryDays)
-            });
-            context.Response.Cookies.Append("access_token", User.AccessToken, new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTimeOffset.UtcNow.AddMinutes(settings.Value.AccessTokenExpiryMinutes)
-            });
-
-            return Results.Ok(User);
+                return Results.BadRequest(new {Message =  ex.Message});
+            }
+            
         }
         private static async Task<IResult> Logout(HttpContext context,
             RefreshDto refreshDto,
