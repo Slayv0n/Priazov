@@ -29,4 +29,4 @@ ENV ASPNETCORE_URLS=http://+:${PORT:-8080}
 ENV ASPNETCORE_ENVIRONMENT=Production
 
 COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "/app/Priazov.dll"]
+ENTRYPOINT ["dotnet", "Priazov.dll"]
