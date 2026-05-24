@@ -189,12 +189,6 @@ select {
     transition: opacity 0.3s ease;
 }
 /* Стили для ошибок */
-.field-error {
-    color: #ff4444;
-    font-size: 14px;
-    margin-top: 5px;
-    display: block;
-}
 
 .form-error {
     color: #ff4444;
