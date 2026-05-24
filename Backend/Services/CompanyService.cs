@@ -134,7 +134,6 @@ namespace Backend.Services
             catch (Exception)
             {
                 _logger.LogError($"Проблемы с Email: {companyDto.Email}");
-                throw new ConflictException("Проблемы с Email");
             }
 
             await db.Users.AddAsync(company);
