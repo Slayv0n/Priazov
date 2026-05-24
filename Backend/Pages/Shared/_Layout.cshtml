@@ -150,6 +150,7 @@
                                             <img src="~/static/img/mdi_eye-outline.svg" asp-append-version="true" class="eye-icon" />
                                         </button>
                                     </div>
+                                    <span class="field-error" id="error-currentPassword"></span>
                                 </div>
                                 <div class="field password-field">
                                     <div class="input-wrapper">
@@ -158,6 +159,7 @@
                                             <img src="~/static/img/mdi_eye-outline.svg" asp-append-version="true" class="eye-icon" />
                                         </button>
                                     </div>
+                                    <span class="field-error" id="error-newPassword"></span>
                                 </div>
                                 <div class="field password-field">
                                     <div class="input-wrapper">
@@ -166,6 +168,7 @@
                                             <img src="~/static/img/mdi_eye-outline.svg" asp-append-version="true" class="eye-icon" />
                                         </button>
                                     </div>
+                                    <span class="field-error" id="error-confirmNewPassword"></span>
                                 </div>
                             </div>
                             <button type="submit" class="button-submit">Далее</button>
@@ -180,18 +183,18 @@
                 <span class="footer-title">Контакты</span>
             <div class="footer-item">
                     <img class="footer-icon" src="~/static/main/mail.svg" asp-append-version="true" />
-                    <a href="mailto:yugolets@priazovsocialimpact.ru">yugolets@tmavt.ru</a>
+                <a href="mailto:priazovimpact@gmail.com">priazovimpact@gmail.com</a>
                 </div>
                 <div class="footer-item">
                     <img class ="footer-icon" src="~/static/main/Phone.svg" asp-append-version="true" />
-                    <a href="tel:+79185009038">+7 (918) 500-9039</a>
+                <a href="tel:+78005553535">+7 (800) 555-3535</a>
                 </div>
             </div>
             <div class="help-section">
                 <span class="help-title">Помощь?</span>
             <div class="footer-item">
                 <img class="footer-icon" src="~/static/main/Telegram App.svg" asp-append-version="true" />
-                <a href="https://t.me/yugolets" style="text-decoration: underline">yugolets</a>
+                <a href="https://t.me/seperegio" style="text-decoration: underline">seperegio</a>
             </div>
             </div>
     </footer>
@@ -202,43 +205,83 @@
             // Функции для работы с ошибками
             // -------------------
                 function showError(message, formId = 'loginForm') {
-                const form = document.getElementById(formId);
-                if (!form) return;
+                    const form = document.getElementById(formId);
+                    if (!form) {
+                    console.warn(`Форма с id="${formId}" не найдена`);
+                    return;
+                    }
 
-                // Ищем или создаём контейнер ошибки
-                let errorContainer = form.querySelector('.form-error');
+                    // Удаляем старую ошибку, если есть
+                    const oldError = form.querySelector('.form-error');
+                    if (oldError) oldError.remove();
+
+                    // Создаём новый контейнер
+                    const errorContainer = document.createElement('div');
+                    errorContainer.className = 'form-error';
+                    errorContainer.style.color = '#ff4444';
+                    errorContainer.style.textAlign = 'center';
+                    errorContainer.style.margin = '0 15px 20px';
+                    errorContainer.style.padding = '10px';
+                    errorContainer.style.backgroundColor = '#fff5f5';
+                    errorContainer.style.borderRadius = '5px';
+                    errorContainer.style.border = '1px solid #ff4444';
+                    errorContainer.style.fontSize = '14px';
+                    errorContainer.style.fontWeight = '500';
+                    errorContainer.textContent = message;
+
+                    // Вставляем перед кнопкой submit
+                    const submitButton = form.querySelector('button[type="submit"]');
+                    if (submitButton) {
+                    submitButton.parentNode.insertBefore(errorContainer, submitButton);
+                    } else {
+                    form.insertBefore(errorContainer, form.firstChild);
+                    }
+
+                    // Авто-скрытие через 5 сек
+                    setTimeout(() => {
+                    if (errorContainer.parentNode) {
+                    errorContainer.remove();
+                    }
+                    }, 5000);
+                }
+
+        function showFieldError(fieldId, message) {
+        const errorEl = document.getElementById(`error-${fieldId}`);
     
-                if (!errorContainer) {
-                errorContainer = document.createElement('div');
-                errorContainer.className = 'form-error';
-                errorContainer.style.color = '#ff4444';
-                errorContainer.style.textAlign = 'center';
-                errorContainer.style.margin = '0 15px 20px';
-                errorContainer.style.padding = '10px';
-                errorContainer.style.backgroundColor = '#fff5f5';
-                errorContainer.style.borderRadius = '5px';
-                errorContainer.style.border = '1px solid #ff4444';
-                errorContainer.style.fontSize = '14px';
-                errorContainer.style.fontWeight = '500';
-
-                // Вставляем перед кнопкой submit или в начало формы
-                const submitButton = form.querySelector('button[type="submit"]');
-                if (submitButton) {
-                submitButton.parentNode.insertBefore(errorContainer, submitButton);
-                } else {
-                form.insertBefore(errorContainer, form.firstChild);
-                }
-                }
-
-                errorContainer.textContent = message;
+        if (!errorEl) {
+        console.warn(`Элемент ошибки с id="${fieldId}" не найдено`);
+        return;
+        }
+        errorEl.textContent = message;
     
-                // Автоматически скрываем через 5 секунд (опционально)
-                setTimeout(() => {
-                if (errorContainer?.parentNode) {
-                errorContainer.remove();
-                }
-                }, 5000);
-                }
+        errorEl.style.display = 'block';
+    
+        }
+
+        // Скрыть ошибку конкретного поля
+        function clearFieldError(fieldId) {
+        // const errorEl = document.getElementById(`error-${fieldId}`);
+        // const field = document.getElementById(fieldId);
+    
+        // if (errorEl) {
+        // errorEl.classList.remove('visible');
+        // errorEl.textContent = ''; Очищаем текст
+        // }
+    
+        // if (field) {
+        // field.classList.remove('input-error');
+        // field.removeAttribute('aria-invalid');
+        // field.removeAttribute('aria-describedby');
+        // }
+        }
+
+        function clearAllErrors() {
+        document.querySelectorAll('.field-error').forEach(el => {
+        el.style.display = 'none';
+        el.textContent = '';
+        });
+        }
+
         function initPasswordToggles() {
                 const toggleButtons = document.querySelectorAll('.password-toggle');
 
@@ -348,8 +391,7 @@
             const newPassword2 = document.getElementById('confirmNewPassword').value;
 
             // Очищаем предыдущие ошибки
-            clearFieldError('newPassword');
-            clearFieldError('confirmNewPassword');
+                clearAllErrors();
 
             let hasErrors = false;
 
@@ -377,7 +419,7 @@
             try {
                 const user = JSON.parse(localStorage.getItem('user'));
                 if (!user || !user.id) {
-                    showError('Пользователь не авторизован');
+        showError('Пользователь не авторизован', 'changePasswordForm');
                     return;
                 }
 
@@ -401,6 +443,10 @@
                         NewPassword2: newPassword2
                     })
                 });
+                let data;
+
+                if (response.bodyUsed)
+                    data = await response?.json();
 
                 if (response.ok) {
                     console.log('Успешная смена пароля');
@@ -421,17 +467,47 @@
                         window.location.href = '/';
                     }, 2000);
 
-                } else {
-                    // Обрабатываем ошибку
-                    const data = await response.json();
-                    const errorMessage = data.message || data.title || 'Ошибка при смене пароля';
-                    console.error('Ошибка сервера:', errorMessage);
-                    showError(errorMessage);
-                }
+        } else if (data != null) {
+                   if (data.errors) {
+                            const fieldMapping = {
+                                'Name': 'currentPassword',
+                                'NewPassword': 'newPassword',
+                                'NewPassword2': 'newPassword2'
+                            };
 
+                            Object.keys(data.errors).forEach(fieldKey => {
+                                const htmlFieldId = fieldMapping[fieldKey] || fieldKey;
+                                const errorMessages = data.errors[fieldKey];
+
+                                if (Array.isArray(errorMessages) && errorMessages.length > 0) {
+                                    showFieldError(htmlFieldId, errorMessages[0]);
+                                }
+                            });
+                        } else if (data.title === 'One or more validation errors occurred.') {
+                            if (data.errors) {
+                                const fieldMapping = {
+                            'Name': 'currentPassword',
+                            'NewPassword': 'newPassword',
+                            'NewPassword2': 'newPassword2'
+                                };
+
+                                Object.keys(data.errors).forEach(fieldKey => {
+                                    const htmlFieldId = fieldMapping[fieldKey] || fieldKey;
+                                    const errorMessages = data.errors[fieldKey];
+
+                                    if (Array.isArray(errorMessages) && errorMessages.length > 0) {
+                                        showFieldError(htmlFieldId, errorMessages[0]);
+                                    }
+                                });
+                            }
+                        }
+                    }
+        else {
+        showError('Неверные данные', 'changePasswordForm');
+        }
             } catch (error) {
                 console.error('Ошибка при выполнении запроса:', error);
-                showError('Ошибка сети или сервера: ' + error.message);
+                showError('Ошибка сети или сервера: ' + error.message, 'changePasswordForm');
             } finally {
                 submitButton.textContent = originalText;
                 submitButton.disabled = false;

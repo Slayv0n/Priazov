@@ -503,3 +503,10 @@ footer {
         background-color: #E7F0F2;
         color: #0E6466;
     }
+
+.field-error {
+    color: #ff4444;
+    font-size: 14px;
+    margin-top: 5px;
+    display: block;
+}

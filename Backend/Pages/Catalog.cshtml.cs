@@ -18,7 +18,6 @@ namespace Backend.Pages
         {
             _companyService = companyService;
             _imageService = imageService;
-            CountPages = new();
         }
         public async Task<IActionResult> OnGetAsync([FromRoute] int pageId = 1)
         {
@@ -104,7 +103,7 @@ namespace Backend.Pages
 
         public List<CompanyResponseDto> Query { get; set; } = new List<CompanyResponseDto>();
         public List<string> Images { get; set; } = new List<string>();
-        public CountDto CountPages;
+        public CountDto CountPages { get; set; } = new CountDto();
         public int PageId;
     }
 }

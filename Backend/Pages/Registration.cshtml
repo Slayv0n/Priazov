@@ -29,10 +29,12 @@
                 <div class="field">
                     <label class="form-label">Краткое название организации</label>
                     <input type="text" placeholder="Название" class="input-field" id="organizationName" name="organizationName">
+                    <span class="field-error" id="error-organizationName"></span>
                 </div>
                 <div class="field">
                     <label class="form-label">Юридический адрес</label>
                     <input type="text" placeholder="Адрес" class="input-field" id="address" name="address">
+                    <span class="field-error" id="error-address"></span>
                 </div>
 
                 <div class="field">
@@ -53,19 +55,23 @@
                         </select>
                         <img src="~/static/img/Chevron down.svg" class="select-arrow" asp-append-version="true" />
                     </div>
+                    <span class="field-error" id="error-industry"></span>
                 </div>
                 <div class="field">
                     <label class="form-label">ФИО руководителя/контактного лица</label>
                     <input type="text" placeholder="ФИО" class="input-field" id="FIO" name="FIO">
+                    <span class="field-error" id="error-FIO"></span>
                 </div>
 
                 <div class="field">
                     <label class="form-label">Телефон руководителя/контактного лица</label>
                     <input type="tel" placeholder="Номер телефона" class="input-field" id="phone" name="phone">
+                    <span class="field-error" id="error-phone"></span>
                 </div>
                 <div class="field">
                     <label class="form-label">Электронная почта</label>
                     <input type="email" placeholder="Почта" class="input-field" id="mail" name="mail">
+                    <span class="field-error" id="error-mail"></span>
                 </div>
 
                 <div class="field password-field">
@@ -76,6 +82,7 @@
                             <img src="~/static/img/mdi_eye-outline.svg" asp-append-version="true" class="eye-icon" />
                         </button>
                     </div>
+                    <span class="field-error" id="error-password"></span>
                 </div>
 
                 <div class="field password-field">
@@ -86,6 +93,7 @@
                             <img src="~/static/img/mdi_eye-outline.svg" asp-append-version="true" class="eye-icon" />
                         </button>
                     </div>
+                    <span class="field-error" id="error-password2"></span>
                 </div>
             </div>
             
@@ -204,6 +212,7 @@
                     errorContainer.remove();
                 }
             }
+
             // -------------------
             // Переключение форм
             // -------------------
